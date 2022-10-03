@@ -1,0 +1,19 @@
+/*================================================================================
+	Item Name: C'M'S Template
+	Version: 1.0
+	Author: Alexsys
+	Author URL: http://www.alexsys.solutions
+================================================================================
+*/
+.table-intragroupe th, .table-intragroupe td{ font-size: 13px}
+.table-intragroupe td{padding: 0.2rem .5rem 0rem !important;}
+.table-intragroupe a i.icn-action{    position: relative;
+    top: 3px;}
+.comava{ border-radius: 5px}
+.btn-table{    padding: .0rem .7rem !important;
+    font-size: .8rem; margin-right: .2rem!important;}
+.flaticon-pdf-file-format-symbol{ top:2px !important}
+
+
+.table-intragroupe a i.ic-delete{color:#d71111}
+.table-intragroupe a i.ic-edit{color:#39DA8A}

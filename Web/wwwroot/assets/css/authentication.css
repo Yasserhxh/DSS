@@ -1,0 +1,34 @@
+/* Authentication page css */
+/*-------------------------*/
+#auth-login .card-title{text-align: center;}
+#auth-login .card-title img{ position: relative; top:-30px;}
+.bg-authentication {
+  background-color: #F2F4F4;
+}
+
+.bg-authentication #icon-arrow {
+  position: absolute;
+  top: 11px;
+  right: 15px;
+}
+
+.bg-authentication .brand-text {
+  color: #5A8DEE;
+  font-weight: 600;
+  letter-spacing: 0.01rem;
+}
+
+@media only screen and (min-width: 992px) {
+  .bg-authentication .disable-rounded-right {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* IE Specific CSS */
+  .bg-authentication {
+    width: 100%;
+    display: block;
+  }
+}

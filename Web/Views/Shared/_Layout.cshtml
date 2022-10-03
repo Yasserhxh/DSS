@@ -5,7 +5,7 @@
 @{ 
     string role = null;
     var user = await userManager.GetUserAsync(User);
-    var userid = user.Id;
+    //var userid = user.Id;
     if (user != null)
     {
         var Roles = await userManager.GetRolesAsync(user);

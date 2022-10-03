@@ -18,6 +18,11 @@ namespace Service.Mapping
             CreateMap<Commande, CommandeModel>();
             CreateMap<DetailCommande, DetailCommandeModel>();
             CreateMap<CentraleBeton, CentraleBetonModel>();
+            CreateMap<FormeJuridique, FormeJuridiqueModel>();
+            CreateMap<TypeChantier, TypeChantierModel>();
+            CreateMap<Zone, ZoneModel>();
+            CreateMap<Article, ArticleModel>();
+            CreateMap<TarifPompeRef,TarifPompeRefModel>();
 
 
             // Models to Entities mapping
@@ -29,6 +34,12 @@ namespace Service.Mapping
             CreateMap<CommandeModel, Commande>();
             CreateMap<DetailCommandeModel, DetailCommande>();
             CreateMap<CentraleBetonModel, CentraleBeton>();
+            CreateMap<FormeJuridiqueModel, FormeJuridique>();
+            CreateMap<TypeChantierModel, TypeChantier>();
+            CreateMap<ZoneModel, Zone>();
+            CreateMap<ArticleModel, Article>();
+            CreateMap<TarifPompeRefModel, TarifPompeRef>();
+
         }
     }
 }
