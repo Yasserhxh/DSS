@@ -4,11 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Data;
 using Repository.IRepositories;
 using Repository.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
@@ -22,36 +17,36 @@ namespace Repository.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<FormeJuridique> GetFormeJuridiques()
+        public async Task<List<FormeJuridique>> GetFormeJuridiques()
         {
-            return _db.FormeJuridiques.AsEnumerable();
+            return await _db.FormeJuridiques.ToListAsync();
         }
-        public IEnumerable<TypeChantier> GetTypeChantiers()
+        public async Task<List<TypeChantier>> GetTypeChantiers()
         {
-            return _db.TypeChantiers.AsEnumerable();
+            return await _db.TypeChantiers.ToListAsync();
         }
-        public IEnumerable<Zone> GetZones()
+        public async Task<List<Zone>> GetZones()
         {
-            return _db.Zones.AsEnumerable();
+            return await _db.Zones.ToListAsync();
         }
-        public IEnumerable<Article> GetArticles()
+        public async Task<List<Article>> GetArticles()
         {
-            return _db.Articles.AsEnumerable();
+            return await _db.Articles.ToListAsync();
         }
-        public IEnumerable<DelaiPaiement> GetDelaiPaiements()
+        public async Task<List<DelaiPaiement>> GetDelaiPaiements()
         {
-            return _db.DélaiPaiements.AsEnumerable();
+            return await _db.DélaiPaiements.ToListAsync();
         }
-        public IEnumerable<CentraleBeton> GetCentraleBetons()
+        public async Task<List<CentraleBeton>> GetCentraleBetons()
         {
-            return _db.CentraleBetons.AsEnumerable();
+            return await _db.CentraleBetons.ToListAsync();
         }
 
         public async Task<double> GetTarifArticle(int Id)
         {
-            var Article = await _db.Articles.FirstOrDefaultAsync(x => x.Article_Id == Id);
-            if (Article.Tarif != null)
-                return (double)Article.Tarif;
+            var article = await _db.Articles.FirstOrDefaultAsync(x => x.Article_Id == Id);
+            if (article is { Tarif: { } })
+                return (double)article.Tarif;
             return 0;         
         }
 
@@ -88,13 +83,10 @@ namespace Repository.Repositories
         {
             await _db.DetailCommandes.AddRangeAsync(detailCommandes);
             var confirm = await _unitOfWork.Complete();
-            if (confirm > 0)
-                return true;
-            else
-                return false;
+            return confirm > 0;
         }
 
-        public async Task<IEnumerable<Client>> GetClients(string Ice, string Cnie, string RS)
+        public async Task<List<Client>> GetClients(string Ice, string Cnie, string RS)
         {
             var query = _db.Clients.AsQueryable();
             if (Ice != null)
@@ -116,7 +108,7 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Commande>> GetCommandes(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandes(int? ClientId, DateTime? DateCommande)
         {
             var query = _db.Commandes.AsQueryable();
             if (ClientId.HasValue)
@@ -134,17 +126,17 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Commande>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandesPT(int? clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes.Where(x => x.IdStatut == Statuts.EtudeEtPropositionDePrix)
                 .AsQueryable();
-            if (ClientId.HasValue)
+            if (clientId.HasValue)
             {
-                query = query.Where(d => d.IdClient == ClientId);
+                query = query.Where(d => d.IdClient == clientId);
             }
-            if (DateCommande.HasValue)
+            if (dateCommande.HasValue)
             {
-                query = query.Where(d => d.DateCommande.Value.Date == DateCommande);
+                query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
             return await query
                 .Include(d => d.Chantier)
@@ -183,20 +175,20 @@ namespace Repository.Repositories
         }
         public async Task<double> GetTarifZone(int Id)
         {
-            var Zone = await _db.Zones.FirstOrDefaultAsync(x => x.Zone_Id == Id);
-            if (Zone != null)
-                return (double)Zone.Zone_Prix;
+            var zone = await _db.Zones.FirstOrDefaultAsync(x => x.Zone_Id == Id);
+            if (zone != null)
+                return (double)zone.Zone_Prix;
             return 0;
         }
 
-        public IEnumerable<TarifPompeRef> GetTarifPompeRefs()
+        public async Task<List<TarifPompeRef>> GetTarifPompeRefs()
         {
-            return _db.TarifPompeRefs.ToList();
+            return await _db.TarifPompeRefs.ToListAsync();
         }
 
-        public async Task<double> GetTarifPompe(int Id)
+        public async Task<double> GetTarifPompe(int id)
         {
-            var tarif = await _db.TarifPompeRefs.FirstOrDefaultAsync(x => x.Tpr_Id == Id);
+            var tarif = await _db.TarifPompeRefs.FirstOrDefaultAsync(x => x.Tpr_Id == id);
             if (tarif != null)
                 return (double)tarif.LongFleche_Prix;
             return 0;
@@ -212,7 +204,40 @@ namespace Repository.Repositories
             return A;
         }
 
-        public async Task<IEnumerable<Commande>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandesDAPBE(int? clientId, DateTime? dateCommande)
+        {
+            var query = _db.Commandes
+                .Include(d => d.Chantier)
+                .Include(d => d.Client)
+                .Include(d => d.Statut)
+                .Include(x => x.DetailCommandes)
+                .ThenInclude(x => x.Article)
+                .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
+                .AsQueryable();
+
+            if (clientId.HasValue)
+            {
+                query = query.Where(d => d.IdClient == clientId);
+            }
+            if (dateCommande.HasValue)
+            {
+                query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
+            }
+            var commandes = await query.ToListAsync();
+
+            var result = new List<Commande>();
+            foreach (var cmd in commandes)
+            {
+                var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
+                if (!cmd.DetailCommandes.Any(x => x.IdArticle != null && x.Montant != null && (tarifs[x.IdArticle] - (double)x.Montant >= 10 || x.IdArticle == 4)))
+                    continue;
+                result.Add(cmd);
+                continue;
+            }
+            return result;
+        }
+
+        public async Task<List<Commande>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
         {
             var query = _db.Commandes
                 .Include(d => d.Chantier)
@@ -233,20 +258,19 @@ namespace Repository.Repositories
             }
             var commandes = await query.ToListAsync();
 
-            List<Commande> result = new List<Commande>();
+            var result = new List<Commande>();
             foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
-                if (cmd.DetailCommandes.Any(x => tarifs[x.IdArticle] - (double)x.Montant >= 10 || x.IdArticle == 4))
-                {
-                    result.Add(cmd);
-                    continue;
-                }
+                if (!cmd.DetailCommandes.Any(x =>
+                        x.Montant != null && x.IdArticle != null && 5 < tarifs[x.IdArticle] - (double)x.Montant &&
+                        tarifs[x.IdArticle] - (double)x.Montant < 10)) continue;
+                result.Add(cmd);
+                continue;
             }
             return result;
         }
-
-        public async Task<IEnumerable<Commande>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandesCV(int? clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes
                 .Include(d => d.Chantier)
@@ -257,63 +281,28 @@ namespace Repository.Repositories
                 .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
                 .AsQueryable();
 
-            if (ClientId.HasValue)
+            if (clientId.HasValue)
             {
-                query = query.Where(d => d.IdClient == ClientId);
+                query = query.Where(d => d.IdClient == clientId);
             }
-            if (DateCommande.HasValue)
+            if (dateCommande.HasValue)
             {
-                query = query.Where(d => d.DateCommande.Value.Date == DateCommande);
-            }
-            var commandes = await query.ToListAsync();
-
-            List<Commande> result = new List<Commande>();
-            foreach (var cmd in commandes)
-            {
-                var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
-                if (cmd.DetailCommandes.Any(x => 5 < tarifs[x.IdArticle] - (double)x.Montant && tarifs[x.IdArticle] - (double)x.Montant < 10))
-                {
-                    result.Add(cmd);
-                    continue;
-                }
-            }
-            return result;
-        }
-        public async Task<IEnumerable<Commande>> GetCommandesCV(int? ClientId, DateTime? DateCommande)
-        {
-            var query = _db.Commandes
-                .Include(d => d.Chantier)
-                .Include(d => d.Client)
-                .Include(d => d.Statut)
-                .Include(x => x.DetailCommandes)
-                .ThenInclude(x => x.Article)
-                .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
-                .AsQueryable();
-
-            if (ClientId.HasValue)
-            {
-                query = query.Where(d => d.IdClient == ClientId);
-            }
-            if (DateCommande.HasValue)
-            {
-                query = query.Where(d => d.DateCommande.Value.Date == DateCommande);
+                query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
             var commandes = await query.ToListAsync();
 
-            List<Commande> result = new List<Commande>();
+            var result = new List<Commande>();
             foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
-                if (cmd.DetailCommandes.Any(x => tarifs[x.IdArticle] - (double)x.Montant <= 5))
-                {
-                    result.Add(cmd);
-                    continue;
-                }
+                if (!cmd.DetailCommandes.Any(x => x.Montant != null && x.IdArticle != null && tarifs[x.IdArticle] - (double)x.Montant <= 5)) continue;
+                result.Add(cmd);
+                continue;
             }
             return result;
         }
 
-        public async Task<IEnumerable<Commande>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
         {
             var query = _db.Commandes
                 .Where(x => x.IdStatut == Statuts.FixationDePrixDuTransport)
@@ -387,7 +376,7 @@ namespace Repository.Repositories
                 foreach (var det in detailCommandes)
                 {
                     var detail = await _db.DetailCommandes.FirstOrDefaultAsync(x => x.IdDetailCommande == det.IdDetailCommande);
-                    detail.Montant = det.Montant;
+                    if (detail != null) detail.Montant = det.Montant;
                 }
 
                 return true;

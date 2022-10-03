@@ -3,15 +3,9 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
 using Domain.Models.Commande;
-using Microsoft.EntityFrameworkCore.Storage;
 using Repository.IRepositories;
 using Repository.UnitOfWork;
 using Service.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
@@ -31,29 +25,29 @@ namespace Service.Services
             _authentificationRepository = authentificationRepository;
         }
 
-        public IEnumerable<FormeJuridiqueModel> GetFormeJuridiques()
+        public async Task<List<FormeJuridiqueModel>> GetFormeJuridiques()
         {
-            return mapper.Map<IEnumerable<FormeJuridique>, IEnumerable< FormeJuridiqueModel>> (this.commandeRepository.GetFormeJuridiques());
+            return mapper.Map<List<FormeJuridique>, List< FormeJuridiqueModel>> (await commandeRepository.GetFormeJuridiques());
         }
-        public IEnumerable<TypeChantierModel> GetTypeChantiers()
+        public async Task<List<TypeChantierModel>> GetTypeChantiers()
         {
-            return mapper.Map<IEnumerable<TypeChantier>, IEnumerable<TypeChantierModel>>(this.commandeRepository.GetTypeChantiers());
+            return mapper.Map<List<TypeChantier>, List<TypeChantierModel>>(await commandeRepository.GetTypeChantiers());
         }
-        public IEnumerable<ZoneModel> GetZones()
+        public async Task<List<ZoneModel>> GetZones()
         {
-            return mapper.Map<IEnumerable<Zone>, IEnumerable<ZoneModel>>(this.commandeRepository.GetZones());
+            return mapper.Map<List<Zone>, List<ZoneModel>>( await this.commandeRepository.GetZones());
         }
-        public IEnumerable<ArticleModel> GetArticles()
+        public async Task<List<ArticleModel>> GetArticles()
         {
-            return mapper.Map<IEnumerable<Article>, IEnumerable<ArticleModel>>(this.commandeRepository.GetArticles());
+            return mapper.Map<List<Article>, List<ArticleModel>>(await this.commandeRepository.GetArticles());
         }
-        public IEnumerable<DelaiPaiementModel> GetDelaiPaiements()
+        public async Task<List<DelaiPaiementModel>> GetDelaiPaiements()
         {
-            return mapper.Map<IEnumerable<DelaiPaiement>, IEnumerable<DelaiPaiementModel>>(this.commandeRepository.GetDelaiPaiements());
+            return mapper.Map<List<DelaiPaiement>, List<DelaiPaiementModel>>(await this.commandeRepository.GetDelaiPaiements());
         }
-        public IEnumerable<CentraleBetonModel> GetCentraleBetons()
+        public async Task<List<CentraleBetonModel>> GetCentraleBetons()
         {
-            return mapper.Map<IEnumerable<CentraleBeton>, IEnumerable<CentraleBetonModel>>(this.commandeRepository.GetCentraleBetons());
+            return mapper.Map<List<CentraleBeton>, List<CentraleBetonModel>>(await this.commandeRepository.GetCentraleBetons());
         }
 
         public async Task<double> GetTarifArticle(int Id)
@@ -73,174 +67,163 @@ namespace Service.Services
 
         public async Task<bool> CreateCommande (CommandeViewModel commandeViewModel)
         {
-            using (IDbContextTransaction transaction = this.unitOfWork.BeginTransaction())
+            await using var transaction = this.unitOfWork.BeginTransaction();
+            try
             {
-                try
+                // Add chantier
+                var chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                var ctnId = await commandeRepository.CreateChantier(chantier);
+
+                // Add client
+                commandeViewModel.Client.Client_Ctn_Id = ((int)ctnId);
+                Client client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                var clientId = await commandeRepository.CreateClient(client);
+
+                // Statut de la commande
+                if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
                 {
-                    // Add chantier
-                    Chantier chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                    var ctnId = await commandeRepository.CreateChantier(chantier);
-
-                    // Add client
-                    commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
-                    Client client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                    var clientId = await commandeRepository.CreateClient(client);
-
-                    // Statut de la commande
-                    if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
-                    {
-                        commandeViewModel.Commande.IdStatut = Statuts.EtudeEtPropositionDePrix;
-                    }
-                    else
-                    {
-                        var tarifs = await commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                        foreach (var det in commandeViewModel.DetailCommandes)
-                        {
-                            if ((double)det.Montant < tarifs[det.IdArticle] || Int64.Parse(commandeViewModel.Commande.Delai_Paiement) > 60)
-                            {
-                                commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
-                                break;
-                            }
-                        }
-
-                        if (commandeViewModel.Commande.IdStatut != Statuts.ValidationDeLoffreDePrix)
-                        {
-                            commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
-                        }
-                    }
-
-                    // Add commande
-                    commandeViewModel.Commande.IdClient = clientId;
-                    commandeViewModel.Commande.Currency = "MAD";
-                    commandeViewModel.Commande.IdChantier = ctnId;
-                    commandeViewModel.Commande.DateCommande = DateTime.Now;
-                    List<decimal?> Mt = new List<decimal?>();
-                    foreach(var c in commandeViewModel.DetailCommandes)
-                    {
-                        Mt.Add(c.Volume * c.Montant);
-                    }
-                    commandeViewModel.Commande.MontantCommande = Mt.Sum();
-                    Commande commande = mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
-                    var commandeId = await commandeRepository.CreateCommande(commande);
-
-                    // Distinct articles en doublons
-                    var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
-                        return new DetailCommandeModel
-                        {
-                            IdArticle = key,
-                            Montant = list.FirstOrDefault().Montant,
-                            Volume = list.Sum(x => x.Volume)
-                        };
-                    }).ToList();
-
-                    // Add details
-                    foreach (var detail in details)
-                    {
-                        detail.IdCommande = commandeId;
-                        detail.Unite_Id = 1;
-                    }
-                    List<DetailCommande> detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(details);
-                    await commandeRepository.CreateDetailCommande(detailCommandes);
-
-                    transaction.Commit();
-                    return true;
+                    commandeViewModel.Commande.IdStatut = Statuts.EtudeEtPropositionDePrix;
                 }
-                catch (Exception ex)
+                else
                 {
-                    transaction.Rollback();
-                    return false;
+                    var tarifs = await commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
+                    foreach (var det in commandeViewModel.DetailCommandes.Where(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                    {
+                        commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                        break;
+                    }
+
+                    if (commandeViewModel.Commande.IdStatut != Statuts.ValidationDeLoffreDePrix)
+                    {
+                        commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
+                    }
                 }
+
+                // Add commande
+                commandeViewModel.Commande.IdClient = clientId;
+                commandeViewModel.Commande.Currency = "MAD";
+                commandeViewModel.Commande.IdChantier = ctnId;
+                commandeViewModel.Commande.DateCommande = DateTime.Now;
+                var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
+                commandeViewModel.Commande.MontantCommande = Mt.Sum();
+                var commande = mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
+                var commandeId = await commandeRepository.CreateCommande(commande);
+
+                // Distinct articles en doublons
+                var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
+                    return new DetailCommandeModel
+                    {
+                        IdArticle = key,
+                        Montant = list.FirstOrDefault().Montant,
+                        Volume = list.Sum(x => x.Volume)
+                    };
+                }).ToList();
+
+                // Add details
+                foreach (var detail in details)
+                {
+                    detail.IdCommande = commandeId;
+                    detail.Unite_Id = 1;
+                }
+                var detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(details);
+                await commandeRepository.CreateDetailCommande(detailCommandes);
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
             }
         }
 
-        public async Task<IEnumerable<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null)
+        public async Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null)
         {
             var clients = await commandeRepository.GetClients(Ice, Cnie, RS);
-            return mapper.Map<IEnumerable<Client>, IEnumerable<ClientModel>>(clients);
+            return mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<IEnumerable<CommandeModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandes(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<IEnumerable<CommandeModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandesPT(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
         public async Task<CommandeModel> GetCommande(int? id)
         {
             return mapper.Map<CommandeModel>(await commandeRepository.GetCommande(id));
         }
 
-        public IEnumerable<TarifPompeRefModel> GetTarifPompeRefs()
+        public async Task<List<TarifPompeRefModel>> GetTarifPompeRefs()
         {
-            return mapper.Map<IEnumerable<TarifPompeRef>, IEnumerable<TarifPompeRefModel>>(this.commandeRepository.GetTarifPompeRefs());
+            return mapper.Map<List<TarifPompeRef>, List<TarifPompeRefModel>>(await this.commandeRepository.GetTarifPompeRefs());
         }
 
         public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName)
         {
-            using (IDbContextTransaction transaction = this.unitOfWork.BeginTransaction())
+            await using var transaction = this.unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var detail = await commandeRepository.GetDetailCommande(Id);
+                var user = await _authentificationRepository.GetUserByName(UserName);
+                var userRole = await _authentificationRepository.GetUserRole(user);
+
+                //Update Detail + Commande
+                detail.Montant = Tarif;
+                detail.Commande.MontantCommande = detail.Commande.MontantCommande + detail.Montant;
+                detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+
+                // Trace Vlidateur
+                ValidationModel validationModel = new ValidationModel()
                 {
-                    var detail = await commandeRepository.GetDetailCommande(Id);
-                    var user = await _authentificationRepository.GetUserByName(UserName);
-                    var userRole = await _authentificationRepository.GetUserRole(user);
+                    IdCommande = (int)detail.IdCommande,
+                    IdStatut = Statuts.ParametrageDesPrixPBE,
+                    Date = DateTime.Now,
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
+                    ValidationLibelle = "Parametrage des prix PBE"
+                };
 
-                    //Update Detail + Commande
-                    detail.Montant = Tarif;
-                    detail.Commande.MontantCommande = detail.Commande.MontantCommande + detail.Montant;
-                    detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
+                await commandeRepository.CreateValidation(validation);
 
-                    // Trace Vlidateur
-                    ValidationModel validationModel = new ValidationModel()
-                    {
-                        IdCommande = (int)detail.IdCommande,
-                        IdStatut = Statuts.ParametrageDesPrixPBE,
-                        Date = DateTime.Now,
-                        UserId = user.Id,
-                        Nom = user.Nom,
-                        Prenom = user.Prenom,
-                        Fonction = userRole,
-                        ValidationLibelle = "Parametrage des prix PBE"
-                    };
-
-                    Validation validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                    await commandeRepository.CreateValidation(validation);
-
-                    await unitOfWork.Complete();
-                    transaction.Commit();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                await unitOfWork.Complete();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
             }
         }
-        public async Task<IEnumerable<CommandeModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandesDAPBE(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<IEnumerable<CommandeModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandesRC(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<IEnumerable<CommandeModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandesCV(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
 
-        public async Task<IEnumerable<CommandeModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandesRL(ClientId, DateCommande);
-            return mapper.Map<IEnumerable<Commande>, IEnumerable<CommandeModel>>(commandes);
+            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
 
         public async Task<bool> ProposerPrixDABPE(int Id, decimal Tarif)
@@ -276,148 +259,138 @@ namespace Service.Services
 
         public async Task<bool> RefuserCommande(int Id, string Commentaire, string UserName)
         {
-            using (IDbContextTransaction transaction = this.unitOfWork.BeginTransaction())
+            await using var transaction = this.unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var user = await _authentificationRepository.GetUserByName(UserName);
+                var userRole = await _authentificationRepository.GetUserRole(user);
+
+                //Logique
+                commande.IdStatut = null;
+                commande.Commentaire = Commentaire;
+
+                //Trace validateur
+                var validationModel = new ValidationModel()
                 {
-                    var commande = await commandeRepository.GetCommandeOnly(Id);
-                    var user = await _authentificationRepository.GetUserByName(UserName);
-                    var userRole = await _authentificationRepository.GetUserRole(user);
+                    IdCommande = Id,
+                    IdStatut = Statuts.ValidationDeLoffreDePrix,
+                    Date = DateTime.Now,
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
+                    ValidationLibelle = "Rejet de l'offre de prix"
+                };
 
-                    //Logique
-                    commande.IdStatut = null;
-                    commande.Commentaire = Commentaire;
+                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
+                await commandeRepository.CreateValidation(validation);
 
-                    //Trace validateur
-                    ValidationModel validationModel = new ValidationModel()
-                    {
-                        IdCommande = Id,
-                        IdStatut = Statuts.ValidationDeLoffreDePrix,
-                        Date = DateTime.Now,
-                        UserId = user.Id,
-                        Nom = user.Nom,
-                        Prenom = user.Prenom,
-                        Fonction = userRole,
-                        ValidationLibelle = "Rejet de l'offre de prix"
-                    };
-
-                    Validation validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                    await commandeRepository.CreateValidation(validation);
-
-                    await unitOfWork.Complete();
-                    transaction.Commit();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                await unitOfWork.Complete();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
             }
         }
 
         public async Task<bool> ValiderCommande(int Id, string Commentaire, string UserName)
         {
-            using (IDbContextTransaction transaction = this.unitOfWork.BeginTransaction())
+            await using var transaction = this.unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var user = await _authentificationRepository.GetUserByName(UserName);
+                var userRole = await _authentificationRepository.GetUserRole(user);
+
+                //Update Commande
+                commande.IdStatut = Statuts.FixationDePrixDuTransport;
+                commande.Commentaire = Commentaire;
+
+                //Trace Validateur
+                var validationModel = new ValidationModel()
                 {
-                    var commande = await commandeRepository.GetCommandeOnly(Id);
-                    var user = await _authentificationRepository.GetUserByName(UserName);
-                    var userRole = await _authentificationRepository.GetUserRole(user);
+                    IdCommande = Id,
+                    IdStatut = Statuts.ValidationDeLoffreDePrix,
+                    Date = DateTime.Now,
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
+                    ValidationLibelle = "Validation de l'offre de prix"
+                };
 
-                    //Update Commande
-                    commande.IdStatut = Statuts.FixationDePrixDuTransport;
-                    commande.Commentaire = Commentaire;
+                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
+                await commandeRepository.CreateValidation(validation);
 
-                    //Trace Validateur
-                    ValidationModel validationModel = new ValidationModel()
-                    {
-                        IdCommande = Id,
-                        IdStatut = Statuts.ValidationDeLoffreDePrix,
-                        Date = DateTime.Now,
-                        UserId = user.Id,
-                        Nom = user.Nom,
-                        Prenom = user.Prenom,
-                        Fonction = userRole,
-                        ValidationLibelle = "Validation de l'offre de prix"
-                    };
-
-                    Validation validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                    await commandeRepository.CreateValidation(validation);
-
-                    await unitOfWork.Complete();
-                    transaction.Commit();
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                await unitOfWork.Complete();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
             }
         }
 
         public async Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName)
         {
-            using (IDbContextTransaction transaction = this.unitOfWork.BeginTransaction())
+            await using var transaction = this.unitOfWork.BeginTransaction();
+            try
             {
-                try
+                var user = await _authentificationRepository.GetUserByName(UserName);
+                var userRole = await _authentificationRepository.GetUserRole(user);
+                var commande = await commandeRepository.GetCommande(id);
+
+                //Update Commande
+                commande.TarifAchatPompage = commandeViewModel.Commande.TarifAchatPompage;
+                commande.TarifAchatTransport = commandeViewModel.Commande.TarifVenteTransport;
+                commande.Conditions = commandeViewModel.Commande.Conditions;
+                commande.Delai_Paiement = commandeViewModel.Commande.Delai_Paiement;
+                commande.LongFleche_Id = commandeViewModel.Commande.LongFleche_Id;
+                commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
+                commande.MontantCommande = Mt.Sum();
+
+                //Update Chantier
+                var chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                await commandeRepository.UpdateChantier((int)commande.IdChantier, chantier);
+
+                //Update Client
+                var client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                await commandeRepository.UpdateClient((int)commande.IdClient, client);
+
+                //Update Details
+                var detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(commandeViewModel.DetailCommandes);                  
+                await commandeRepository.UpdateDetailCommande(detailCommandes);
+
+                //Trace Validateur
+                var validationModel = new ValidationModel()
                 {
-                    var user = await _authentificationRepository.GetUserByName(UserName);
-                    var userRole = await _authentificationRepository.GetUserRole(user);
-                    var commande = await commandeRepository.GetCommande(id);
+                    IdCommande = commande.IdCommande,
+                    IdStatut = null,
+                    Date = DateTime.Now,
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
+                    ValidationLibelle = "Modification tarif commande"
+                };
+                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
+                await commandeRepository.CreateValidation(validation);
 
-                    //Update Commande
-                    commande.TarifAchatPompage = commandeViewModel.Commande.TarifAchatPompage;
-                    commande.TarifAchatTransport = commandeViewModel.Commande.TarifVenteTransport;
-                    commande.Conditions = commandeViewModel.Commande.Conditions;
-                    commande.Delai_Paiement = commandeViewModel.Commande.Delai_Paiement;
-                    commande.LongFleche_Id = commandeViewModel.Commande.LongFleche_Id;
-                    commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
-                    List<decimal?> Mt = new List<decimal?>();
-                    foreach (var c in commandeViewModel.DetailCommandes)
-                    {
-                        Mt.Add(c.Volume * c.Montant);
-                    }
-                    commande.MontantCommande = Mt.Sum();
-
-                    //Update Chantier
-                    Chantier chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                    await commandeRepository.UpdateChantier((int)commande.IdChantier, chantier);
-
-                    //Update Client
-                    Client client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                    await commandeRepository.UpdateClient((int)commande.IdClient, client);
-
-                    //Update Details
-                    List<DetailCommande> detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(commandeViewModel.DetailCommandes);                  
-                    await commandeRepository.UpdateDetailCommande(detailCommandes);
-
-                    //Trace Validateur
-                    ValidationModel validationModel = new ValidationModel()
-                    {
-                        IdCommande = commande.IdCommande,
-                        IdStatut = null,
-                        Date = DateTime.Now,
-                        UserId = user.Id,
-                        Nom = user.Nom,
-                        Prenom = user.Prenom,
-                        Fonction = userRole,
-                        ValidationLibelle = "Modification tarif commande"
-                    };
-                    Validation validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                    await commandeRepository.CreateValidation(validation);
-
-                    await unitOfWork.Complete();
-                    transaction.Commit();
-                    return true;
-                }
-                catch(Exception ex)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                await unitOfWork.Complete();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
             }
         }
 

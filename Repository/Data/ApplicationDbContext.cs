@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Domain.Authentication;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using System.Reflection;
 using Newtonsoft.Json;
 
 namespace Repository.Data

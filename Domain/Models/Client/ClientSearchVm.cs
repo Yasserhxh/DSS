@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Models.Client
+﻿namespace Domain.Models.Client
 {
     public class ClientSearchVm
     {

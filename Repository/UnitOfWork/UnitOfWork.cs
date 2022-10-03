@@ -1,9 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using Repository.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.UnitOfWork
 {

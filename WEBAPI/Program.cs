@@ -1,7 +1,6 @@
 using Domain.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Repository.Data;
 using Repository.IRepositories;
 using Repository.Repositories;

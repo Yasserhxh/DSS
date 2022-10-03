@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Models.Commande
+﻿namespace Domain.Models.Commande
 {
     public class CommandeSearchVm
     {

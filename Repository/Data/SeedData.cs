@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Domain.Authentication;
+﻿using Domain.Authentication;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 

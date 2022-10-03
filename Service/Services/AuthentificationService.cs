@@ -5,10 +5,6 @@ using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Repository.IRepositories;
 using Service.IServices;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
@@ -44,7 +40,7 @@ namespace Service.Services
             return await this.authentificationRepository.Logout();
         }
 
-        public async Task<IEnumerable<UserModel>> getListUsers()
+        public async Task<List<UserModel>> getListUsers()
         {
             return await authentificationRepository.getListUsers();
         }
@@ -53,9 +49,9 @@ namespace Service.Services
             return await authentificationRepository.EnableDisableUser(Id, code);
         }
 
-        public async Task<IEnumerable<RoleModel>> GetRoles()
+        public async Task<List<RoleModel>> GetRoles()
         {
-            return mapper.Map<IEnumerable<IdentityRole>, IEnumerable<RoleModel>>(await this.authentificationRepository.GetRoles());
+            return mapper.Map<List<IdentityRole>, List<RoleModel>>(await this.authentificationRepository.GetRoles());
         }
 
         public async Task<Response> AjouterUnUtilisateur(RegisterModel registerModel)

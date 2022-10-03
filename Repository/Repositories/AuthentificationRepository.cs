@@ -2,11 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Domain.Authentication;
 using Repository.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
 using Repository.Data;
 using Microsoft.EntityFrameworkCore;
 using Repository.UnitOfWork;
@@ -34,26 +29,17 @@ namespace Repository.Repositories
         public async Task<ApplicationUser> Login(LoginModel loginModel)
         {
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
-            if (user != null)
-            {
-                var result = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
-                if (result.Succeeded)
-                    return user;
-                else
-                    return null;
-            }
+            if (user == null) return null;
+            var result = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
+            return result.Succeeded ? user : null;
             //return user;
-            return null;
         }
 
         public async Task<bool> Register(RegisterModel registerModel)
         {
             var user = new ApplicationUser { UserName = registerModel.UserName, Email = registerModel.Email };
             var result = await _userManager.CreateAsync(user, registerModel.Password);
-            if (result.Succeeded)
-                return true;
-            else
-                return false;
+            return result.Succeeded;
         }
 
         public async Task<bool> Logout()
@@ -78,26 +64,26 @@ namespace Repository.Repositories
         public async Task<string> GetUserRole(ApplicationUser user)
         {
             var Roles = await _userManager.GetRolesAsync(user);
-            string role = Roles.FirstOrDefault();
+            var role = Roles.FirstOrDefault();
             return role;
         }
 
-        public async Task<IEnumerable<UserModel>> getListUsers()
+        public async Task<List<UserModel>> getListUsers()
         {
-            var users = (from u in _db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc")
-                         join ur in _db.UserRoles on u.Id equals ur.UserId
-                         join r in _db.Roles on ur.RoleId equals r.Id
-                         select new UserModel()
-                         {
-                             Id = u.Id,
-                             UserName = u.UserName,
-                             Email = u.Email,
-                             Role = r.Name,
-                             Nom = u.Nom,
-                             Prenom = u.Prenom,
-                             PhoneNumber = u.PhoneNumber,
-                             Statut = u.IsActive
-                         }).ToListAsync();
+            var users = (_db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc")
+                .Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+                .Join(_db.Roles, @t => @t.ur.RoleId, r => r.Id,
+                    (@t, r) => new UserModel()
+                    {
+                        Id = @t.u.Id,
+                        UserName = @t.u.UserName,
+                        Email = @t.u.Email,
+                        Role = r.Name,
+                        Nom = @t.u.Nom,
+                        Prenom = @t.u.Prenom,
+                        PhoneNumber = @t.u.PhoneNumber,
+                        Statut = @t.u.IsActive
+                    })).ToListAsync();
             return await users;
         }
 
@@ -108,10 +94,7 @@ namespace Repository.Repositories
                 return false;
             try
             {
-                if (code == 0)
-                    user.IsActive = false;
-                else
-                    user.IsActive = true;
+                user.IsActive = code != 0;
 
                 await _unitOfWork.Complete();
                 return true;
@@ -122,7 +105,7 @@ namespace Repository.Repositories
             }
         }
 
-        public async Task<IEnumerable<IdentityRole>> GetRoles()
+        public async Task<List<IdentityRole>> GetRoles()
         {
             return await _db.Roles
                 .Where(x => !x.Name.Contains("Admin"))
@@ -131,58 +114,56 @@ namespace Repository.Repositories
 
         public async Task<Response> AjouterUnUtilisateur(RegisterModel registerModel)
         {
-            using (IDbContextTransaction transaction = _db.Database.BeginTransaction())
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
             {
-                try
+                var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
+                if (userExists != null)
+                    return new Response { Success = false, Message = "Utilisateur existe déjà!" };
+
+                var emailExists = await _userManager.FindByEmailAsync(registerModel.Email);
+                if (emailExists != null)
+                    return new Response { Success = false, Message = "Email existe déjà!" };
+
+                var user = new ApplicationUser
                 {
-                    var userExists = await _userManager.FindByNameAsync(registerModel.UserName);
-                    if (userExists != null)
-                        return new Response { Success = false, Message = "Utilisateur existe déjà!" };
+                    UserName = registerModel.UserName,
+                    Email = registerModel.Email,
+                    Nom = registerModel.Nom,
+                    Prenom = registerModel.Prenom,
+                    PhoneNumber = registerModel.PhoneNumber,
+                    IsActive = true,
+                };
 
-                    var emailExists = await _userManager.FindByEmailAsync(registerModel.Email);
-                    if (emailExists != null)
-                        return new Response { Success = false, Message = "Email existe déjà!" };
+                var result = await _userManager.CreateAsync(user, registerModel.Password);
 
-                    var user = new ApplicationUser
-                    {
-                        UserName = registerModel.UserName,
-                        Email = registerModel.Email,
-                        Nom = registerModel.Nom,
-                        Prenom = registerModel.Prenom,
-                        PhoneNumber = registerModel.PhoneNumber,
-                        IsActive = true,
-                    };
-
-                    var result = await _userManager.CreateAsync(user, registerModel.Password);
-
-                    if (result.Succeeded)
-                    {
-                        var resultRole = await _userManager.AddToRoleAsync(user, registerModel.Role);
-                        if (!resultRole.Succeeded)
-                        {
-                            transaction.Rollback();
-                            return new Response { Success = false, Message = Messages.ErrorRole }; ;
-                        }
-                        transaction.Commit();
-                        return new Response { Success = true, Message = "" };
-                    }
-                    else
+                if (result.Succeeded)
+                {
+                    var resultRole = await _userManager.AddToRoleAsync(user, registerModel.Role);
+                    if (!resultRole.Succeeded)
                     {
                         transaction.Rollback();
-                        return new Response { Success = false, Message = Messages.Error };
+                        return new Response { Success = false, Message = Messages.ErrorRole }; ;
                     }
+                    transaction.Commit();
+                    return new Response { Success = true, Message = "" };
                 }
-                catch
+                else
                 {
                     transaction.Rollback();
                     return new Response { Success = false, Message = Messages.Error };
                 }
             }
+            catch
+            {
+                transaction.Rollback();
+                return new Response { Success = false, Message = Messages.Error };
+            }
         }
 
         public async Task<Response> UpdateUser(UserModel model)
         {
-            using (IDbContextTransaction transaction = _db.Database.BeginTransaction())
+            await using (var transaction = await _db.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -191,34 +172,37 @@ namespace Repository.Repositories
                     var role = roles.FirstOrDefault();
                     var usernames = await _db.Users.Where(x => x.Id != model.Id).Select(x => x.UserName).ToListAsync();
                     var emails = await _db.Users.Where(x => x.Id != model.Id).Select(x => x.Email).ToListAsync();
-                    foreach (var u in usernames)
+                    if (usernames.Any(u => string.Equals(u, model.UserName, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        if (u.ToUpper() == model.UserName.ToUpper())
-                            return new Response { Success = false, Message = "Utilisateur existe déjà!" };
+                        return new Response { Success = false, Message = "Utilisateur existe déjà!" };
                     }
-                    foreach (var e in emails)
+                    if (emails.Any(e => e == model.Email))
                     {
-                        if (e == model.Email)
-                            return new Response { Success = false, Message = "Email existe déjà!" };
+                        return new Response { Success = false, Message = "Email existe déjà!" };
                     }
 
-                    user.UserName = model.UserName;
-                    user.Email = model.Email;
-                    user.Nom = model.Nom;
-                    user.Prenom = model.Prenom;
-                    user.PhoneNumber = model.PhoneNumber;
-
-                    await _userManager.UpdateAsync(user);
-
-                    await _userManager.RemoveFromRoleAsync(user, role);
-
-                    var resultRole = await _userManager.AddToRoleAsync(user, model.Role);
-
-                    if (!resultRole.Succeeded)
+                    if (user != null)
                     {
-                        transaction.Rollback();
-                        return new Response { Success = false, Message = Messages.ErrorRole }; ;
+                        user.UserName = model.UserName;
+                        user.Email = model.Email;
+                        user.Nom = model.Nom;
+                        user.Prenom = model.Prenom;
+                        user.PhoneNumber = model.PhoneNumber;
+
+                        await _userManager.UpdateAsync(user);
+
+                        await _userManager.RemoveFromRoleAsync(user, role);
+
+                        var resultRole = await _userManager.AddToRoleAsync(user, model.Role);
+
+                        if (!resultRole.Succeeded)
+                        {
+                            await transaction.RollbackAsync();
+                            return new Response { Success = false, Message = Messages.ErrorRole };
+                            
+                        }
                     }
+
                     transaction.Commit();
                 }
                 catch
@@ -236,18 +220,17 @@ namespace Repository.Repositories
             var usernames = await _db.Users.Where(x => x.Id != model.Id).Select(x => x.UserName).ToListAsync();
             var emails = await _db.Users.Where(x => x.Id != model.Id).Select(x => x.Email).ToListAsync();
 
-            foreach (var u in usernames)
+            if (usernames.Any(u => string.Equals(u, model.UserName, StringComparison.CurrentCultureIgnoreCase)))
             {
-                if (u.ToUpper() == model.UserName.ToUpper())
-                    return new Response { Success = false, Message = "Utilisateur existe déjà!" };
+                return new Response { Success = false, Message = "Utilisateur existe déjà!" };
             }
 
-            foreach (var e in emails)
+            if (emails.Any(e => e == model.Email))
             {
-                if (e == model.Email)
-                    return new Response { Success = false, Message = "Email existe déjà!" };
+                return new Response { Success = false, Message = "Email existe déjà!" };
             }
 
+            if (user == null) return new Response { Success = true, Message = "" };
             user.UserName = model.UserName;
             user.Email = model.Email;
             user.Nom = model.Nom;
