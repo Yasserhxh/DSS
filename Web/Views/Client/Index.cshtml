@@ -1,0 +1,182 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Domain.Models.Client
+@model Domain.Models.Client.ClientSearchVm
+<!-- BEGIN: Content-->
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="bx bx-home-alt"></i></a> </li>
+                                <li class="breadcrumb-item active"><a href="#">Demande de l'offre de prix</a> </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Dashboard Ecommerce Starts -->
+            <section id="dashboard-ecommerce">
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Recherche	 </h4>
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- table success start -->
+
+                                            <div class="card">
+                                                <!-- datatable start -->
+                                                <form method="get" class="needs-validation" novalidate>
+
+                                                    <div class="form-row">
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="validationTooltip01">ICE</label>
+                                                            <input name="@nameof(ClientSearchVm.Ice)" type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="validationTooltip02">CINE</label>
+                                                            <input name="@nameof(ClientSearchVm.Cnie)" type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="validationTooltip02">Raison social</label>
+                                                            <input name="@nameof(ClientSearchVm.RS)" type="text" class="form-control">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-right">
+                                                            <!-- Buttons with Icon -->
+
+                                                            <button type="submit" class="btn btn-dark glow ml-1 mb-1"><i class="bx bx-search-alt"></i> <span class="align-middle ml-25">Recherche</span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <!-- datatable ends -->
+
+                                            </div>
+
+                                            <!-- table success ends -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-1 text-right"> <a href="@Url.Action("Index","Home")" class="btn btn-dark glow ml-1 mb-1"><i class="bx bx-plus"></i><span class="align-middle ml-25">Nouveau Client</span></a> </div>
+                </div>
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Liste des client	 </h4>
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- table success start -->
+
+                                            <div class="card">
+                                                <!-- datatable start -->
+                                                <div class="table">
+                                                    <table class="table table-intragroupe table-bordered mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>N° ICE</th>
+                                                                <th>CINE</th>
+                                                                <th>Raison social</th>
+                                                                <th>Destinataire/Interlocuteur</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var client in Model.Clients)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-bold-500">@client.Ice</td>
+                                                                    <td class="text-bold-500">@client.Cnie</td>
+                                                                    <td class="text-bold-500">@client.RaisonSociale</td>
+                                                                    <td class="text-bold-500">@client.Destinataire_Interlocuteur</td>
+                                                                    <td class="text-center">
+                                                                        <div class="dropdown">
+                                                                            <span class="bx bx-dots-vertical-rounded font-medium-3 dropdown-toggle nav-hide-arrow cursor-pointer"
+                                                                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="menu"></span>
+                                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                                <a class="dropdown-item" href="#"><i class="bx bx-edit-alt mr-1"></i> Éditer</a>
+                                                                                <a class="dropdown-item" href="#"><i class="bx bx-trash mr-1"></i> Supprimer</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- datatable ends -->
+
+                                            </div>
+
+                                            <!-- table success ends -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+            <!-- Dashboard Ecommerce ends -->
+
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<script>
+     @if ((string)TempData["Creation"] == "OK")
+        {
+            <text>CreationNotifications();</text>
+        }
+    function CreationNotifications() {
+        ShowNotification("Client enregistré avec succés.", NotifToaster.SucessType, NotifToaster.Top_Full_Width);
+    }
+</script>

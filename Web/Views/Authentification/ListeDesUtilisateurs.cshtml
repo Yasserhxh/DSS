@@ -1,0 +1,218 @@
+﻿@model IEnumerable<Domain.Models.UserModel>
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="bx bx-home-alt"></i></a> </li>
+                                <li class="breadcrumb-item active"><a href="#">Gestion des utilisateurs</a> </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Dashboard Ecommerce Starts -->
+            <section id="dashboard-ecommerce">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <!-- Buttons with Icon -->
+                        <a href="/Authentification/AjouterUnUtilisateur" class="btn btn-dark glow ml-1 mb-1"><i class="bx bx-add-to-queue"></i> <span class="align-middle ml-25">Ajouter un utilisateur</span></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Liste des utilisateurs</h4>
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- table success start -->
+
+                                            <div class="card">
+                                                <!-- datatable start -->
+                                                <div class="table">
+                                                    <table class="table table-intragroupe table-bordered mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Utilisateur</th>
+                                                                <th>Email</th>
+                                                                <th>Téléphone</th>
+                                                                <th>Rôle</th>
+                                                                <th>Statut</th>
+                                                                <th class="text-center">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var u in Model)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-bold-500">@u.UserName</td>
+                                                                    <td class="text-bold-500">@u.Email</td>
+                                                                    <td class="text-bold-500">@u.PhoneNumber</td>
+                                                                    <td class="text-bold-500">@u.Role</td>
+                                                                    <td class="text-bold-500">@(u.Statut ? "Activé" : "Desactivé")</td>
+                                                                    <td class="text-center">
+                                                                        <div class="btn-action">
+                                                                            <a href="/Authentification/ModifierUnUtilisateurByAdmin/@u.Id"><i style="color:#5A8DEE" class="icn-action-form bx bx-edit-alt ic-edit font-medium-3"></i></a>
+                                                                            @if (!u.Statut)
+                                                                            {
+                                                                                <a style="cursor:pointer" class="ml-1" onclick="EnableDisable('@u.Id',1)"><i style="color:#39DA8A" class="icn-action-form bx bx-lock-open font-medium-3"></i></a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <a style="cursor:pointer" class="ml-1" onclick="EnableDisable('@u.Id',0)"><i style="color:red" class="icn-action-form bx bx-lock font-medium-3"></i></a>
+                                                                            }
+                                                                            <a style="cursor:pointer" class="ml-1" onclick="ResetPassword('@u.Id')"><i class="icn-action-form bx bx-key font-medium-3"></i></a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- datatable ends -->
+
+                                            </div>
+
+                                            <!-- table success ends -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+            <!-- Dashboard Ecommerce ends -->
+
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<script>
+    @if ((string)TempData["Creation"] == "OK")
+    {
+        <text>CreationNotifications();</text>
+    }
+    function CreationNotifications() {
+        ShowNotification("Utilisateur enregistré avec succés.", NotifToaster.SucessType, NotifToaster.Top_Full_Width);
+    }
+     @if ((string)TempData["Creation"] == "OKM")
+    {
+        <text>CreationNotifications();</text>
+    }
+    function CreationNotifications() {
+        ShowNotification("Utilisateur modifié avec succés.", NotifToaster.SucessType, NotifToaster.Top_Full_Width);
+    }
+    function ResetPassword(Id) {
+        swal.fire({
+        icon: 'info',
+        title: "Etes-vous sur ?",
+        showCancelButton: true,
+        cancelButtonText: 'Annuler',
+        confirmButtonText: "Envoyer ",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var data = {
+                    Id: Id
+                };
+
+                $.ajax({
+                    url: '@Url.Action("ResetPasswordByAdmin", "Authentification")',
+                    type: "POST",
+                    cache: false,
+                    async: true,
+                    data: data,
+                    success: function (data) {
+                        if (data) {
+                            swal.fire("Success!", "Mot de passe rénitialiser avec succès", "success");
+                            setTimeout(
+                                function () {
+                                    window.location.reload();
+                                }, 1500
+                            );
+                        }
+                        else
+                        {
+                             swal.fire("Erreur", "Une erreur est survenue", "error");
+                        }
+                    },
+                    error: function () {
+                        swal.fire("Erreur", "Une erreur est survenue", "error");
+                    }
+                });
+            }
+        })
+    }
+
+    function EnableDisable(Id, code) {
+        swal.fire({
+        icon: 'info',
+        title: "Etes-vous sur ?",
+        showCancelButton: true,
+        cancelButtonText: 'Annuler',
+        confirmButtonText: "Envoyer ",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var data = {
+                    Id: Id,
+                    code: code
+                };
+
+                $.ajax({
+                    url: '@Url.Action("EnableDisableUser", "Authentification")',
+                    type: "POST",
+                    cache: false,
+                    async: true,
+                    data: data,
+                    success: function (data) {
+                        if (data) {
+                            if (code == 0) {
+                                swal.fire("Bloqué!", "Le compte a été bloqué", "success");
+                            }
+                            else {
+                                swal.fire("Débloqué!", "Le compte a été débloqué", "success");
+                            }
+                            setTimeout(
+                                function () {
+                                    window.location.reload();
+                                }, 1800
+                            );
+                        }
+                        else
+                        {
+                             swal.fire("Erreur", "Une erreur est survenue", "error");
+                        }
+                    },
+                    error: function () {
+                        swal.fire("Erreur", "Une erreur est survenue", "error");
+                    }
+                });
+            }
+        })
+    }
+</script>

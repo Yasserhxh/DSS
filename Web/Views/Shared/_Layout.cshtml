@@ -1,74 +1,314 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Web</title>
+﻿@using Domain.Authentication
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+@{ 
+    string role = null;
+    var user = await userManager.GetUserAsync(User);
+    var userid = user.Id;
+    if (user != null)
+    {
+        var Roles = await userManager.GetRolesAsync(user);
+        role = Roles.FirstOrDefault();
+    }
+}
+<!DOCTYPE html>
+
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>CIMAR</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/vendors/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/table/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/css/pickers/pickadate/pickadate.css">
+    <link rel="stylesheet" type="text/css" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/css/pickers/daterange/daterangepicker.css">
+    <!-- END: Vendor CSS-->
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/bootstrap/bootstrap-extended.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/colors.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/components.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/themes/dark-layout.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/plugins/themes/semi-dark-layout.min.css">
+    <link href="~/css/toastr.css" rel="stylesheet" />
+    <link href="~/css/sweetalert2.min.css" rel="stylesheet" />
+    <!-- END: Theme CSS-->
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vertical-menu.min.css">
+    <!-- END: Page CSS-->
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <!-- END: Custom CSS-->
+    <link rel="stylesheet" type="text/css" href="~/assets/css/wizard.css">
+    <link href="~/css/filepond.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Application</a>
+<!-- END: Head-->
+<!-- BEGIN: Body-->
+<body class="vertical-layout vertical-menu-modern 2-columns  navbar-static footer-static  semi-dark-layout menu-expanded" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+
+    <!--Génération theme Modal -->
+    <div class="modal fade text-left" id="generer" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel111" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title white" id="myModalLabel111">Enregistrer les données</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="bx bx-x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Êtes-vous sûre de bien vouloir enregistrer les données ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                        <i class="bx bx-x d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Annuler</span>
+                    </button>
+
+                    <button type="button" class="btn btn-dark ml-1" data-dismiss="modal">
+                        <i class="bx bx-check d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Générer</span>
+                    </button>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Authentification" asp-action="Login">Login</a></li>
-                    <li><a asp-area="" asp-controller="Authentification" asp-action="Register">Register</a></li>
-                </ul>
+        </div>
+    </div>
+
+    <!-- BEGIN: Header-->
+    <div class="header-navbar-shadow"></div>
+    <nav class="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu navbar-static-top ">
+        <div class="navbar-wrapper">
+            <div class="navbar-container content">
+                <div class="navbar-collapse" id="navbar-mobile">
+                    <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ficon bx bx-menu"></i></a></li>
+                        </ul>
+                    </div>
+                    <ul class="nav navbar-nav float-right">
+                        <li class="nav-item d-lg-block"><a class="nav-link nav-link-dark dark-btn"><i class="ficon bx icn-moon bx-moon"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon bx bx-fullscreen"></i></a></li>
+                        <li class="nav-item nav-search">
+                            <a class="nav-link nav-link-search"><i class="ficon bx bx-search"></i></a>
+                            <div class="search-input">
+                                <div class="search-input-icon"><i class="bx bx-search primary"></i></div>
+                                <input class="input" type="text" placeholder="Recherche..." tabindex="-1" data-search="template-search">
+                                <div class="search-input-close"><i class="bx bx-x"></i></div>
+                                <ul class="search-list">
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="dropdown dropdown-notification nav-item">
+                            <a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon  bx bx-bell bx-tada bx-flip-horizontal"></i><span class="badge badge-pill badge-danger badge-up">2</span></a>
+                            <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                                <li class="dropdown-menu-header">
+                                    <div class="dropdown-header px-1 py-75 d-flex justify-content-between"><span class="notification-title">2 nouvelle notification</span><span class="text-bold-400 cursor-pointer">Tout marquer comme lu</span></div>
+                                </li>
+                                <li class="scrollable-container media-list">
+                                    <a class="d-flex justify-content-between" href="javascript:void(0)">
+                                        <div class="media d-flex align-items-center">
+                                            <div class="media-body">
+                                                <h6 class="media-heading"><span class="text-bold-500">Client</span> <span class="float-right">31 Octobre 2020</span></h6>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="scrollable-container media-list">
+                                    <a class="d-flex justify-content-between" href="javascript:void(0)">
+                                        <div class="media d-flex align-items-center">
+                                            <div class="media-body">
+                                                <h6 class="media-heading"><span class="text-bold-500">Client</span> <span class="float-right">06 Novembre 2020</span></h6>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dropdown-menu-footer"><a class="dropdown-item p-50 text-primary justify-content-center" href="javascript:void(0)">Lire toutes les notifications</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown dropdown-user nav-item">
+                            <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                <div class="user-nav d-sm-flex d-none"><span class="user-name">@User.Identity.Name</span><span class="user-status text-muted">@role</span></div>
+                                <span><img class="round" src="~/assets/images/avatar/avatar.png" alt="avatar" height="40" width="40"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right pb-0">
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" href="/Authentification/ListeDesUtilisateurs"><i class="bx bx-user mr-50"></i> Gestion d'utilisateurs</a>
+                                    <div class="dropdown-divider mb-0"></div>
+                                }
+                                @if (!User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" href="/Authentification/ModifierUnUtilisateur"><i class="bx bx-user mr-50"></i> Editer le profil</a>
+                                    <div class="dropdown-divider mb-0"></div>
+                                }
+                                <a onclick="logout()" class="dropdown-item" style="cursor:pointer"><i class="bx bx-power-off mr-50"></i> Se déconnecter</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
-
-    <partial name="_CookieConsentPartial" />
-
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2020 - Web</p>
-        </footer>
+    <!-- END: Header-->
+    <!-- BEGIN: Main Menu-->
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mr-auto">
+                    <a class="navbar-brand" href="index.html">
+                        <div class="brand-logo"><img class="logo" alt="" src="~/assets/images/logo/logo-symbole.png" /></div>
+                        <h2 class="brand-text mb-0">Ciments du maroc</h2>
+                    </a>
+                </li>
+                <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="bx bx-x d-block d-xl-none font-medium-4 primary"></i><i class="toggle-icon bx bx-disc font-medium-4 d-none d-xl-block primary" data-ticon="bx-disc"></i></a></li>
+            </ul>
+        </div>
+        <div class="shadow-bottom"></div>
+        <div class="main-menu-content">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
+                <li class="nav-item"><a href="#0"><i class="ficon bx bx-user-voice"></i><span class="menu-title">Gestion de prospection client potentiel</span></a> </li>
+                <li class="nav-item active"><a href="Demande de l'offre de prix.html"><i class="ficon bx bx-dollar-circle"></i><span class="menu-title">Gestion de préparation des offres de prix BPE</span></a> </li>
+                @if (User.IsInRole("Admin") || User.IsInRole("Commercial"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("Index","Client")"><i class="ficon bx bx-user-plus"></i><span class="menu-title">Gestion d’ouverture du compte client</span></a> </li>
+                }
+                <li class="nav-item"><a href="#"><i class="ficon bx bx-credit-card"></i><span class="menu-title">Gestion contrôle de crédit des clients</span></a> </li>
+                @if (User.IsInRole("Admin") || User.IsInRole("Commercial"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandes", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+                @if (User.IsInRole("Prescripteur technique"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandesPT", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+                @if (User.IsInRole("Chef de ventes"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandesCV", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+                @if (User.IsInRole("Responsable commercial"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandesRC", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+                @if (User.IsInRole("DA BPE"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandesDABPE", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+                @if (User.IsInRole("Responsable logistique"))
+                {
+                    <li class="nav-item"><a href="@Url.Action("ListeCommandesRL", "Commande")"><i class="ficon bx bx-file"></i><span class="menu-title">Gestion des commandes des clients</span></a> </li>
+                }
+            </ul>
+        </div>
     </div>
+    <!-- END: Main Menu-->
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+    <!-- BEGIN: Vendor JS-->
+    <script src="~/assets/plugins/vendors/vendors.min.js"></script>
+    <script src="~/assets/plugins/LivIconsEvo/LivIconsEvo.defaults.min.js"></script>
+    <script src="~/assets/plugins/LivIconsEvo/LivIconsEvo.min.js"></script>
+    <!-- BEGIN Vendor JS-->
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="~/assets/plugins/table/datatables.min.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/pickadate/picker.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/pickadate/picker.date.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/pickadate/picker.time.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/pickadate/legacy.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/daterange/moment.min.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/vendors/js/pickers/daterange/daterangepicker.js"></script>
+    <script src="~/assets/js/chart.min.js"></script>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    <script src="~/assets/js/apexcharts.min.js"></script>
+    <!-- END: Page Vendor JS-->
+    <!-- BEGIN: Theme JS-->
+    <script src="~/assets/js/vertical-menu-light.min.js"></script>
+    <script src="~/assets/js/app-menu.min.js"></script>
+    <script src="~/assets/js/app.min.js"></script>
+    <script src="~/assets/js/components.min.js"></script>
+    <script src="~/assets/js/footer.min.js"></script>
+    <script src="~/assets/js/customizer.min.js"></script>
+    <!-- END: Theme JS-->
+    <!-- BEGIN: Page JS-->
+    <script src="~/assets/plugins/table/table-extended.min.js"></script>
+    <script src="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/app-~/assets/js/scripts/pickers/dateTime/pick-a-datetime.min.js"></script>
+    <script src="~/assets/js/chart-chartjs.min.js"></script>
+    <script src="~/assets/js/widgets.min.js"></script>
+    <!-- END: Page JS-->
+    <script src="~/assets/js/toastr.js"></script>
+    <script src="~/js/sweetalert2.min.js"></script>
+    <script src="~/assets/js/wizard.js"></script>
+    <script src="~/js/filepond.min.js"></script>
+    <script src="~/js/filepond.jquery.js"></script>
+    <script>
+        function logout() {
+            $.ajax({
+                url: '@Url.Action("Logout", "Authentification")',
+                type: "POST",
+                cache: false,
+                async: true,
+                    success: function (data) {
+                        if (data) {
+                            window.location.href = '@Url.Action("Login", "Authentification")'
+                        }
+                        else {
+                            alert('Un problème est survenu!')
+                        }
+                },
+                error: function () {
+                }
+            });
+        }
+        var NotifToaster = {
+            SucessType: "success",
+            InfoType: "info",
+            WarningType: "warning",
+            ErrorType: "error",
+            Bottom_Right: "toast-bottom-right",
+            Top_Full_Width: "toast-top-full-width",
+            Bottom_Full_Width: "toast-bottom-full-width",
+        }
 
-    @RenderSection("Scripts", required: false)
+        function ShowNotification(NotificationMessage, NotificationType, NotificationPosition) {
+
+            NotificationMessage = NotificationMessage.replace("'", "&rsquo");
+            if (NotificationType == "")
+                NotificationType = "error";
+
+            if (NotificationPosition == "")
+                NotificationPosition = "toast-top-full-width";
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "positionClass": NotificationPosition,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "2000",
+                "timeOut": "7000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+            }
+
+            Command: toastr[NotificationType](NotificationMessage);
+        }
+        window.onerror = function logError(msg) {
+                $.post("/Home/LogJavaScriptError", { message: msg });
+        }
+    </script>
+    @RenderBody()
 </body>
+<!-- END: Body-->
 </html>

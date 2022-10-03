@@ -1,0 +1,117 @@
+﻿@model Domain.Models.RegisterModel
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="bx bx-home-alt"></i></a> </li>
+                                <li class="breadcrumb-item active"><a href="#">Gestion des utilisateurs</a> </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Dashboard Ecommerce Starts -->
+            <section id="dashboard-ecommerce">
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <form method="post" asp-controller="Authentification" asp-action="AjouterUnUtilisateur">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <fieldset class="fieldset">
+                                                    <input id="Erreur" type="hidden" value="@(TempData["Erreur"])" />
+                                                    <input id="Error" type="hidden" value="@(TempData["Error"])" />
+                                                    <legend>Ajouter un utilisateur</legend>
+                                                    <div class="form-row">
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Nom d'utilisateur</label>
+                                                            <input asp-for="UserName" id="UserName" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Mot de passe</label>
+                                                            <input asp-for="Password" id="mdp" type="password" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Nom</label>
+                                                            <input asp-for="Nom" id="Nom" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Prenom</label>
+                                                            <input asp-for="Prenom" id="Prenom" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Email</label>
+                                                            <input asp-for="Email" id="Email" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Téléphone</label>
+                                                            <input asp-for="PhoneNumber" id="Telephone" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="validationTooltip01">Fonction</label>
+                                                            <select asp-for="Role" asp-items="@ViewBag.Roles" id="role" class="custom-select" required>
+                                                                <option selected disabled>Sélectionnez une fonction</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <button type="submit" class="btn btn-dark glow float-right mt-2">Envoyer</button>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </section>
+            <!-- Dashboard Ecommerce ends -->
+
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<script>
+    @if(TempData["Erreur"] != null)
+    {
+        <text>CreationNotifications();</text>
+    }
+    function CreationNotifications() {
+        var message = $("#Erreur").val();
+        ShowNotification(message, NotifToaster.ErrorType, NotifToaster.Top_Full_Width);
+    }
+     @if (TempData["Error"] != null)
+    {
+        <text>CreationNotifications2();</text>
+    }
+    function CreationNotifications2() {
+        var message = $("#Error").val();
+        ShowNotification(message, NotifToaster.ErrorType, NotifToaster.Top_Full_Width);
+    }
+</script>

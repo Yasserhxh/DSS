@@ -1,0 +1,329 @@
+﻿@using Domain.Models
+@using Domain.Models.Commande
+@using Domain.Enums
+@model Domain.Models.Commande.CommandeSearchVm
+
+@{
+    var clientsSelectList = new SelectList(Model.CLients, nameof(ClientModel.Client_Id), nameof(ClientModel.RaisonSociale));
+    SelectListItem selectedClient = null;
+    if (Model.IdClient != null)
+    {
+        selectedClient = clientsSelectList.First(c => c.Value == Model.IdClient.ToString());
+        selectedClient.Selected = true;
+
+    }
+}
+
+@*Validation Modal*@
+<div class="modal fade text-left" id="Valider" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel110" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title white" id="myModalLabel110">Valider la commande</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="text-bold-600 col-md-2 mb-1">Commentaire :</label>
+                        <textarea id="CommentaireV" class="form-control" rows="4" style="min-width: 100%"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+
+                <button type="button" class="btn btn-light-primary ml-1" onclick="Valider()" data-dismiss="modal">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Valider</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Reject Modal*@
+<div class="modal fade text-left" id="Refuser" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel110" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h5 class="modal-title white" id="myModalLabel110">Rejeter la commande</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="text-bold-600 col-md-2 mb-1">Commentaire :</label>
+                        <textarea id="CommentaireR" class="form-control" rows="4" style="min-width: 100%"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                    <i class="bx bx-x d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Annuler</span>
+                </button>
+
+                <button type="button" class="btn btn-light-primary ml-1" onclick="Rejeter()" data-dismiss="modal">
+                    <i class="bx bx-check d-block d-sm-none"></i>
+                    <span class="d-none d-sm-block">Valider</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Body -->
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <div class="content-header-left col-12 mb-2 mt-1">
+                <div class="row breadcrumbs-top">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrapper col-12">
+                            <ol class="breadcrumb p-0 mb-0">
+                                <li class="breadcrumb-item"><a href="index.html"><i class="bx bx-home-alt"></i></a> </li>
+                                <li class="breadcrumb-item active"><a href="#">Demande de l'offre de prix</a> </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <!-- Dashboard Ecommerce Starts -->
+            <section id="dashboard-ecommerce">
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Recherche	 </h4>
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- table success start -->
+
+                                            <div class="card">
+                                                <!-- datatable start -->
+                                                <form method="get" class="needs-validation" novalidate>
+
+                                                    <div class="form-row">
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="validationTooltip01">Client</label>
+                                                            <select name="@nameof(CommandeSearchVm.IdClient)" class="custom-select" asp-items="clientsSelectList">
+                                                                <option value="" selected="@(selectedClient == null ? "true" : "false")"> -- Selectionner -- </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4 mb-1">
+                                                            <label for="validationTooltip02">Date</label>
+                                                            <input name="@nameof(CommandeSearchVm.DateCommande)" class="form-control" type="date">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 text-right">
+                                                            <!-- Buttons with Icon -->
+
+                                                            <button type="submit" class="btn btn-dark glow ml-1 mb-1"><i class="bx bx-search-alt"></i> <span class="align-middle ml-25">Recherche</span></button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <!-- datatable ends -->
+
+                                            </div>
+
+                                            <!-- table success ends -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <!-- Greetings Content Starts -->
+                    <div class="col-xl-12 col-md-12 col-12 dashboard-greetings">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Liste des commandes</h4>
+                                <a class="heading-elements-toggle"> <i class="bx bx-dots-vertical font-medium-3"></i> </a>
+                                <div class="heading-elements">
+                                    <ul class="list-inline mb-0">
+                                        <li> <a data-action="collapse"> <i class="bx bx-chevron-down"></i> </a> </li>
+                                        <li> <a data-action="expand"> <i class="bx bx-fullscreen"></i> </a> </li>
+                                        <li> <a data-action="reload"> <i class="bx bx-revision"></i> </a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-content collapse show">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- table success start -->
+
+                                            <div class="card">
+                                                <!-- datatable start -->
+                                                <div class="table">
+                                                    <table class="table table-intragroupe table-bordered mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>N° Commande</th>
+                                                                <th>Client</th>
+                                                                <th>Chantier</th>
+                                                                <th>Date de la commande</th>
+                                                                <th>Montant</th>
+                                                                <th>Statut</th>
+                                                                <th class="text-center">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var cmd in Model.Commandes)
+                                                            {
+                                                                <tr>
+                                                                    <td class="text-bold-500">@cmd.IdCommande</td>
+                                                                    <td class="text-bold-500">@cmd.Client.RaisonSociale</td>
+                                                                    <td class="text-bold-500">@cmd.Chantier.Ctn_Nom</td>
+                                                                    <td class="text-bold-500">@Convert.ToDateTime(cmd.DateCommande).ToString("dd/MM/yyyy")</td>
+                                                                    <td class="text-bold-500">@cmd.MontantCommande</td>
+                                                                    @if (cmd.IdStatut != Statuts.Validé)
+                                                                    {
+                                                                        <td class="text-bold-500">En cours traitement</td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td class="text-bold-500">Validé</td>
+                                                                    }
+                                                                   <td class="text-center">
+                                                                        <div class="btn-action">
+                                                                            <a href="/Commande/DetailDABPE/@cmd.IdCommande"><i class="fas fa-eye"></i></a>
+                                                                            <a style="cursor:pointer" onclick="GetId(@cmd.IdCommande)" data-toggle="modal" data-target="#Valider" class="ml-1"><i style="color:green" class="fas fa-check"></i></a>
+                                                                            <a style="cursor:pointer" onclick="GetId(@cmd.IdCommande)" data-toggle="modal" data-target="#Refuser" class="ml-1"><i style="color:red" class="fas fa-times"></i></a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- datatable ends -->
+                                                <input type="hidden" id="CommandeId" />
+                                            </div>
+
+                                            <!-- table success ends -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+            <!-- Dashboard Ecommerce ends -->
+
+        </div>
+    </div>
+</div>
+<!-- END: Content-->
+<script>
+    function GetId(Id) {
+        $("#CommandeId").val('');
+        $("#CommandeId").val(Id);
+    }
+
+    function Valider() {
+        var Id = $("#CommandeId").val();
+        var Commentaire = $("#CommentaireV").val();
+
+        var data = {
+                    Id: Id,
+                    Commentaire: Commentaire
+        };
+        $.ajax({
+            url: '@Url.Action("ValiderCommande", "Commande")',
+            type: "POST",
+            cache: false,
+            async: true,
+            data: data,
+            success: function (data) {
+                if (data) {
+                    $("#CommandeId").val('');
+                    swal.fire("Success!", "Commande validée avec succès", "success");
+                    setTimeout(
+                        function () {
+                            window.location.reload();
+                        }, 1500
+                    );
+                }
+                else
+                {
+                    swal.fire("Erreur", "Une erreur est survenue", "error");
+                }
+            },
+            error: function () {
+                swal.fire("Erreur", "Une erreur est survenue", "error");
+            }
+        });
+    }
+
+    function Rejeter() {
+        var Id = $("#CommandeId").val();
+        var Commentaire = $("#CommentaireR").val();
+
+        var data = {
+                    Id: Id,
+                    Commentaire: Commentaire
+        };
+        $.ajax({
+            url: '@Url.Action("RefuserCommande", "Commande")',
+            type: "POST",
+            cache: false,
+            async: true,
+            data: data,
+            success: function (data) {
+                if (data) {
+                    $("#CommandeId").val('');
+                    swal.fire("Success!", "Commande rejeté avec succès", "success");
+                    setTimeout(
+                        function () {
+                            window.location.reload();
+                        }, 1500
+                    );
+                }
+                else
+                {
+                    swal.fire("Erreur", "Une erreur est survenue", "error");
+                }
+            },
+            error: function () {
+                swal.fire("Erreur", "Une erreur est survenue", "error");
+            }
+        });
+    }
+</script>
