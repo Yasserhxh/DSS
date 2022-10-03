@@ -27,7 +27,7 @@ namespace Web.Controllers
         {
             var success = await this.authentificationService.Login(user);
 
-            if (!success)
+            if (success is not null)
             {
                 TempData["LoginError"] = "Login ou mot de passe incorrect";
                 return View();
@@ -44,7 +44,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel user)
         {
-            var success = await this.authentificationService.Register(user);
+            var success = await authentificationService.Register(user);
 
             if (!success)
             {

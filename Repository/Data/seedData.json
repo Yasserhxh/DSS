@@ -1,0 +1,362 @@
+﻿{
+  "Users": [
+    {
+      "Id": "3375dc1e-b359-403e-9f13-5e2b395ffafc",
+      "UserName": "admin",
+      "NormalizedUserName": "ADMIN",
+      "Email": "t.abdelmajid@Alexsys.solutions",
+      "EmailConfirmed": true,
+      "Password": "123***Sss",
+      "SecurityStamp": "78806f6d-7f1f-4d2f-9a13-ce06383ed217",
+      "Nom": null,
+      "Prenom": null
+    },
+    {
+      "Id": "7167d11d-9358-4262-b7a4-77372e1c121d",
+      "UserName": "CV",
+      "NormalizedUserName": "CV",
+      "Password": "123***Sss",
+      "SecurityStamp": "45a41cea-397f-4837-9706-945073586524",
+      "Nom": "CVNom",
+      "Prenom": "CVPrenom"
+    },
+    {
+      "Id": "2e142fe7-a372-4b98-ab9d-dcc4e4966b88",
+      "UserName": "RC",
+      "NormalizedUserName": "RC",
+      "Password": "123***Sss",
+      "SecurityStamp": "925b8781-e141-4f60-9dfc-293d3e24b78f",
+      "Nom": "RCNom",
+      "Prenom": "RCPrenom"
+    },
+    {
+      "Id": "b8888a0f-ebcf-4b0a-815a-83ccc0a4c349",
+      "UserName": "DAPBE",
+      "NormalizedUserName": "DABPE",
+      "Password": "123***Sss",
+      "SecurityStamp": "54227a7c-67ee-4ebb-b9d0-272ccb30e483",
+      "Nom": "DAPBENom",
+      "Prenom": "DAPBEPrenom"
+    },
+    {
+      "Id": "3e45b10c-0d15-49f2-903b-7de4bbc62f98",
+      "UserName": "PT",
+      "NormalizedUserName": "PT",
+      "Password": "123***Sss",
+      "SecurityStamp": "58053aac-a438-4e44-acce-4f967d8df300",
+      "Nom" :  "PTNom",
+      "Prenom" :  "PTPrenom"
+    },
+    {
+      "Id": "d19f9bc1-13b4-42b3-881a-a847f4c0684e",
+      "UserName": "RL",
+      "NormalizedUserName": "RL",
+      "Password": "123***Sss",
+      "SecurityStamp": "adf0467d-bf4f-4bf5-a576-078dac83af6b",
+      "Nom": "RLNom",
+      "Prenom": "RLPrenom"
+    },
+    {
+      "Id": "fe1300d0-ecf8-4bb5-afaf-5030b27959bd",
+      "UserName": "ADV",
+      "NormalizedUserName": "ADV",
+      "Password": "123***Sss",
+      "SecurityStamp": "02d7a2a5-9486-4980-b031-b1728f9125f1",
+      "Nom": "ADVNome",
+      "Prenom": "ADVPrenom"
+    },
+    {
+      "Id": "48e50810-f7fc-45c8-8d13-0a03a6a8b1de",
+      "UserName": "CC",
+      "NormalizedUserName": "CC",
+      "Password": "123***Sss",
+      "SecurityStamp": "8e031d55-7c1e-4a55-896b-288a6f628ecd",
+      "Nom": "CCNom",
+      "Prenom": "CCPrenom"
+    },
+    {
+      "Id": "f32d5249-cfe5-4b76-909e-4ef6d73cd504",
+      "UserName": "Commercial",
+      "NormalizedUserName": "COMMERCIAL",
+      "Password": "123***Sss",
+      "SecurityStamp": "8e031d55-7c1e-4a55-896b-288a6f628ecd",
+      "Nom": "CNom",
+      "Prenom": "CPrenom"
+    }
+  ],
+  "Roles": [
+    {
+      "Id": "48e33a01-bd1f-4739-a27f-126e8e8b2d1c",
+      "Name": "Admin",
+      "NormalizedName": "ADMIN"
+    },
+    {
+      "Id": "1588b3b9-37bc-4f58-acf9-e42fd47f1c28",
+      "Name": "Chef de ventes",
+      "NormalizedName": "CHEF DE VENTES"
+    },
+    {
+      "Id": "6eafdfbe-ed07-4687-9d2c-0b767b15a305",
+      "Name": "Responsable commercial",
+      "NormalizedName": "RESPONSABLE COMMERCIAL"
+    },
+    {
+      "Id": "9be024db-d122-4cd2-8329-2afd0d259e77",
+      "Name": "DA BPE",
+      "NormalizedName": "DA BPE"
+    },
+    {
+      "Id": "126a635b-d763-48bf-ab0e-f5599cffb4fe",
+      "Name": "Prescripteur technique",
+      "NormalizedName": "PRESCRIPTEUR TECHNIQUE"
+    },
+    {
+      "Id": "a7846740-cb77-4d25-8da6-d5c68dfb590d",
+      "Name": "Responsable logistique",
+      "NormalizedName": "RESPONSABLE LOGISTIQUE"
+    },
+    {
+      "Id": "3e130fc1-981e-4183-a12d-fa5f73d13bb2",
+      "Name": "Administration des ventes",
+      "NormalizedName": "ADMINISTRATION DES VENTES"
+    },
+    {
+      "Id": "7b8ab704-463e-4074-8c19-a62905f62e11",
+      "Name": "Controle crédit",
+      "NormalizedName": "CONTROLE CREDIT"
+    },
+    {
+      "Id": "ab68ea17-b8d8-490a-aa11-75ff2973c01e",
+      "Name": "Commercial",
+      "NormalizedName": "COMMERCIAL"
+    }
+  ],
+  "UserRoles": [
+    {
+      "RoleId": "48e33a01-bd1f-4739-a27f-126e8e8b2d1c",
+      "UserId": "3375dc1e-b359-403e-9f13-5e2b395ffafc"
+    },
+    {
+      "RoleId": "1588b3b9-37bc-4f58-acf9-e42fd47f1c28",
+      "UserId": "7167d11d-9358-4262-b7a4-77372e1c121d"
+    },
+    {
+      "RoleId": "6eafdfbe-ed07-4687-9d2c-0b767b15a305",
+      "UserId": "2e142fe7-a372-4b98-ab9d-dcc4e4966b88"
+    },
+    {
+      "RoleId": "9be024db-d122-4cd2-8329-2afd0d259e77",
+      "UserId": "b8888a0f-ebcf-4b0a-815a-83ccc0a4c349"
+    },
+    {
+      "RoleId": "126a635b-d763-48bf-ab0e-f5599cffb4fe",
+      "UserId": "3e45b10c-0d15-49f2-903b-7de4bbc62f98"
+    },
+    {
+      "RoleId": "a7846740-cb77-4d25-8da6-d5c68dfb590d",
+      "UserId": "d19f9bc1-13b4-42b3-881a-a847f4c0684e"
+    },
+    {
+      "RoleId": "3e130fc1-981e-4183-a12d-fa5f73d13bb2",
+      "UserId": "fe1300d0-ecf8-4bb5-afaf-5030b27959bd"
+    },
+    {
+      "RoleId": "7b8ab704-463e-4074-8c19-a62905f62e11",
+      "UserId": "48e50810-f7fc-45c8-8d13-0a03a6a8b1de"
+    },
+    {
+      "RoleId": "ab68ea17-b8d8-490a-aa11-75ff2973c01e",
+      "UserId": "f32d5249-cfe5-4b76-909e-4ef6d73cd504"
+    }
+  ],
+  "StatutS": [
+    {
+      "IdStatut": 1,
+      "CodeStatutSap": "1",
+      "Libelle": "Etude et proposition de prix"
+    },
+    {
+      "IdStatut": 2,
+      "CodeStatutSap": "2",
+      "Libelle": "Parametrage des prix PBE"
+    },
+    {
+      "IdStatut": 3,
+      "CodeStatutSap": "3",
+      "Libelle": "Validation de l'offre de prix"
+    },
+    {
+      "IdStatut": 4,
+      "CodeStatutSap": "4",
+      "Libelle": "Fixation de prix du transport"
+    },
+    {
+      "IdStatut": 5,
+      "CodeStatutSap": "5",
+      "Libelle": "Parametrage des prix de services"
+    },
+    {
+      "IdStatut": 6,
+      "CodeStatutSap": "6",
+      "Libelle": "Validé"
+    },
+    {
+      "IdStatut": 7,
+      "CodeStatutSap": "7",
+      "Libelle": "En cours de validation"
+    }
+  ],
+  "Unites": [
+    {
+      "IdUnite": 1,
+      "Libelle": "m3"
+    }
+  ],
+  "Pays": [
+    {
+      "IdPays": 1,
+      "CodePaysSap": "MA",
+      "NomPays": "Maroc"
+    }
+  ],
+  "Villes": [
+    {
+      "IdVille": 1,
+      "CodeVilleSap": "R",
+      "NomVille": "Rabat",
+      "CodePaysSap": "MA",
+      "IdPays": 1
+    },
+    {
+      "IdVille": 2,
+      "CodeVilleSap": "C",
+      "NomVille": "Casablanca",
+      "CodePaysSap": "MA",
+      "IdPays": 1
+    }
+  ],
+  "Articles": [
+    {
+      "Article_ID": 1,
+      "Designation": "Beton 1",
+      "Tarif": 50
+    },
+    {
+      "Article_ID": 2,
+      "Designation": "Beton 2",
+      "Tarif": 60
+    },
+    {
+      "Article_ID": 3,
+      "Designation": "Beton 3",
+      "Tarif": 70
+    },
+    {
+      "Article_ID": 4,
+      "Designation": "Beton Spécial",
+      "Tarif": null
+    }
+  ],
+  "FormeJuridiques": [
+    {
+      "FormeJuridique_Id": 1,
+      "FormeJuridique_Libelle": "SA"
+    },
+    {
+      "FormeJuridique_Id": 2,
+      "FormeJuridique_Libelle": "SARL"
+    }
+  ],
+  "Zones": [
+    {
+      "Zone_Id": 1,
+      "Zone_Libelle": "Zone 1",
+      "Zone_Prix": 50
+    },
+    {
+      "Zone_Id": 2,
+      "Zone_Libelle": "Zone 2",
+      "Zone_Prix": 60
+    },
+    {
+      "Zone_Id": 3,
+      "Zone_Libelle": "Zone 3",
+      "Zone_Prix": 70
+    }
+  ],
+  "TypeChantiers": [
+    {
+      "Tc_Id": 1,
+      "Tc_Libelle": "Type 1"
+    },
+    {
+      "Tc_Id": 2,
+      "Tc_Libelle": "Type 2"
+    },
+    {
+      "Tc_Id": 3,
+      "Tc_Libelle": "Type 3"
+    }
+  ],
+  "CentraleBetons": [
+    {
+      "Ctr_ID": 1,
+      "Ctr_Nom": "Centrale 1",
+      "Ctr_Adresse": "Adresse 1",
+      "Ctr_CodePostal": "20250",
+      "Ctr_Ville_Id": "2",
+      "Ctr_Gsm": "0620055784",
+      "Ctr_Email": "Centrale1@gmail.com",
+      "Ctr_Responsable": "Test",
+      "Ctr_Responsable_Gsm": "0620055784",
+      "Ctr_Latitude": "33.59679657708449",
+      "Ctr_Longitude": "-7.618710247586268",
+      "Rayon": null
+    },
+    {
+      "Ctr_ID": 2,
+      "Ctr_Nom": "Centrale 2",
+      "Ctr_Adresse": "Adresse 2",
+      "Ctr_CodePostal": "20250",
+      "Ctr_Ville_Id": "2",
+      "Ctr_Gsm": "0520055784",
+      "Ctr_Email": "Centrale2@gmail.com",
+      "Ctr_Responsable": "Test 2",
+      "Ctr_Responsable_Gsm": "0625255784",
+      "Ctr_Latitude": "33.613650",
+      "Ctr_Longitude": "-7.533456",
+      "Rayon": null
+    },
+    {
+      "Ctr_ID": 3,
+      "Ctr_Nom": "Centrale 3",
+      "Ctr_Adresse": "Adresse 3",
+      "Ctr_CodePostal": "20256",
+      "Ctr_Ville_Id": "2",
+      "Ctr_Gsm": "0525055784",
+      "Ctr_Email": "Centrale3@gmail.com",
+      "Ctr_Responsable": "Test 3",
+      "Ctr_Responsable_Gsm": "0625285784",
+      "Ctr_Latitude": "33,5892",
+      "Ctr_Longitude": "-7,6738",
+      "Rayon": null
+    }
+  ],
+  "TarifPompeRefs": [
+    {
+      "Tpr_Id": 1,
+      "LongFleche_Libelle": "48",
+      "LongFleche_Prix": 50
+    },
+    {
+      "Tpr_Id": 2,
+      "LongFleche_Libelle": "50",
+      "LongFleche_Prix": 60
+    },
+    {
+      "Tpr_Id": 3,
+      "LongFleche_Libelle": "52",
+      "LongFleche_Prix": 70
+    }
+  ]
+}

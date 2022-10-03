@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Data;
 
@@ -11,9 +12,10 @@ using Repository.Data;
 namespace Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221003095150_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,161 +96,6 @@ namespace Repository.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "3375dc1e-b359-403e-9f13-5e2b395ffafc",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "93013dd1-eb1c-458b-a397-f07a4d01e5f6",
-                            Email = "t.abdelmajid@Alexsys.solutions",
-                            EmailConfirmed = true,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "T.ABDELMAJID@ALEXSYS.SOLUTIONS",
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELfYBUTvEAubMIkjap6ZKZU7Fr9SVYbMLgokgubRXPLBzLMpWndYUBJE90zhtZ/hcg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "78806f6d-7f1f-4d2f-9a13-ce06383ed217",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = "7167d11d-9358-4262-b7a4-77372e1c121d",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "a44029d7-21cd-4504-8e7b-9d06cfa06e22",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "CVNom",
-                            NormalizedUserName = "CV",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPhqIY39UAWwZCPxG1+zjh3zLwtj/dqto4nkCQcRCiLRBiWp8rdl0IKipWtvVQrpUA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "CVPrenom",
-                            SecurityStamp = "45a41cea-397f-4837-9706-945073586524",
-                            TwoFactorEnabled = false,
-                            UserName = "CV"
-                        },
-                        new
-                        {
-                            Id = "2e142fe7-a372-4b98-ab9d-dcc4e4966b88",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "7d8ee1a9-ab94-4afc-bb77-7dd014156a25",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "RCNom",
-                            NormalizedUserName = "RC",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDrXcu1fcDfKrt6aNuproHNrJ3xx4roGVcwHiQe6KGO7RSb/QGfzAOhLsIyGRasMfA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "RCPrenom",
-                            SecurityStamp = "925b8781-e141-4f60-9dfc-293d3e24b78f",
-                            TwoFactorEnabled = false,
-                            UserName = "RC"
-                        },
-                        new
-                        {
-                            Id = "b8888a0f-ebcf-4b0a-815a-83ccc0a4c349",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d46eb0e-e1a3-43f5-b0c5-5c297547601b",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "DAPBENom",
-                            NormalizedUserName = "DABPE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKILS6AhXb9SC6VxeKWvTQrGn453uWRRbQUBIdPzkJXISS4K4JO1YYvXvljgxSF8AQ==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "DAPBEPrenom",
-                            SecurityStamp = "54227a7c-67ee-4ebb-b9d0-272ccb30e483",
-                            TwoFactorEnabled = false,
-                            UserName = "DAPBE"
-                        },
-                        new
-                        {
-                            Id = "3e45b10c-0d15-49f2-903b-7de4bbc62f98",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "4ff6ca60-b596-4c08-9177-78379769437b",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "PTNom",
-                            NormalizedUserName = "PT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFV0UoW+VSGxwM2SoLOc4eYoApxr0xoIIZF9LGqTHrR1FIe2iqkbJzSTBghzbaeToA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "PTPrenom",
-                            SecurityStamp = "58053aac-a438-4e44-acce-4f967d8df300",
-                            TwoFactorEnabled = false,
-                            UserName = "PT"
-                        },
-                        new
-                        {
-                            Id = "d19f9bc1-13b4-42b3-881a-a847f4c0684e",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "bb77036a-bf60-4249-82c1-3ddfc75311e0",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "RLNom",
-                            NormalizedUserName = "RL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB1o/Igh/C5MIqzrZhvM5bOGlnfYkNzyVLG2PmfTSj9m1JHebEE8XvkbsvKAvtVNXA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "RLPrenom",
-                            SecurityStamp = "adf0467d-bf4f-4bf5-a576-078dac83af6b",
-                            TwoFactorEnabled = false,
-                            UserName = "RL"
-                        },
-                        new
-                        {
-                            Id = "fe1300d0-ecf8-4bb5-afaf-5030b27959bd",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "ec48f552-56aa-4998-ab5c-e2b57df36f7c",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "ADVNome",
-                            NormalizedUserName = "ADV",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM01AKiu2t9LlsZUAyoZnIPfMZxnIqc/nnAOZ+vLCYEZLTaaw00O7AWEmPmgwWC/+A==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "ADVPrenom",
-                            SecurityStamp = "02d7a2a5-9486-4980-b031-b1728f9125f1",
-                            TwoFactorEnabled = false,
-                            UserName = "ADV"
-                        },
-                        new
-                        {
-                            Id = "48e50810-f7fc-45c8-8d13-0a03a6a8b1de",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "a6a669fd-f838-4fbc-967c-2fe45b02bda7",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "CCNom",
-                            NormalizedUserName = "CC",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJRyaeytwUC7u0TPLi2ObUhuIrmnc2Fx1KhfzC3CcyhkGwDgzzB9yxOWwlog8s1HQA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "CCPrenom",
-                            SecurityStamp = "8e031d55-7c1e-4a55-896b-288a6f628ecd",
-                            TwoFactorEnabled = false,
-                            UserName = "CC"
-                        },
-                        new
-                        {
-                            Id = "f32d5249-cfe5-4b76-909e-4ef6d73cd504",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "c628c842-66a9-4496-912e-ba81ecbcd02e",
-                            EmailConfirmed = false,
-                            IsActive = false,
-                            LockoutEnabled = false,
-                            Nom = "CNom",
-                            NormalizedUserName = "COMMERCIAL",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPMPKXvQjbCSYTmmF30iyI18EqJUMwilOByfsYEeEK8WjakVjJ/SWNz4s9ophsAJZA==",
-                            PhoneNumberConfirmed = false,
-                            Prenom = "CPrenom",
-                            SecurityStamp = "8e031d55-7c1e-4a55-896b-288a6f628ecd",
-                            TwoFactorEnabled = false,
-                            UserName = "Commercial"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Article", b =>
@@ -268,31 +115,6 @@ namespace Repository.Migrations
                     b.HasKey("Article_Id");
 
                     b.ToTable("Article");
-
-                    b.HasData(
-                        new
-                        {
-                            Article_Id = 1,
-                            Designation = "Beton 1",
-                            Tarif = 50.0
-                        },
-                        new
-                        {
-                            Article_Id = 2,
-                            Designation = "Beton 2",
-                            Tarif = 60.0
-                        },
-                        new
-                        {
-                            Article_Id = 3,
-                            Designation = "Beton 3",
-                            Tarif = 70.0
-                        },
-                        new
-                        {
-                            Article_Id = 4,
-                            Designation = "Beton Spécial"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.CentraleBeton", b =>
@@ -341,47 +163,6 @@ namespace Repository.Migrations
                     b.HasIndex("Ctr_Ville_Id");
 
                     b.ToTable("Centrale_Beton");
-
-                    b.HasData(
-                        new
-                        {
-                            Ctr_Id = 1,
-                            Ctr_Adresse = "Adresse 1",
-                            Ctr_CodePostal = 20250,
-                            Ctr_Email = "Centrale1@gmail.com",
-                            Ctr_Gsm = "0620055784",
-                            Ctr_Longitude = "-7.618710247586268",
-                            Ctr_Nom = "Centrale 1",
-                            Ctr_Responsable = "Test",
-                            Ctr_Responsable_Gsm = "0620055784",
-                            Ctr_Ville_Id = 2
-                        },
-                        new
-                        {
-                            Ctr_Id = 2,
-                            Ctr_Adresse = "Adresse 2",
-                            Ctr_CodePostal = 20250,
-                            Ctr_Email = "Centrale2@gmail.com",
-                            Ctr_Gsm = "0520055784",
-                            Ctr_Longitude = "-7.533456",
-                            Ctr_Nom = "Centrale 2",
-                            Ctr_Responsable = "Test 2",
-                            Ctr_Responsable_Gsm = "0625255784",
-                            Ctr_Ville_Id = 2
-                        },
-                        new
-                        {
-                            Ctr_Id = 3,
-                            Ctr_Adresse = "Adresse 3",
-                            Ctr_CodePostal = 20256,
-                            Ctr_Email = "Centrale3@gmail.com",
-                            Ctr_Gsm = "0525055784",
-                            Ctr_Longitude = "-7,6738",
-                            Ctr_Nom = "Centrale 3",
-                            Ctr_Responsable = "Test 3",
-                            Ctr_Responsable_Gsm = "0625285784",
-                            Ctr_Ville_Id = 2
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Chantier", b =>
@@ -641,18 +422,6 @@ namespace Repository.Migrations
                     b.HasKey("FormeJuridique_Id");
 
                     b.ToTable("Forme_Juridique");
-
-                    b.HasData(
-                        new
-                        {
-                            FormeJuridique_Id = 1,
-                            FormeJuridique_Libelle = "SA"
-                        },
-                        new
-                        {
-                            FormeJuridique_Id = 2,
-                            FormeJuridique_Libelle = "SARL"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Paiement", b =>
@@ -688,14 +457,6 @@ namespace Repository.Migrations
                     b.HasKey("IdPays");
 
                     b.ToTable("Pays");
-
-                    b.HasData(
-                        new
-                        {
-                            IdPays = 1,
-                            CodePaysSap = "MA",
-                            NomPays = "Maroc"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Statut", b =>
@@ -715,50 +476,6 @@ namespace Repository.Migrations
                     b.HasKey("IdStatut");
 
                     b.ToTable("Statut");
-
-                    b.HasData(
-                        new
-                        {
-                            IdStatut = 1,
-                            CodeStatutSap = "1",
-                            Libelle = "Etude et proposition de prix"
-                        },
-                        new
-                        {
-                            IdStatut = 2,
-                            CodeStatutSap = "2",
-                            Libelle = "Parametrage des prix PBE"
-                        },
-                        new
-                        {
-                            IdStatut = 3,
-                            CodeStatutSap = "3",
-                            Libelle = "Validation de l'offre de prix"
-                        },
-                        new
-                        {
-                            IdStatut = 4,
-                            CodeStatutSap = "4",
-                            Libelle = "Fixation de prix du transport"
-                        },
-                        new
-                        {
-                            IdStatut = 5,
-                            CodeStatutSap = "5",
-                            Libelle = "Parametrage des prix de services"
-                        },
-                        new
-                        {
-                            IdStatut = 6,
-                            CodeStatutSap = "6",
-                            Libelle = "Validé"
-                        },
-                        new
-                        {
-                            IdStatut = 7,
-                            CodeStatutSap = "7",
-                            Libelle = "En cours de validation"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.TarifBetonRef", b =>
@@ -797,26 +514,6 @@ namespace Repository.Migrations
                     b.HasKey("Tpr_Id");
 
                     b.ToTable("Tarif_Pompe");
-
-                    b.HasData(
-                        new
-                        {
-                            Tpr_Id = 1,
-                            LongFleche_Libelle = "48",
-                            LongFleche_Prix = 50m
-                        },
-                        new
-                        {
-                            Tpr_Id = 2,
-                            LongFleche_Libelle = "50",
-                            LongFleche_Prix = 60m
-                        },
-                        new
-                        {
-                            Tpr_Id = 3,
-                            LongFleche_Libelle = "52",
-                            LongFleche_Prix = 70m
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.TarifService", b =>
@@ -852,23 +549,6 @@ namespace Repository.Migrations
                     b.HasKey("Tc_Id");
 
                     b.ToTable("Type_Chantier");
-
-                    b.HasData(
-                        new
-                        {
-                            Tc_Id = 1,
-                            Tc_Libelle = "Type 1"
-                        },
-                        new
-                        {
-                            Tc_Id = 2,
-                            Tc_Libelle = "Type 2"
-                        },
-                        new
-                        {
-                            Tc_Id = 3,
-                            Tc_Libelle = "Type 3"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Unite", b =>
@@ -885,13 +565,6 @@ namespace Repository.Migrations
                     b.HasKey("IdUnite");
 
                     b.ToTable("Unite");
-
-                    b.HasData(
-                        new
-                        {
-                            IdUnite = 1,
-                            Libelle = "m3"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Validation", b =>
@@ -958,24 +631,6 @@ namespace Repository.Migrations
                     b.HasIndex("IdPays");
 
                     b.ToTable("Ville");
-
-                    b.HasData(
-                        new
-                        {
-                            IdVille = 1,
-                            CodePaysSap = "MA",
-                            CodeVilleSap = "R",
-                            IdPays = 1,
-                            NomVille = "Rabat"
-                        },
-                        new
-                        {
-                            IdVille = 2,
-                            CodePaysSap = "MA",
-                            CodeVilleSap = "C",
-                            IdPays = 1,
-                            NomVille = "Casablanca"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Zone", b =>
@@ -995,26 +650,6 @@ namespace Repository.Migrations
                     b.HasKey("Zone_Id");
 
                     b.ToTable("Zone");
-
-                    b.HasData(
-                        new
-                        {
-                            Zone_Id = 1,
-                            Zone_Libelle = "Zone 1",
-                            Zone_Prix = 50m
-                        },
-                        new
-                        {
-                            Zone_Id = 2,
-                            Zone_Libelle = "Zone 2",
-                            Zone_Prix = 60m
-                        },
-                        new
-                        {
-                            Zone_Id = 3,
-                            Zone_Libelle = "Zone 3",
-                            Zone_Prix = 70m
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1042,71 +677,6 @@ namespace Repository.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "48e33a01-bd1f-4739-a27f-126e8e8b2d1c",
-                            ConcurrencyStamp = "8bb2741f-9704-4d37-a501-6741d14d5f93",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "1588b3b9-37bc-4f58-acf9-e42fd47f1c28",
-                            ConcurrencyStamp = "2bf243d6-5aa0-40c1-bc3c-470ba24c7dfb",
-                            Name = "Chef de ventes",
-                            NormalizedName = "CHEF DE VENTES"
-                        },
-                        new
-                        {
-                            Id = "6eafdfbe-ed07-4687-9d2c-0b767b15a305",
-                            ConcurrencyStamp = "42d08be2-5105-4aca-94ce-ad8c9129fbff",
-                            Name = "Responsable commercial",
-                            NormalizedName = "RESPONSABLE COMMERCIAL"
-                        },
-                        new
-                        {
-                            Id = "9be024db-d122-4cd2-8329-2afd0d259e77",
-                            ConcurrencyStamp = "0a545942-a790-4345-8674-88f653b3d100",
-                            Name = "DA BPE",
-                            NormalizedName = "DA BPE"
-                        },
-                        new
-                        {
-                            Id = "126a635b-d763-48bf-ab0e-f5599cffb4fe",
-                            ConcurrencyStamp = "0748555d-5884-467c-a3ba-88130f9ee2e7",
-                            Name = "Prescripteur technique",
-                            NormalizedName = "PRESCRIPTEUR TECHNIQUE"
-                        },
-                        new
-                        {
-                            Id = "a7846740-cb77-4d25-8da6-d5c68dfb590d",
-                            ConcurrencyStamp = "30aac02c-8443-4e5e-b07e-46a508938b04",
-                            Name = "Responsable logistique",
-                            NormalizedName = "RESPONSABLE LOGISTIQUE"
-                        },
-                        new
-                        {
-                            Id = "3e130fc1-981e-4183-a12d-fa5f73d13bb2",
-                            ConcurrencyStamp = "8223a248-89fb-4aec-95bb-f83ead8ccdd1",
-                            Name = "Administration des ventes",
-                            NormalizedName = "ADMINISTRATION DES VENTES"
-                        },
-                        new
-                        {
-                            Id = "7b8ab704-463e-4074-8c19-a62905f62e11",
-                            ConcurrencyStamp = "b46a563a-b39b-491a-b71e-aef526e640c4",
-                            Name = "Controle crédit",
-                            NormalizedName = "CONTROLE CREDIT"
-                        },
-                        new
-                        {
-                            Id = "ab68ea17-b8d8-490a-aa11-75ff2973c01e",
-                            ConcurrencyStamp = "da46d04a-d1de-42ee-aa4b-38f8669528c2",
-                            Name = "Commercial",
-                            NormalizedName = "COMMERCIAL"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1194,53 +764,6 @@ namespace Repository.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "3375dc1e-b359-403e-9f13-5e2b395ffafc",
-                            RoleId = "48e33a01-bd1f-4739-a27f-126e8e8b2d1c"
-                        },
-                        new
-                        {
-                            UserId = "7167d11d-9358-4262-b7a4-77372e1c121d",
-                            RoleId = "1588b3b9-37bc-4f58-acf9-e42fd47f1c28"
-                        },
-                        new
-                        {
-                            UserId = "2e142fe7-a372-4b98-ab9d-dcc4e4966b88",
-                            RoleId = "6eafdfbe-ed07-4687-9d2c-0b767b15a305"
-                        },
-                        new
-                        {
-                            UserId = "b8888a0f-ebcf-4b0a-815a-83ccc0a4c349",
-                            RoleId = "9be024db-d122-4cd2-8329-2afd0d259e77"
-                        },
-                        new
-                        {
-                            UserId = "3e45b10c-0d15-49f2-903b-7de4bbc62f98",
-                            RoleId = "126a635b-d763-48bf-ab0e-f5599cffb4fe"
-                        },
-                        new
-                        {
-                            UserId = "d19f9bc1-13b4-42b3-881a-a847f4c0684e",
-                            RoleId = "a7846740-cb77-4d25-8da6-d5c68dfb590d"
-                        },
-                        new
-                        {
-                            UserId = "fe1300d0-ecf8-4bb5-afaf-5030b27959bd",
-                            RoleId = "3e130fc1-981e-4183-a12d-fa5f73d13bb2"
-                        },
-                        new
-                        {
-                            UserId = "48e50810-f7fc-45c8-8d13-0a03a6a8b1de",
-                            RoleId = "7b8ab704-463e-4074-8c19-a62905f62e11"
-                        },
-                        new
-                        {
-                            UserId = "f32d5249-cfe5-4b76-909e-4ef6d73cd504",
-                            RoleId = "ab68ea17-b8d8-490a-aa11-75ff2973c01e"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
