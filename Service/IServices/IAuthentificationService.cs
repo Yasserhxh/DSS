@@ -7,7 +7,7 @@ namespace Service.IServices
     public interface IAuthentificationService
     {
         Task<bool> Register(RegisterModel userModel);
-        Task<ApplicationUser> Login(LoginModel loginModel);
+        Task<ApplicationUser?> Login(LoginModel loginModel);
         Task<bool> Logout();
         Task<List<UserModel>> getListUsers();
         Task<bool> EnableDisableUser(string Id, int code);

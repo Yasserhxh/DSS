@@ -10,61 +10,58 @@ namespace Service.Services
 {
     public class AuthentificationService : IAuthentificationService
     {
-        private readonly IAuthentificationRepository authentificationRepository;
-        private readonly IMapper mapper;
+        private readonly IAuthentificationRepository _authentificationRepository;
+        private readonly IMapper _mapper;
 
 
         public AuthentificationService(IAuthentificationRepository authentificationRepository, IMapper mapper)
         {
-            this.authentificationRepository = authentificationRepository;
-            this.mapper = mapper;
+            this._authentificationRepository = authentificationRepository;
+            this._mapper = mapper;
         }
 
         public async Task<bool> Register(RegisterModel registerModel)
         {
 
-            return await this.authentificationRepository.Register(registerModel);
+            return await this._authentificationRepository.Register(registerModel);
         }
 
-        public async Task<ApplicationUser> Login(LoginModel loginModel)
+        public async Task<ApplicationUser?> Login(LoginModel loginModel)
         {
-            var user = await this.authentificationRepository.Login(loginModel);
+            var user = await this._authentificationRepository.Login(loginModel);
 
-            if (user == null)
-                return null;
-
-            return user;
+            return user ?? null;
         }
         public async Task<bool> Logout()
         {
-            return await this.authentificationRepository.Logout();
+            return await this._authentificationRepository.Logout();
         }
 
         public async Task<List<UserModel>> getListUsers()
         {
-            return await authentificationRepository.getListUsers();
+            return await _authentificationRepository.getListUsers();
         }
-        public async Task<bool> EnableDisableUser(string Id, int code)
+        public async Task<bool> EnableDisableUser(string id, int code)
         {
-            return await authentificationRepository.EnableDisableUser(Id, code);
+            return await _authentificationRepository.EnableDisableUser(id, code);
         }
 
         public async Task<List<RoleModel>> GetRoles()
         {
-            return mapper.Map<List<IdentityRole>, List<RoleModel>>(await this.authentificationRepository.GetRoles());
+            return _mapper.Map<List<IdentityRole>, List<RoleModel>>(await this._authentificationRepository.GetRoles());
         }
 
         public async Task<Response> AjouterUnUtilisateur(RegisterModel registerModel)
         {
-            return await this.authentificationRepository.AjouterUnUtilisateur(registerModel);
+            return await this._authentificationRepository.AjouterUnUtilisateur(registerModel);
         }
         public async Task<Response> UpdateUser(UserModel model)
         {
-            return await this.authentificationRepository.UpdateUser(model);
+            return await this._authentificationRepository.UpdateUser(model);
         }
         public async Task<Response> UpdateProfil(UpdateUserModel model)
         {
-            return await this.authentificationRepository.UpdateProfil(model);
+            return await _authentificationRepository.UpdateProfil(model);
         }
     }
 }

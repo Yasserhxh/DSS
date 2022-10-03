@@ -179,7 +179,7 @@ namespace Service.Services
                 detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 
                 // Trace Vlidateur
-                ValidationModel validationModel = new ValidationModel()
+                var validationModel = new ValidationModel
                 {
                     IdCommande = (int)detail.IdCommande,
                     IdStatut = Statuts.ParametrageDesPrixPBE,
