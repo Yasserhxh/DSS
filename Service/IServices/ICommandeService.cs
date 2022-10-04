@@ -20,6 +20,7 @@ namespace Service.IServices
         Task<double> GetTarifZone(int Id);
         Task<double> GetTarifPompe(int Id);
         Task<List<CommandeModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande);
+        Task<List<DetailCommandeModel>> GetCommandesDetails(int? commandeId);
         Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName);
         Task<List<CommandeModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande);
         Task<List<CommandeModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande);

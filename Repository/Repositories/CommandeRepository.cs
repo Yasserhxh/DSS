@@ -147,13 +147,19 @@ namespace Repository.Repositories
 
         public async Task<Commande> GetCommande(int? Id)
         {
-            var cmd = await _db.Commandes
+           /* var cmd = await _db.Commandes
                 .Include(x => x.DetailCommandes)
                 .ThenInclude(a => a.Article)
                 .Include(x => x.DetailCommandes)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
                 .Include(d => d.Client)
-                .FirstOrDefaultAsync(x => x.IdCommande == Id);
+                .FirstOrDefaultAsync(x => x.IdCommande == Id);*/
+            var cmd = await _db.Commandes.Where(x => x.IdCommande == Id)
+                .Include(x => x.DetailCommandes)
+                .ThenInclude(a => a.Article)
+                .Include(x => x.DetailCommandes)
+                .Include(d => d.Chantier.ZONE_CHANTIER)
+                .Include(d => d.Client).FirstOrDefaultAsync();
             return cmd;
         }
         public async Task<Commande> GetCommandeOnly(int? Id)
@@ -162,6 +168,15 @@ namespace Repository.Repositories
                 .Include(x => x.DetailCommandes)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
                 .FirstOrDefaultAsync(x => x.IdCommande == Id);
+            return cmd;
+        } 
+        public async Task<List<DetailCommande>> GetListDetailsCommande(int? id)
+        {
+            var cmd = await _db.DetailCommandes
+                .Where(x => x.IdCommande == id)
+                .Include(d => d.Article)
+                .Include(d => d.Unite)
+                .ToListAsync();
             return cmd;
         }
         public async Task<DetailCommande> GetDetailCommande(int? Id)

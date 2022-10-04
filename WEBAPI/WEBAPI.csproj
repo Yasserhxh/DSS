@@ -11,4 +11,10 @@
     <ProjectReference Include="..\Service\Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ErrorOr" Version="1.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-rc.1.22426.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+  </ItemGroup>
+
 </Project>

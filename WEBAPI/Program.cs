@@ -10,14 +10,18 @@ using Service.Mapping;
 using Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = 
+    builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(
                    builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<ICommandeService, CommandeService>();
@@ -34,7 +38,7 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseHsts();
 app.MapControllers();
-
+app.UseStaticFiles();
 app.Run();

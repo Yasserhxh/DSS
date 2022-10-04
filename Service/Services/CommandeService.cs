@@ -67,7 +67,7 @@ namespace Service.Services
 
         public async Task<bool> CreateCommande (CommandeViewModel commandeViewModel)
         {
-            await using var transaction = this.unitOfWork.BeginTransaction();
+            await using var transaction = unitOfWork.BeginTransaction();
             try
             {
                 // Add chantier
@@ -75,8 +75,8 @@ namespace Service.Services
                 var ctnId = await commandeRepository.CreateChantier(chantier);
 
                 // Add client
-                commandeViewModel.Client.Client_Ctn_Id = ((int)ctnId);
-                Client client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
+                var client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
                 var clientId = await commandeRepository.CreateClient(client);
 
                 // Statut de la commande
@@ -131,7 +131,7 @@ namespace Service.Services
                 await transaction.CommitAsync();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync();
                 return false;
@@ -163,10 +163,14 @@ namespace Service.Services
         {
             return mapper.Map<List<TarifPompeRef>, List<TarifPompeRefModel>>(await this.commandeRepository.GetTarifPompeRefs());
         }
-
+        public async Task<List<DetailCommandeModel>> GetCommandesDetails(int? commandeId)
+        {
+            var commandes = await commandeRepository.GetListDetailsCommande(commandeId);
+            return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
+        }
         public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName)
         {
-            await using var transaction = this.unitOfWork.BeginTransaction();
+            await using var transaction = unitOfWork.BeginTransaction();
             try
             {
                 var detail = await commandeRepository.GetDetailCommande(Id);

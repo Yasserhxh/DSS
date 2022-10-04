@@ -23,6 +23,7 @@ namespace Service.Mapping
             CreateMap<Zone, ZoneModel>();
             CreateMap<Article, ArticleModel>();
             CreateMap<TarifPompeRef,TarifPompeRefModel>();
+            CreateMap<Statut,StatutModel>();
 
 
             // Models to Entities mapping
@@ -39,6 +40,7 @@ namespace Service.Mapping
             CreateMap<ZoneModel, Zone>();
             CreateMap<ArticleModel, Article>();
             CreateMap<TarifPompeRefModel, TarifPompeRef>();
+            CreateMap<StatutModel,Statut>();
 
         }
     }

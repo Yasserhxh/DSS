@@ -6,5 +6,6 @@
         public List<DetailCommandeModel> DetailCommandes { get; set; }
         public ClientModel Client { get; set; }
         public ChantierModel Chantier { get; set; }
+        
     }
 }
