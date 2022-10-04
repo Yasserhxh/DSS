@@ -4,6 +4,7 @@ using Domain.Authentication;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace Repository.Data
 {
@@ -35,7 +36,7 @@ namespace Repository.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            SeedData(builder, this);
+            //SeedData(builder, this);
         }
         private static void SeedData(ModelBuilder builder, ApplicationDbContext applicationDbContext)
         {
