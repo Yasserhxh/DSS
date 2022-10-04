@@ -55,7 +55,7 @@ public class CommandeController : ControllerBase
     {
         if (commandeId is null) return Problem("Veuillez selectionner une commande");
         var details = await _commandeService.GetCommandesDetails(commandeId);
-        return details.Any() ? Problem("Commande non trouvée") : Ok(details);
+        return !details.Any() ? Problem("Commande non trouvée") : Ok(details);
 
     }
 
