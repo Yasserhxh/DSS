@@ -60,35 +60,35 @@ namespace Web.Controllers
         public async Task<IActionResult> ListeCommandesPT(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandesPT(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandesPT(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         [Authorize(Roles = "Admin,DA BPE")]
         public async Task<IActionResult> ListeCommandesDABPE(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandesDAPBE(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandesDAPBE(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         [Authorize(Roles = "Admin,Responsable commercial")]
         public async Task<IActionResult> ListeCommandesRC(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandesRC(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandesRC(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         [Authorize(Roles = "Admin,Chef de ventes")]
         public async Task<IActionResult> ListeCommandesCV(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandesCV(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandesCV(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         [Authorize(Roles = "Admin,Responsable logistique")]
         public async Task<IActionResult> ListeCommandesRL(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         public async Task<IActionResult> Detail(int? id)

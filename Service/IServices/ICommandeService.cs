@@ -20,16 +20,16 @@ namespace Service.IServices
         Task<List<TarifPompeRefModel>> GetTarifPompeRefs();
         Task<double> GetTarifZone(int Id);
         Task<double> GetTarifPompe(int Id);
-        Task<List<CommandeModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande);
-        Task<List<DetailCommandeModel>> GetCommandesDetails(int? commandeId);
+        Task<List<CommandeApiModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande);
+        Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId);
         Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName);
-        Task<List<CommandeModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande);
-        Task<List<CommandeModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande);
-        Task<List<CommandeModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande);
         Task<bool> ProposerPrixDABPE(int Id, decimal Tarif);
         Task<bool> RefuserCommande(int Id, string Commentaire, string UserName);
         Task<bool> ValiderCommande(int Id, string Commentaire, string UserName);
-        Task<List<CommandeModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande);
         Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName);
         Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP);
     }

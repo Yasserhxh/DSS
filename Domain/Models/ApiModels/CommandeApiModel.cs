@@ -25,5 +25,5 @@ public class CommandeApiModel
     public decimal VolumePrevisonnel { get; set; }
     public decimal Duree { get; set; }
     public decimal Rayon { get; set; }
-    public List<DetailCommandeApiModel> DetailsCommande { get; set; }
+   // public List<DetailCommandeApiModel> DetailsCommande { get; set; }
 }

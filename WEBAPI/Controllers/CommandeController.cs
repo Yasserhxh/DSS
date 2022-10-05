@@ -41,11 +41,11 @@ public class CommandeController : ControllerBase
         vm.CommandesAPI = vm.UserRole switch
         {
             "Commercial" => await _commandeService.GetCommandes(vm.IdClient, vm.DateCommande),
-          //  "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClient, vm.DateCommande),
-          //  "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClient, vm.DateCommande),
-          //  "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClient, vm.DateCommande),
-          //  "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClient, vm.DateCommande),
-          //  "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande),
+            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClient, vm.DateCommande),
+            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClient, vm.DateCommande),
+            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClient, vm.DateCommande),
+            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClient, vm.DateCommande),
+            "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande),
             _ => vm.CommandesAPI
         };
         return !vm.CommandesAPI.Any() ? Problem("Aucune commande/prospection trouvée pour ce client") : Ok(vm.CommandesAPI);
