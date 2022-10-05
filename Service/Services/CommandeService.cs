@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Models;
+using Domain.Models.ApiModels;
 using Domain.Models.Commande;
 using Repository.IRepositories;
 using Repository.UnitOfWork;
@@ -144,10 +145,53 @@ namespace Service.Services
             return mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<List<CommandeModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
         {
             var commandes = await commandeRepository.GetCommandes(ClientId, DateCommande);
-            return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
+            var commandesApi = new List<CommandeApiModel>();
+            var listDetailCommandeApi = new List<DetailCommandeApiModel>();
+            foreach (var item in commandes)
+            {
+                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                {
+                    IdDetailCommande = detail.IdDetailCommande,
+                    ArticleDesignation = detail.Article.Designation,
+                    Montant = detail.Montant,
+                    DateProduction = detail.DateProduction,
+                    Volume = detail.Volume,
+                    UniteLibelle = detail.Unite.Libelle
+                }));
+                var commandeApi = new CommandeApiModel
+                {
+                    CommandeId = item.IdCommande,
+                    CodeCommandeSap = item.CodeClientSap,
+                    StatutCommande =item.Statut.Libelle,
+                    DateCommande = item.DateCommande,
+                    DateLivraisonSouhaite = item.DateLivraisonSouhaite,
+                    TarifAchatTransport = item.TarifAchatTransport,
+                    TarifVenteTransport = item.TarifVenteTransport,
+                    TarifAchatPompage = item.TarifAchatPompage,
+                    TarifVentePompage = item.TarifVentePompage,
+                    Conditions = item.Conditions,
+                    DelaiPaiement = item.Delai_Paiement,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    Commentaire = item.Commentaire,
+                    ArticleFile = item.ArticleFile,
+                    Ice = item.Client.Ice,
+                    Cnie = item.Client.Cnie,
+                    RaisonSociale = item.Client.RaisonSociale,
+                    CtnNom = item.Chantier.Ctn_Nom,
+                    MaitreOuvrage = item.Chantier.MaitreOuvrage,
+                    VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
+                    Duree = item.Chantier.Duree,
+                    Rayon = item.Chantier.Rayon,
+                    DetailsCommande  = listDetailCommandeApi
+                };
+                commandesApi.Add(commandeApi);
+            }
+            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
+            return commandesApi;
         }
         public async Task<List<CommandeModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
         {

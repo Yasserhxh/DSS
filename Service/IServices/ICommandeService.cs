@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.ApiModels;
 using Domain.Models.Commande;
 
 namespace Service.IServices
@@ -14,7 +15,7 @@ namespace Service.IServices
         Task<double> GetTarifArticle(int Id);
         Task<bool> CreateCommande(CommandeViewModel commandeViewModel);
         Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null);
-        Task<List<CommandeModel>> GetCommandes(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande);
         Task<CommandeModel> GetCommande(int? id);
         Task<List<TarifPompeRefModel>> GetTarifPompeRefs();
         Task<double> GetTarifZone(int Id);

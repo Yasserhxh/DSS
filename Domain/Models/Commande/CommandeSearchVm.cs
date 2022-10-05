@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.Commande
+﻿using Domain.Models.ApiModels;
+
+namespace Domain.Models.Commande
 {
     public class CommandeSearchVm
     {
@@ -9,6 +11,7 @@
         public string RsClient { get; set; }
         public DateTime? DateCommande { get; set; }
         public IEnumerable<CommandeModel> Commandes { get; set; }
+        public IEnumerable<CommandeApiModel> CommandesAPI { get; set; }
         public IEnumerable<ClientModel> CLients { get; set; }
     }
 }

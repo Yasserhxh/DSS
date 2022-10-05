@@ -123,6 +123,10 @@ namespace Repository.Repositories
                 .Include(d => d.Chantier)
                 .Include(d => d.Client)
                 .Include(d => d.Statut)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Article)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Unite)
                 .ToListAsync();
         }
 

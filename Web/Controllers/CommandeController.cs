@@ -53,7 +53,7 @@ namespace Web.Controllers
         public async Task<IActionResult> ListeCommandes(CommandeSearchVm vm)
         {
             vm.CLients = await commandeService.GetClients();
-            vm.Commandes = await commandeService.GetCommandes(vm.IdClient, vm.DateCommande);
+            //vm.Commandes = await commandeService.GetCommandes(vm.IdClient, vm.DateCommande);
             return View(vm);
         }
         [Authorize(Roles = "Admin,Prescripteur technique")]
