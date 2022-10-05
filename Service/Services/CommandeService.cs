@@ -157,14 +157,14 @@ namespace Service.Services
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
                     Montant = detail.Montant,
-                    //DateProduction = detail.DateProduction,
+                    DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
                 }));
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
-                    //CodeCommandeSap = item.CodeClientSap,
+                    CodeCommandeSap = item.CodeClientSap,
                     StatutCommande =item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
@@ -174,10 +174,10 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
-                    //Commentaire = item.Commentaire,
-                    //ArticleFile = item.ArticleFile,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    Commentaire = item.Commentaire,
+                    ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
