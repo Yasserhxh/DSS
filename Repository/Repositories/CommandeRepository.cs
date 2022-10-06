@@ -121,8 +121,9 @@ namespace Repository.Repositories
             }
             return await query
                 .Include(d => d.Chantier)
-                .Include(d => d.Client)
+                .Include(d => d.Client).ThenInclude(p=>p.Forme_Juridique)
                 .Include(d => d.Statut)
+                .Include(p=>p.Tarif_Pompe)
                 .Include(d => d.DetailCommandes)
                 .ThenInclude(p=>p.Article)
                 .Include(d => d.DetailCommandes)

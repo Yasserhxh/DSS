@@ -19,6 +19,7 @@ public class CommandeApiModel
     public string ArticleFile { get; set; }
     public string Ice { get; set; }
     public string Cnie { get; set; }
+    public string FormeJuridique { get; set; }
     public string RaisonSociale { get; set; }
     public string CtnNom { get; set; }
     public string MaitreOuvrage { get; set; }
