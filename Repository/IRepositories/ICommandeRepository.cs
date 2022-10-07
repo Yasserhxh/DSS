@@ -31,6 +31,8 @@ namespace Repository.IRepositories
         Task<List<Commande>> GetCommandesRC(int? ClientId, DateTime? DateCommande);
         Task<List<Commande>> GetCommandesCV(int? ClientId, DateTime? DateCommande);
         Task<List<Commande>> GetCommandesRL(int? ClientId, DateTime? DateCommande);
+        Task<List<Ville>> GetVilles();
+        Task<List<Pays>> GetPays();
         Task<bool> UpdateChantier(int id, Chantier chantier);
         Task<bool> UpdateClient(int id, Client client);
         Task<bool> UpdateDetailCommande(List<DetailCommande> detailCommandes);

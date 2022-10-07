@@ -12,73 +12,74 @@ namespace Service.Services
 {
     public class CommandeService : ICommandeService
     {
-        private readonly ICommandeRepository commandeRepository;
+        private readonly ICommandeRepository _commandeRepository;
         private readonly IAuthentificationRepository _authentificationRepository;
-        private readonly IMapper mapper;
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CommandeService(ICommandeRepository commandeRepository, IMapper mapper, IUnitOfWork unitOfWork,
             IAuthentificationRepository authentificationRepository)
         {
-            this.commandeRepository = commandeRepository;
-            this.mapper = mapper;
-            this.unitOfWork = unitOfWork;
+            this._commandeRepository = commandeRepository;
+            this._mapper = mapper;
+            this._unitOfWork = unitOfWork;
             _authentificationRepository = authentificationRepository;
         }
 
         public async Task<List<FormeJuridiqueModel>> GetFormeJuridiques()
         {
-            return mapper.Map<List<FormeJuridique>, List< FormeJuridiqueModel>> (await commandeRepository.GetFormeJuridiques());
+            return _mapper.Map<List<FormeJuridique>, List< FormeJuridiqueModel>> (await _commandeRepository.GetFormeJuridiques());
         }
         public async Task<List<TypeChantierModel>> GetTypeChantiers()
         {
-            return mapper.Map<List<TypeChantier>, List<TypeChantierModel>>(await commandeRepository.GetTypeChantiers());
+            return _mapper.Map<List<TypeChantier>, List<TypeChantierModel>>(await _commandeRepository.GetTypeChantiers());
         }
         public async Task<List<ZoneModel>> GetZones()
         {
-            return mapper.Map<List<Zone>, List<ZoneModel>>( await this.commandeRepository.GetZones());
+            return _mapper.Map<List<Zone>, List<ZoneModel>>( await this._commandeRepository.GetZones());
         }
         public async Task<List<ArticleModel>> GetArticles()
         {
-            return mapper.Map<List<Article>, List<ArticleModel>>(await this.commandeRepository.GetArticles());
+            return _mapper.Map<List<Article>, List<ArticleModel>>(await this._commandeRepository.GetArticles());
         }
         public async Task<List<DelaiPaiementModel>> GetDelaiPaiements()
         {
-            return mapper.Map<List<DelaiPaiement>, List<DelaiPaiementModel>>(await this.commandeRepository.GetDelaiPaiements());
+            return _mapper.Map<List<DelaiPaiement>, List<DelaiPaiementModel>>(await this._commandeRepository.GetDelaiPaiements());
         }
         public async Task<List<CentraleBetonModel>> GetCentraleBetons()
         {
-            return mapper.Map<List<CentraleBeton>, List<CentraleBetonModel>>(await this.commandeRepository.GetCentraleBetons());
+            return _mapper.Map<List<CentraleBeton>, List<CentraleBetonModel>>(await this._commandeRepository.GetCentraleBetons());
         }
 
         public async Task<double> GetTarifArticle(int Id)
         {
-            return await commandeRepository.GetTarifArticle(Id);
+            return await _commandeRepository.GetTarifArticle(Id);
         }
 
         public async Task<double> GetTarifZone(int Id)
         {
-            return await commandeRepository.GetTarifZone(Id);
+            return await _commandeRepository.GetTarifZone(Id);
         }
 
         public async Task<double> GetTarifPompe(int Id)
         {
-            return await commandeRepository.GetTarifPompe(Id);
+            return await _commandeRepository.GetTarifPompe(Id);
         }
-
+        public async Task<List<VilleModel>> GetVilles() => _mapper.Map<List<Ville>, List<VilleModel>> (await _commandeRepository.GetVilles());
+        public async Task<List<PaysModel>> GetPays() => _mapper.Map<List<Pays>, List<PaysModel>> (await _commandeRepository.GetPays());
         public async Task<bool> CreateCommande (CommandeViewModel commandeViewModel)
         {
-            await using var transaction = unitOfWork.BeginTransaction();
+            await using var transaction = _unitOfWork.BeginTransaction();
             try
             {
                 // Add chantier
-                var chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                var ctnId = await commandeRepository.CreateChantier(chantier);
+                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                var ctnId = await _commandeRepository.CreateChantier(chantier);
 
                 // Add client
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
-                var client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                var clientId = await commandeRepository.CreateClient(client);
+                var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                var clientId = await _commandeRepository.CreateClient(client);
 
                 // Statut de la commande
                 if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
@@ -87,7 +88,7 @@ namespace Service.Services
                 }
                 else
                 {
-                    var tarifs = await commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
+                    var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
                     foreach (var det in commandeViewModel.DetailCommandes.Where(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                     {
                         commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
@@ -107,8 +108,8 @@ namespace Service.Services
                 commandeViewModel.Commande.DateCommande = DateTime.Now;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.Commande.MontantCommande = Mt.Sum();
-                var commande = mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
-                var commandeId = await commandeRepository.CreateCommande(commande);
+                var commande = _mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
+                var commandeId = await _commandeRepository.CreateCommande(commande);
 
                 // Distinct articles en doublons
                 var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
@@ -126,8 +127,8 @@ namespace Service.Services
                     detail.IdCommande = commandeId;
                     detail.Unite_Id = 1;
                 }
-                var detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(details);
-                await commandeRepository.CreateDetailCommande(detailCommandes);
+                var detailCommandes = _mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(details);
+                await _commandeRepository.CreateDetailCommande(detailCommandes);
 
                 await transaction.CommitAsync();
                 return true;
@@ -141,18 +142,18 @@ namespace Service.Services
 
         public async Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null)
         {
-            var clients = await commandeRepository.GetClients(Ice, Cnie, RS);
-            return mapper.Map<List<Client>, List<ClientModel>>(clients);
+            var clients = await _commandeRepository.GetClients(Ice, Cnie, RS);
+            return _mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
         public async Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandes(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandes(ClientId, DateCommande);
             var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -160,7 +161,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -183,11 +184,20 @@ namespace Service.Services
                     FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
-                   // DetailsCommande  = listDetailCommandeApi
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -196,12 +206,12 @@ namespace Service.Services
         }
         public async Task<List<CommandeApiModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandesPT(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesPT(ClientId, DateCommande);
             var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -209,7 +219,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -223,19 +233,28 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
-                   // DetailsCommande  = listDetailCommandeApi
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -245,16 +264,16 @@ namespace Service.Services
         }
         public async Task<CommandeModel> GetCommande(int? id)
         {
-            return mapper.Map<CommandeModel>(await commandeRepository.GetCommande(id));
+            return _mapper.Map<CommandeModel>(await _commandeRepository.GetCommande(id));
         }
 
         public async Task<List<TarifPompeRefModel>> GetTarifPompeRefs()
         {
-            return mapper.Map<List<TarifPompeRef>, List<TarifPompeRefModel>>(await this.commandeRepository.GetTarifPompeRefs());
+            return _mapper.Map<List<TarifPompeRef>, List<TarifPompeRefModel>>(await this._commandeRepository.GetTarifPompeRefs());
         }
         public async Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId)
         {
-            var commandes = await commandeRepository.GetListDetailsCommande(commandeId);
+            var commandes = await _commandeRepository.GetListDetailsCommande(commandeId);
             List<DetailCommandeApiModel> listDetailsApiModel = new();
             foreach (var item in commandes)
             {
@@ -275,10 +294,10 @@ namespace Service.Services
         }
         public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName)
         {
-            await using var transaction = unitOfWork.BeginTransaction();
+            await using var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                var detail = await commandeRepository.GetDetailCommande(Id);
+                var detail = await _commandeRepository.GetDetailCommande(Id);
                 var user = await _authentificationRepository.GetUserByName(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
 
@@ -300,10 +319,10 @@ namespace Service.Services
                     ValidationLibelle = "Parametrage des prix PBE"
                 };
 
-                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                await commandeRepository.CreateValidation(validation);
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
 
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
             }
@@ -315,12 +334,12 @@ namespace Service.Services
         }
         public async Task<List<CommandeApiModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandesDAPBE(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesDAPBE(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+               /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -328,7 +347,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -342,19 +361,28 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
-                   // DetailsCommande  = listDetailCommandeApi
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -364,12 +392,12 @@ namespace Service.Services
         }
         public async Task<List<CommandeApiModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandesRC(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesRC(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -377,7 +405,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -391,18 +419,28 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+
                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
@@ -413,12 +451,12 @@ namespace Service.Services
         }
         public async Task<List<CommandeApiModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandesCV(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesCV(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -426,7 +464,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -440,18 +478,28 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+
                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
@@ -463,12 +511,12 @@ namespace Service.Services
 
         public async Task<List<CommandeApiModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
         {
-            var commandes = await commandeRepository.GetCommandesRL(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesRL(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
             {
-                listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
                 {
                     IdDetailCommande = detail.IdDetailCommande,
                     ArticleDesignation = detail.Article.Designation,
@@ -476,7 +524,7 @@ namespace Service.Services
                     DateProduction = detail.DateProduction,
                     Volume = detail.Volume,
                     UniteLibelle = detail.Unite.Libelle
-                }));
+                }));*/
                 var commandeApi = new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
@@ -490,19 +538,28 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
                     MaitreOuvrage = item.Chantier.MaitreOuvrage,
                     VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
                     Duree = item.Chantier.Duree,
                     Rayon = item.Chantier.Rayon,
-                   // DetailsCommande  = listDetailCommandeApi
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -515,9 +572,9 @@ namespace Service.Services
         {
             try
             {
-                var detail = await commandeRepository.GetDetailCommande(Id);
+                var detail = await _commandeRepository.GetDetailCommande(Id);
                 detail.Montant = Tarif;
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return true;
             }
             catch (Exception ex)
@@ -530,10 +587,10 @@ namespace Service.Services
         {
             try
             {
-                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var commande = await _commandeRepository.GetCommandeOnly(Id);
                 commande.IdStatut = null;
                 commande.Commentaire = Commentaire;
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return true;
             }
             catch (Exception ex)
@@ -544,10 +601,10 @@ namespace Service.Services
 
         public async Task<bool> RefuserCommande(int Id, string Commentaire, string UserName)
         {
-            await using var transaction = this.unitOfWork.BeginTransaction();
+            await using var transaction = this._unitOfWork.BeginTransaction();
             try
             {
-                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var commande = await _commandeRepository.GetCommandeOnly(Id);
                 var user = await _authentificationRepository.GetUserByName(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
 
@@ -568,10 +625,10 @@ namespace Service.Services
                     ValidationLibelle = "Rejet de l'offre de prix"
                 };
 
-                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                await commandeRepository.CreateValidation(validation);
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
 
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
             }
@@ -584,10 +641,10 @@ namespace Service.Services
 
         public async Task<bool> ValiderCommande(int Id, string Commentaire, string UserName)
         {
-            await using var transaction = this.unitOfWork.BeginTransaction();
+            await using var transaction = this._unitOfWork.BeginTransaction();
             try
             {
-                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var commande = await _commandeRepository.GetCommandeOnly(Id);
                 var user = await _authentificationRepository.GetUserByName(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
 
@@ -608,10 +665,10 @@ namespace Service.Services
                     ValidationLibelle = "Validation de l'offre de prix"
                 };
 
-                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                await commandeRepository.CreateValidation(validation);
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
 
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
             }
@@ -624,12 +681,12 @@ namespace Service.Services
 
         public async Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName)
         {
-            await using var transaction = this.unitOfWork.BeginTransaction();
+            await using var transaction = this._unitOfWork.BeginTransaction();
             try
             {
                 var user = await _authentificationRepository.GetUserByName(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
-                var commande = await commandeRepository.GetCommande(id);
+                var commande = await _commandeRepository.GetCommande(id);
 
                 //Update Commande
                 commande.TarifAchatPompage = commandeViewModel.Commande.TarifAchatPompage;
@@ -642,16 +699,16 @@ namespace Service.Services
                 commande.MontantCommande = Mt.Sum();
 
                 //Update Chantier
-                var chantier = mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                await commandeRepository.UpdateChantier((int)commande.IdChantier, chantier);
+                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                await _commandeRepository.UpdateChantier((int)commande.IdChantier, chantier);
 
                 //Update Client
-                var client = mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                await commandeRepository.UpdateClient((int)commande.IdClient, client);
+                var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                await _commandeRepository.UpdateClient((int)commande.IdClient, client);
 
                 //Update Details
-                var detailCommandes = mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(commandeViewModel.DetailCommandes);                  
-                await commandeRepository.UpdateDetailCommande(detailCommandes);
+                var detailCommandes = _mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(commandeViewModel.DetailCommandes);                  
+                await _commandeRepository.UpdateDetailCommande(detailCommandes);
 
                 //Trace Validateur
                 var validationModel = new ValidationModel()
@@ -665,10 +722,10 @@ namespace Service.Services
                     Fonction = userRole,
                     ValidationLibelle = "Modification tarif commande"
                 };
-                var validation = mapper.Map<ValidationModel, Validation>(validationModel);
-                await commandeRepository.CreateValidation(validation);
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
 
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
             }
@@ -683,11 +740,11 @@ namespace Service.Services
         {
             try
             {
-                var commande = await commandeRepository.GetCommandeOnly(Id);
+                var commande = await _commandeRepository.GetCommandeOnly(Id);
                 commande.TarifVenteTransport = VenteT;
                 commande.TarifVentePompage = VenteP;
                 commande.IdStatut = Statuts.Validé;
-                await unitOfWork.Complete();
+                await _unitOfWork.Complete();
                 return true;
             }
             catch(Exception ex)

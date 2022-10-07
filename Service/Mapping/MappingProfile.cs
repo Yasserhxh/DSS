@@ -24,7 +24,9 @@ namespace Service.Mapping
             CreateMap<Article, ArticleModel>();
             CreateMap<TarifPompeRef,TarifPompeRefModel>();
             CreateMap<Statut,StatutModel>();
-
+            CreateMap<DelaiPaiement,DelaiPaiementModel>();
+            CreateMap<Pays,PaysModel>();
+            CreateMap<Ville,VilleModel>();
 
             // Models to Entities mapping
             CreateMap<UserModel, ApplicationUser>();
@@ -41,7 +43,9 @@ namespace Service.Mapping
             CreateMap<ArticleModel, Article>();
             CreateMap<TarifPompeRefModel, TarifPompeRef>();
             CreateMap<StatutModel,Statut>();
-
+            CreateMap<DelaiPaiementModel,DelaiPaiement>();
+            CreateMap<PaysModel,Pays>();
+            CreateMap<VilleModel,Ville>();
         }
     }
 }

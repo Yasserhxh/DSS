@@ -18,6 +18,8 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande);
         Task<CommandeModel> GetCommande(int? id);
         Task<List<TarifPompeRefModel>> GetTarifPompeRefs();
+        public Task<List<VilleModel>> GetVilles();
+        public Task<List<PaysModel>> GetPays();
         Task<double> GetTarifZone(int Id);
         Task<double> GetTarifPompe(int Id);
         Task<List<CommandeApiModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande);

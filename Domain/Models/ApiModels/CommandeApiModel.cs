@@ -21,10 +21,20 @@ public class CommandeApiModel
     public string Cnie { get; set; }
     public string FormeJuridique { get; set; }
     public string RaisonSociale { get; set; }
+    public string Gsm { get; set; }
+    public string Email { get; set; }
+    public string Adresse { get; set; }
+    public string DestinataireInterlocuteur { get; set; }
+    public string Ville { get; set; }
+    public string Pays { get; set; }
     public string CtnNom { get; set; }
+    public string CtnZone { get; set; }
+    public string CtnType { get; set; }
     public string MaitreOuvrage { get; set; }
     public decimal VolumePrevisonnel { get; set; }
     public decimal Duree { get; set; }
     public decimal Rayon { get; set; }
-   // public List<DetailCommandeApiModel> DetailsCommande { get; set; }
+    public string CtrNom { get; set; }
+
+    // public List<DetailCommandeApiModel> DetailsCommande { get; set; }
 }

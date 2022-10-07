@@ -31,8 +31,9 @@ namespace Repository.Repositories
         }
         public async Task<List<Article>> GetArticles()
         {
-            return await _db.Articles.ToListAsync();
+            return await _db.Articles.Where(p => p.Article_Id != 4 && p.Article_Id != 5).ToListAsync();
         }
+        
         public async Task<List<DelaiPaiement>> GetDelaiPaiements()
         {
             return await _db.DélaiPaiements.ToListAsync();
@@ -66,8 +67,7 @@ namespace Repository.Repositories
             var confirm = await _unitOfWork.Complete();
             if (confirm > 0)
                 return client.Client_Id;
-            else
-                return null;
+            return null;
         }
 
         public async Task<int?> CreateCommande(Commande commande)
@@ -120,8 +120,12 @@ namespace Repository.Repositories
                 query = query.Where(d => d.DateCommande.Value.Date == DateCommande);
             }
             return await query
-                .Include(d => d.Chantier)
+                .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
+                .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
+                .Include(d => d.Chantier).ThenInclude(p=>p.Centrale_Beton)
                 .Include(d => d.Client).ThenInclude(p=>p.Forme_Juridique)
+                .Include(d => d.Client).ThenInclude(p=>p.Ville)
+                .Include(d => d.Client).ThenInclude(p=>p.Pays)
                 .Include(d => d.Statut)
                 .Include(p=>p.Tarif_Pompe)
                 .Include(d => d.DetailCommandes)
@@ -342,6 +346,10 @@ namespace Repository.Repositories
                 .Include(d => d.Tarif_Pompe)
                 .ToListAsync();
         }
+
+        public async Task<List<Ville>> GetVilles() =>  await _db.Villes.ToListAsync();
+        public async Task<List<Pays>> GetPays() =>  await _db.Pays.ToListAsync();
+
 
         public async Task<bool> UpdateChantier(int id, Chantier chantier)
         {
