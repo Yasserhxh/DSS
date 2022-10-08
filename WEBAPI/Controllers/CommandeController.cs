@@ -31,9 +31,7 @@ public class CommandeController : ControllerBase
 
         
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
-        if (redirect) 
-            return Ok();
-        return Problem();
+        return redirect ? Ok() : Problem();
     }
     [HttpPost("ListeCommandes")]
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
