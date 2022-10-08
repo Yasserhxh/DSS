@@ -39,9 +39,9 @@ public class CommandeController : ControllerBase
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
     {
         var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
-        if (client is null)
+        if (!client.Any())
             return Problem("Client est introuvable");
-        vm.IdClient = client.FirstOrDefault()?.Client_Id;
+        vm.IdClient = client.FirstOrDefault()!.Client_Id;
         vm.CommandesAPI = vm.UserRole switch
         {
             "Commercial" => await _commandeService.GetCommandes(vm.IdClient, vm.DateCommande),

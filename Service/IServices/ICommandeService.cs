@@ -15,7 +15,7 @@ namespace Service.IServices
         Task<double> GetTarifArticle(int Id);
         Task<bool> CreateCommande(CommandeViewModel commandeViewModel);
         Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null);
-        Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandes(int ClientId, DateTime? DateCommande);
         Task<CommandeModel> GetCommande(int? id);
         Task<List<TarifPompeRefModel>> GetTarifPompeRefs();
         public Task<List<VilleModel>> GetVilles();

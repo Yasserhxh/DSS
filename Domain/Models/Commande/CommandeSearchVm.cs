@@ -4,7 +4,7 @@ namespace Domain.Models.Commande
 {
     public class CommandeSearchVm
     {
-        public int? IdClient { get; set; }
+        public int IdClient { get; set; }
         public string UserRole { get; set; }
         public string IceClient { get; set; }
         public string CnieClient { get; set; }

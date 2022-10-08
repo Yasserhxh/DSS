@@ -146,27 +146,16 @@ namespace Service.Services
             return _mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<List<CommandeApiModel>> GetCommandes(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandes(int ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandes(ClientId, DateCommande);
-            var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
-            foreach (var item in commandes)
-            {
-                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
-                {
-                    IdDetailCommande = detail.IdDetailCommande,
-                    ArticleDesignation = detail.Article.Designation,
-                    Montant = detail.Montant,
-                    DateProduction = detail.DateProduction,
-                    Volume = detail.Volume,
-                    UniteLibelle = detail.Unite.Libelle
-                }));*/
-                var commandeApi = new CommandeApiModel
+            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
+            return commandes.Select(item => new CommandeApiModel
                 {
                     CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -175,8 +164,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
@@ -198,11 +187,8 @@ namespace Service.Services
                     Ville = item.Client.Ville.NomVille,
                     Pays = item.Client.Pays.NomPays
                     // DetailsCommande  = listDetailCommandeApi
-                };
-                commandesApi.Add(commandeApi);
-            }
-            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
-            return commandesApi;
+                })
+                .ToList();
         }
         public async Task<List<CommandeApiModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
         {
@@ -233,8 +219,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    // LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
@@ -361,8 +347,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
@@ -419,8 +405,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
@@ -478,8 +464,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
@@ -538,8 +524,8 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
-                    LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,

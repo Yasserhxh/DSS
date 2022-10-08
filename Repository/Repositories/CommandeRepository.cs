@@ -86,21 +86,16 @@ namespace Repository.Repositories
             return confirm > 0;
         }
 
-        public async Task<List<Client>> GetClients(string Ice, string Cnie, string RS)
+        public async Task<List<Client>> GetClients(string ice, string cnie, string rs)
         {
             var query = _db.Clients.AsQueryable();
-            if (Ice != null)
-            {
-                query = query.Where(d => d.Ice == Ice);
-            }
-            if (Cnie != null)
-            {
-                query = query.Where(d => d.Cnie == Cnie);
-            }
-            if (RS != null)
-            {
-                query = query.Where(d => d.RaisonSociale == RS);
-            }
+            if (!string.IsNullOrEmpty(ice))
+                query = query.Where(d => d.Ice == ice);
+            if (!string.IsNullOrEmpty(cnie))
+                query = query.Where(d => d.Cnie == cnie);
+            if (!string.IsNullOrEmpty(rs))  
+                query = query.Where(d => d.RaisonSociale == rs);
+            
             return await query
                 .Include(d => d.Chantier)
                 .Include(d => d.Ville)
@@ -108,14 +103,10 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandes(int? ClientId, DateTime? DateCommande)
+        public async Task<List<Commande>> GetCommandes(int ClientId, DateTime? DateCommande)
         {
-            var query = _db.Commandes.AsQueryable();
-            if (ClientId.HasValue)
-            {
-                query = query.Where(d => d.IdClient == ClientId);
-            }
-            if (DateCommande.HasValue)
+            var query = _db.Commandes.Where(d => d.IdClient == ClientId).AsQueryable();
+            if (DateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == DateCommande);
             }
@@ -133,6 +124,7 @@ namespace Repository.Repositories
                 .Include(d => d.DetailCommandes)
                 .ThenInclude(p=>p.Unite)
                 .ToListAsync();
+            //return await query.ToListAsync();
         }
 
         public async Task<List<Commande>> GetCommandesPT(int? clientId, DateTime? dateCommande)
