@@ -39,6 +39,7 @@ namespace Domain.Entities
         public Statut Statut { get; set; }
         public Chantier Chantier { get; set; }
         public List<DetailCommande> DetailCommandes { get; set; }
+        public List<CommandeStatut> CommandeStatuts { get; set; }
         public TarifPompeRef Tarif_Pompe { get; set; }
     }
 }
