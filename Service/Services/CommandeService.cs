@@ -80,6 +80,38 @@ namespace Service.Services
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
                 var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
                 var clientId = await _commandeRepository.CreateClient(client);
+                
+                // Statut de la commande
+                if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
+                {
+                    commandeViewModel.Commande.IdStatut = Statuts.EtudeEtPropositionDePrix;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.EtudeEtPropositionDePrix, 
+                    });
+                }
+                else
+                {
+                    var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
+                    foreach (var det in commandeViewModel.DetailCommandes.Where(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                    {
+                        commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrix, 
+                        });
+                        break;
+                    }
+
+                    if (commandeViewModel.Commande.IdStatut != Statuts.ValidationDeLoffreDePrix)
+                    {
+                        commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.FixationDePrixDuTransport, 
+                        });
+                    }
+                }
 
                 // Add commande
                 commandeViewModel.Commande.IdClient = clientId;
@@ -90,43 +122,6 @@ namespace Service.Services
                 commandeViewModel.Commande.MontantCommande = Mt.Sum();
                 var commande = _mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
                 var commandeId = await _commandeRepository.CreateCommande(commande);
-                
-                // Statut de la commande
-                if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EtudeEtPropositionDePrix;
-                    commandeViewModel.Commande.CommandeStatut.Add(new CommandeStatutModel
-                    {
-                        StatutId = Statuts.EtudeEtPropositionDePrix, 
-                        CommandeId = (int)commandeId
-                    });
-                }
-                else
-                {
-                    var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                    foreach (var det in commandeViewModel.DetailCommandes.Where(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
-                    {
-                        commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
-                        commandeViewModel.Commande.CommandeStatut.Add(new CommandeStatutModel
-                        {
-                            StatutId = Statuts.ValidationDeLoffreDePrix, 
-                            CommandeId = (int)commandeId
-                        });
-                        break;
-                    }
-
-                    if (commandeViewModel.Commande.IdStatut != Statuts.ValidationDeLoffreDePrix)
-                    {
-                        commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
-                        commandeViewModel.Commande.CommandeStatut.Add(new CommandeStatutModel
-                        {
-                            StatutId = Statuts.FixationDePrixDuTransport, 
-                            CommandeId = (int)commandeId
-                        });
-                    }
-                }
-
-
 
                 // Distinct articles en doublons
                 var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
@@ -530,9 +525,9 @@ namespace Service.Services
                 }));*/
                 var commandeApi = new CommandeApiModel
                 {
-                    CommandeId = item.IdCommande,
+                   CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -547,6 +542,7 @@ namespace Service.Services
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
                     CtnType = item.Chantier.Type_Chantier.Tc_Libelle,

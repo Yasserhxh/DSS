@@ -366,8 +366,8 @@ namespace Repository.Repositories
                 query = query.Where(x =>
                     x.DateCommande.Value <= Convert.ToDateTime(dateFinSearch));
             
-            if(string.IsNullOrEmpty(dateFinSearch) && string.IsNullOrEmpty(dateDebutSearch))
-                query = query.Where(x => x.DateCommande.Value.Date == DateTime.Now.Date);
+            //if(string.IsNullOrEmpty(dateFinSearch) && string.IsNullOrEmpty(dateDebutSearch))
+                //query = query.Where(x => x.DateCommande.Value.Date == DateTime.Now.Date);
             
             return await query
                 .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)

@@ -38,7 +38,7 @@ public class CommandeController : ControllerBase
     {
         var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
         if (!client.Any())
-            return Problem("Client est introuvable");
+            return Problem(statusCode:StatusCodes.Status404NotFound, title:"Client est introuvable");
         vm.IdClients = client.Select(x=>x.Client_Id).ToList();
         vm.CommandesAPI = vm.UserRole switch
         {
@@ -50,7 +50,7 @@ public class CommandeController : ControllerBase
             "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             _ => vm.CommandesAPI
         };
-        return !vm.CommandesAPI.Any() ? Problem("Aucune commande/prospection trouvée pour ce client") : Ok(vm.CommandesAPI);
+        return !vm.CommandesAPI.Any() ? Problem(statusCode:StatusCodes.Status404NotFound ,title: "Aucune commande/prospection trouvée pour ce client") : Ok(vm.CommandesAPI);
     }   
     [HttpGet("DetailCommande/{commandeId}")]
     public async Task<IActionResult> DetailCommande(int? commandeId)

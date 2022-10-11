@@ -6,6 +6,10 @@ namespace Domain.Entities
     [Table("Commande")]
     public class Commande
     {
+        public Commande()
+        {
+            CommandeStatuts = new List<CommandeStatut>();
+        }
         [Key]
         public int IdCommande { get; set; }
         [Column(TypeName = "nvarchar(20)")]
