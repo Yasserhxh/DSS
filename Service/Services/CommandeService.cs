@@ -90,28 +90,26 @@ namespace Service.Services
                         StatutId = Statuts.EtudeEtPropositionDePrix, 
                     });
                 }
-                else
+                
+                var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
+                if (commandeViewModel.DetailCommandes.Any(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                 {
-                    var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                    foreach (var det in commandeViewModel.DetailCommandes.Where(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                    commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
-                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
-                        {
-                            StatutId = Statuts.ValidationDeLoffreDePrix, 
-                        });
-                        break;
-                    }
-
-                    if (commandeViewModel.Commande.IdStatut != Statuts.ValidationDeLoffreDePrix)
-                    {
-                        commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
-                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
-                        {
-                            StatutId = Statuts.FixationDePrixDuTransport, 
-                        });
-                    }
+                        StatutId = Statuts.ValidationDeLoffreDePrix, 
+                    });
                 }
+
+                if (!commandeViewModel.Commande.CommandeStatuts.Any())
+                {
+                    commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.FixationDePrixDuTransport, 
+                    });
+                }
+                
 
                 // Add commande
                 commandeViewModel.Commande.IdClient = clientId;

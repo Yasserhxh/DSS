@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Domain.Models;
 using Domain.Models.Commande;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
 
@@ -31,7 +32,7 @@ public class CommandeController : ControllerBase
 
         
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
-        return redirect ? Ok() : Problem();
+        return redirect ? Ok("La prospection est crée avec succées") : Problem();
     }
     [HttpPost("ListeCommandes")]
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
