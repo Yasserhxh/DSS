@@ -512,9 +512,9 @@ namespace Service.Services
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
 
-        public async Task<List<CommandeApiModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch)
         {
-            var commandes = await _commandeRepository.GetCommandesRL(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesRL(ClientIds, DateCommande,DateDebutSearch,DateFinSearch);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)

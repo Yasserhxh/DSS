@@ -31,7 +31,7 @@ namespace Service.IServices
         Task<bool> ProposerPrixDABPE(int Id, decimal Tarif);
         Task<bool> RefuserCommande(int Id, string Commentaire, string UserName);
         Task<bool> ValiderCommande(int Id, string Commentaire, string UserName);
-        Task<List<CommandeApiModel>> GetCommandesRL(int? ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName);
         Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP);
     }

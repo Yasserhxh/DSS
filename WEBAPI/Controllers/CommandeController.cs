@@ -39,15 +39,15 @@ public class CommandeController : ControllerBase
         var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
         if (!client.Any())
             return Problem("Client est introuvable");
-        vm.IdClient = client.FirstOrDefault()!.Client_Id;
+        vm.IdClients = client.Select(x=>x.Client_Id).ToList();
         vm.CommandesAPI = vm.UserRole switch
         {
-            "Commercial" => await _commandeService.GetCommandes(vm.IdClient, vm.DateCommande),
-            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClient, vm.DateCommande),
-            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClient, vm.DateCommande),
-            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClient, vm.DateCommande),
-            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClient, vm.DateCommande),
-            "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande),
+            "Commercial" => await _commandeService.GetCommandes(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             _ => vm.CommandesAPI
         };
         return !vm.CommandesAPI.Any() ? Problem("Aucune commande/prospection trouvée pour ce client") : Ok(vm.CommandesAPI);
