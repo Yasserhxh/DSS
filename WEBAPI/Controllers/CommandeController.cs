@@ -42,11 +42,11 @@ public class CommandeController : ControllerBase
         vm.IdClients = client.Select(x=>x.Client_Id).ToList();
         vm.CommandesAPI = vm.UserRole switch
         {
-            "Commercial" => await _commandeService.GetCommandes(vm.IdClients.FirstOrDefault(), vm.DateCommande),
-            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients.FirstOrDefault(), vm.DateCommande),
-            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients.FirstOrDefault(), vm.DateCommande),
-            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients.FirstOrDefault(), vm.DateCommande),
-            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients.FirstOrDefault(), vm.DateCommande),
+            "Commercial" => await _commandeService.GetCommandes(vm.IdClients, vm.DateCommande),
+            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients, vm.DateCommande),
+            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients, vm.DateCommande),
+            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients, vm.DateCommande),
+            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients, vm.DateCommande),
             "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             _ => vm.CommandesAPI
         };

@@ -158,7 +158,7 @@ namespace Service.Services
             return _mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<List<CommandeApiModel>> GetCommandes(int ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandes(List<int> ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandes(ClientId, DateCommande);
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
@@ -202,7 +202,7 @@ namespace Service.Services
                 })
                 .ToList();
         }
-        public async Task<List<CommandeApiModel>> GetCommandesPT(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandesPT(ClientId, DateCommande);
             var commandesApi = new List<CommandeApiModel>();
@@ -330,7 +330,7 @@ namespace Service.Services
                 return false;
             }
         }
-        public async Task<List<CommandeApiModel>> GetCommandesDAPBE(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int> ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandesDAPBE(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
@@ -388,7 +388,7 @@ namespace Service.Services
             return commandesApi;
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<List<CommandeApiModel>> GetCommandesRC(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesRC(List<int> ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandesRC(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();
@@ -447,7 +447,7 @@ namespace Service.Services
             return commandesApi;
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<List<CommandeApiModel>> GetCommandesCV(int? ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande)
         {
             var commandes = await _commandeRepository.GetCommandesCV(ClientId, DateCommande);
                         var commandesApi = new List<CommandeApiModel>();

@@ -103,9 +103,9 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandes(int clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande)
         {
-            var query = _db.Commandes.Where(d => d.IdClient == clientId).AsQueryable();
+            var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient)).AsQueryable();
             if (dateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
@@ -127,13 +127,13 @@ namespace Repository.Repositories
             //return await query.ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandesPT(int? clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesPT(List<int> clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes.Where(x => x.IdStatut == Statuts.EtudeEtPropositionDePrix)
                 .AsQueryable();
-            if (clientId.HasValue)
+            if (clientId.Any())
             {
-                query = query.Where(d => d.IdClient == clientId);
+                query = query.Where(d => clientId.Contains((int)d.IdClient));
             }
             if (dateCommande.HasValue)
             {
@@ -229,7 +229,7 @@ namespace Repository.Repositories
             return A;
         }
 
-        public async Task<List<Commande>> GetCommandesDAPBE(int? clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesDAPBE(List<int> clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
@@ -247,9 +247,9 @@ namespace Repository.Repositories
                 .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
                 .AsQueryable();
 
-            if (clientId.HasValue)
+            if (clientId.Any())
             {
-                query = query.Where(d => d.IdClient == clientId);
+                query = query.Where(d => clientId.Contains((int)d.IdClient));
             }
             if (dateCommande.HasValue)
             {
@@ -269,7 +269,7 @@ namespace Repository.Repositories
             return result;
         }
 
-        public async Task<List<Commande>> GetCommandesRC(int? clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesRC(List<int>clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
@@ -287,9 +287,9 @@ namespace Repository.Repositories
                 .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
                 .AsQueryable();
 
-            if (clientId.HasValue)
+            if (clientId.Any())
             {
-                query = query.Where(d => d.IdClient == clientId);
+                query = query.Where(d => clientId.Contains((int)d.IdClient));
             }
             if (dateCommande.HasValue)
             {
@@ -309,7 +309,7 @@ namespace Repository.Repositories
             }
             return result;
         }
-        public async Task<List<Commande>> GetCommandesCV(int? clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesCV(List<int> clientId, DateTime? dateCommande)
         {
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
@@ -327,9 +327,9 @@ namespace Repository.Repositories
                 .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
                 .AsQueryable();
 
-            if (clientId.HasValue)
+            if (clientId.Any())
             {
-                query = query.Where(d => d.IdClient == clientId);
+                query = query.Where(d => clientId.Contains((int)d.IdClient));
             }
             if (dateCommande.HasValue)
             {
