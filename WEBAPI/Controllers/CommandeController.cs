@@ -61,7 +61,14 @@ public class CommandeController : ControllerBase
         return !details.Any() ? Problem("Commande non trouvée") : Ok(details);
 
     }
+    [HttpGet("StatusCommande/{commandeId}")]
+    public async Task<IActionResult> StatusCommande(int? commandeId)
+    {
+        if (commandeId is null) return Problem("Veuillez selectionner une commande");
+        var status = await _commandeService.GetCommandesStatuts(commandeId);
+        return !status.Any() ? Problem("Commande non trouvée") : Ok(status);
 
+    }
     [HttpGet("GetFormeJuridiques")]
     public async Task<IActionResult> GetFormesJuridique()
     {

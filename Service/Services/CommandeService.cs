@@ -82,9 +82,20 @@ namespace Service.Services
                 var clientId = await _commandeRepository.CreateClient(client);
                 
                 // Statut de la commande
+                
+                if (commandeViewModel.Commande.TarifAchatTransport !=  0 && commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 5))
+                {
+                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.FixationDePrixDuTransport, 
+                    });
+                }
+                
+                
                 if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
                 {
-                    commandeViewModel.Commande.IdStatut = Statuts.EtudeEtPropositionDePrix;
+                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
                         StatutId = Statuts.EtudeEtPropositionDePrix, 
@@ -94,19 +105,20 @@ namespace Service.Services
                 var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
                 if (commandeViewModel.DetailCommandes.Any(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                 {
-                    commandeViewModel.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
                         StatutId = Statuts.ValidationDeLoffreDePrix, 
                     });
                 }
 
-                if (!commandeViewModel.Commande.CommandeStatuts.Any())
+                //var statuts = new List<int>{1,3,41};
+                if (commandeViewModel.Commande.IdStatut is null)
                 {
-                    commandeViewModel.Commande.IdStatut = Statuts.FixationDePrixDuTransport;
+                    commandeViewModel.Commande.IdStatut = Statuts.Validé;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.FixationDePrixDuTransport, 
+                        StatutId = Statuts.Validé, 
                     });
                 }
                 
@@ -288,6 +300,10 @@ namespace Service.Services
             //return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
             return listDetailsApiModel;
         }
+
+        public async Task<List<StatutModel>> GetCommandesStatuts(int? id) =>
+            _mapper.Map<List<Statut>, List<StatutModel>>(
+                await _commandeRepository.GetCommandesStatuts(id));
         public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName)
         {
             await using var transaction = _unitOfWork.BeginTransaction();

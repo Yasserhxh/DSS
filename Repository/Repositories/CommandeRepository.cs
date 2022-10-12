@@ -155,6 +155,9 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<Statut>> GetCommandesStatuts(int? id) =>
+            await _db.CommandeStatuts.Where(p => p.CommandeId == id).Select(p => p.Statut).ToListAsync();
+
         public async Task<Commande> GetCommande(int? id)
         {
            /* var cmd = await _db.Commandes
