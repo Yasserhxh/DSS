@@ -98,7 +98,7 @@ namespace Service.Services
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.EtudeEtPropositionDePrix, 
+                        StatutId = Statuts.EtudeEtPropositionDePrix 
                     });
                 }
                 
@@ -108,7 +108,7 @@ namespace Service.Services
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.ValidationDeLoffreDePrix, 
+                        StatutId = Statuts.ValidationDeLoffreDePrix
                     });
                 }
 
@@ -118,7 +118,7 @@ namespace Service.Services
                     commandeViewModel.Commande.IdStatut = Statuts.Validé;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.Validé, 
+                        StatutId = Statuts.Validé 
                     });
                 }
                 
