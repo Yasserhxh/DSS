@@ -35,5 +35,7 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName);
         Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP);
+        ClientModel FindFormulaireClient(string Ice, string Cnie);
+
     }
 }

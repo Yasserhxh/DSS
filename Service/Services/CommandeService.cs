@@ -78,12 +78,26 @@ namespace Service.Services
 
                 // Add client
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
-                var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                var clientId = await _commandeRepository.CreateClient(client);
+                var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
+                        commandeViewModel.Client.Cnie);
+                int? clientId;
+                if (result == null)
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                     clientId = await _commandeRepository.CreateClient(client);
+                }
+                else
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                    var resUpdate = _commandeRepository.UpdateClient(result.Client_Id, client);
+                     clientId = result.Client_Id;
+
+                }
+                
                 
                 // Statut de la commande
                 
-                if (commandeViewModel.Commande.TarifAchatTransport !=  0 && commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 5))
+                if (commandeViewModel.Commande.TarifAchatTransport !=  0)
                 {
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -764,6 +778,12 @@ namespace Service.Services
             {
                 return false;
             }
+        }
+
+        public ClientModel FindFormulaireClient(string Ice, string Cnie)
+        {
+            var result =  _commandeRepository.FindFormulaireClient(Ice, Cnie);
+            return _mapper.Map<Client,ClientModel>(result);
         }
     }
 }

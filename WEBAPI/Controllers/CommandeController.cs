@@ -16,6 +16,14 @@ public class CommandeController : ControllerBase
     {
         _commandeService = commandeService;
     }
+
+    [HttpPost]
+    [Route("CheckClient")]
+    public  IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
+    {
+        var result =  _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient);
+        return Ok(result);
+    }
     [HttpPost]
     [Route("Create")]
     public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel)

@@ -455,5 +455,13 @@ namespace Repository.Repositories
                 return false;
             }
         }
+
+        public Client FindFormulaireClient(string Ice, string Cnie)
+        {
+            if (!string.IsNullOrEmpty(Ice))
+                return _db.Clients.FirstOrDefault(p => p.Ice == Ice);
+            
+            return !string.IsNullOrEmpty(Cnie) ? _db.Clients.FirstOrDefault(p => p.Cnie == Cnie) : new Client();
+        }
     }
 }
