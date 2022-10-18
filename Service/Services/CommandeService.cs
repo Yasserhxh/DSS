@@ -89,8 +89,10 @@ namespace Service.Services
                 else
                 {
                     var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                    var resUpdate = _commandeRepository.UpdateClient(result.Client_Id, client);
-                     clientId = result.Client_Id;
+                    var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
+                    if(!resUpdate)
+                        return false;
+                    clientId = result.Client_Id;
 
                 }
                 
@@ -169,7 +171,7 @@ namespace Service.Services
                 await transaction.CommitAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 await transaction.RollbackAsync();
                 return false;
