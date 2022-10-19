@@ -28,9 +28,9 @@ namespace Repository.IRepositories
         Task<DetailCommande> GetDetailCommande(int? Id);
         Task CreateValidation(Validation validation);
         Task<Dictionary<int?, double?>> GetTarifsByArticleIds(List<int?> Ids);
-        Task<List<Commande>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande);
-        Task<List<Commande>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande);
-        Task<List<Commande>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande);
+        Task<List<Commande>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
+        Task<List<Commande>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
+        Task<List<Commande>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<Commande>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<Ville>> GetVilles();
         Task<List<Pays>> GetPays();

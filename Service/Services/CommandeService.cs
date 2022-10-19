@@ -119,12 +119,28 @@ namespace Service.Services
                 }
                 
                 var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                if (commandeViewModel.DetailCommandes.Any(det => (double)det.Montant < tarifs[det.IdArticle] || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                 {
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.ValidationDeLoffreDePrix
+                        StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+                    });
+                }
+                if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  == 10))
+                {
+                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.ValidationDeLoffreDePrixRC
+                    });
+                }
+                if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
+                {
+                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.ValidationDeLoffreDePrixCV
                     });
                 }
 
@@ -333,7 +349,7 @@ namespace Service.Services
                 //Update Detail + Commande
                 detail.Montant = Tarif;
                 detail.Commande.MontantCommande = detail.Commande.MontantCommande + detail.Montant;
-                detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+               // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
@@ -361,9 +377,9 @@ namespace Service.Services
                 return false;
             }
         }
-        public async Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int> ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
         {
-            var commandes = await _commandeRepository.GetCommandesDAPBE(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesDAPBE(ClientId, DateCommande , dateDebutSearch,dateFinSearch);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
@@ -379,9 +395,9 @@ namespace Service.Services
                 }));*/
                 var commandeApi = new CommandeApiModel
                 {
-                    CommandeId = item.IdCommande,
+                      CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -396,6 +412,7 @@ namespace Service.Services
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
                     CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
@@ -419,9 +436,9 @@ namespace Service.Services
             return commandesApi;
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<List<CommandeApiModel>> GetCommandesRC(List<int> ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesRC(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
         {
-            var commandes = await _commandeRepository.GetCommandesRC(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesRC(ClientId, DateCommande, dateDebutSearch,dateFinSearch);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
@@ -436,10 +453,10 @@ namespace Service.Services
                     UniteLibelle = detail.Unite.Libelle
                 }));*/
                 var commandeApi = new CommandeApiModel
-                {
+                { 
                     CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -454,6 +471,7 @@ namespace Service.Services
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
                     CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
@@ -469,8 +487,7 @@ namespace Service.Services
                     DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
                     Ville = item.Client.Ville.NomVille,
                     Pays = item.Client.Pays.NomPays
-
-                   // DetailsCommande  = listDetailCommandeApi
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -478,9 +495,9 @@ namespace Service.Services
             return commandesApi;
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
-        public async Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSrearch)
         {
-            var commandes = await _commandeRepository.GetCommandesCV(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesCV(ClientId, DateCommande, dateDebutSearch, dateFinSrearch);
                         var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)
@@ -496,9 +513,9 @@ namespace Service.Services
                 }));*/
                 var commandeApi = new CommandeApiModel
                 {
-                    CommandeId = item.IdCommande,
+                      CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -513,6 +530,7 @@ namespace Service.Services
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
                     CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
@@ -528,8 +546,7 @@ namespace Service.Services
                     DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
                     Ville = item.Client.Ville.NomVille,
                     Pays = item.Client.Pays.NomPays
-
-                   // DetailsCommande  = listDetailCommandeApi
+                    // DetailsCommande  = listDetailCommandeApi
                 };
                 commandesApi.Add(commandeApi);
             }
@@ -646,7 +663,7 @@ namespace Service.Services
                 var validationModel = new ValidationModel()
                 {
                     IdCommande = Id,
-                    IdStatut = Statuts.ValidationDeLoffreDePrix,
+                  //  IdStatut = Statuts.ValidationDeLoffreDePrix,
                     Date = DateTime.Now,
                     UserId = user.Id,
                     Nom = user.Nom,
@@ -686,7 +703,7 @@ namespace Service.Services
                 var validationModel = new ValidationModel()
                 {
                     IdCommande = Id,
-                    IdStatut = Statuts.ValidationDeLoffreDePrix,
+                //    IdStatut = Statuts.ValidationDeLoffreDePrix,
                     Date = DateTime.Now,
                     UserId = user.Id,
                     Nom = user.Nom,
@@ -724,7 +741,7 @@ namespace Service.Services
                 commande.Conditions = commandeViewModel.Commande.Conditions;
                 commande.Delai_Paiement = commandeViewModel.Commande.Delai_Paiement;
                 commande.LongFleche_Id = commandeViewModel.Commande.LongFleche_Id;
-                commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+               // commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commande.MontantCommande = Mt.Sum();
 

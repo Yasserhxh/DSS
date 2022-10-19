@@ -26,9 +26,9 @@ namespace Service.IServices
         Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId);
         Task<List<StatutModel>> GetCommandesStatuts(int? id);
         Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName);
-        Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande);
-        Task<List<CommandeApiModel>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande);
-        Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
+        Task<List<CommandeApiModel>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
+        Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<bool> ProposerPrixDABPE(int Id, decimal Tarif);
         Task<bool> RefuserCommande(int Id, string Commentaire, string UserName);
         Task<bool> ValiderCommande(int Id, string Commentaire, string UserName);

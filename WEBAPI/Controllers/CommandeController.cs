@@ -10,10 +10,12 @@ namespace WEBAPI.Controllers;
 public class CommandeController : ControllerBase
 {
     private readonly ICommandeService _commandeService;
+    private readonly IBlobService blobService;
 
-    public CommandeController(ICommandeService commandeService)
+    public CommandeController(ICommandeService commandeService, IBlobService blobService)
     {
         _commandeService = commandeService;
+        this.blobService = blobService;
     }
 
     [HttpPost]
@@ -25,17 +27,17 @@ public class CommandeController : ControllerBase
     }
     [HttpPost]
     [Route("Create")]
-    public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel)
+    public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
     {
-       /* if (file != null)
+        if (file != null)
         {
             var mimeType = file.ContentType;
             using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
             ms.ToArray();
 
-            //commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid().ToString() + "/" + file.FileName, "Beton Spécial", fileData, mimeType);
-        }*/
+           // commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid().ToString() + "/" + file.FileName, "Beton Spécial", fileData, mimeType);
+        }
 
         
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
@@ -52,9 +54,9 @@ public class CommandeController : ControllerBase
         {
             "Commercial" => await _commandeService.GetCommandes(vm.IdClients, vm.DateCommande),
             "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients, vm.DateCommande ,vm.DateDebutSearch, vm.DateFinSearch),
-            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients, vm.DateCommande),
-            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients, vm.DateCommande),
-            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients, vm.DateCommande),
+            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
+            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
+            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
             "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             _ => vm.CommandesAPI
         };

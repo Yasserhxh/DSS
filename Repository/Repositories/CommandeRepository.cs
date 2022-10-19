@@ -239,7 +239,7 @@ namespace Repository.Repositories
             return A;
         }
 
-        public async Task<List<Commande>> GetCommandesDAPBE(List<int> clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesDAPBE(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
@@ -254,7 +254,8 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
+                .Where(x =>  x.IdStatut == Statuts.EnCoursDeTraitement
+                             && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true)
                 .AsQueryable();
 
             if (clientId.Any())
@@ -265,9 +266,16 @@ namespace Repository.Repositories
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
+             
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
             var commandes = await query.ToListAsync();
 
-            var result = new List<Commande>();
+        /*    var result = new List<Commande>();
             foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
@@ -276,11 +284,13 @@ namespace Repository.Repositories
                 result.Add(cmd);
                 continue;
             }
-            return result;
+            return result;*/
+        return commandes;
         }
 
-        public async Task<List<Commande>> GetCommandesRC(List<int>clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesRC(List<int>clientId, DateTime? dateCommande, string dateDebutSearch,string dateFinSearch)
         {
+            
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
                     .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
@@ -294,8 +304,9 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
-                .AsQueryable();
+                    .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
+                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true)
+                    .AsQueryable();
 
             if (clientId.Any())
             {
@@ -305,9 +316,16 @@ namespace Repository.Repositories
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
+             
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
             var commandes = await query.ToListAsync();
 
-            var result = new List<Commande>();
+         /*   var result = new List<Commande>();
             foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
@@ -316,10 +334,11 @@ namespace Repository.Repositories
                         tarifs[x.IdArticle] - (double)x.Montant < 10)) continue;
                 result.Add(cmd);
                 continue;
-            }
-            return result;
+            }*/
+            return commandes;
         }
-        public async Task<List<Commande>> GetCommandesCV(List<int> clientId, DateTime? dateCommande)
+
+        public async Task<List<Commande>> GetCommandesCV(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var query = _db.Commandes
                     .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
@@ -334,7 +353,8 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                .Where(x => x.IdStatut == Statuts.ValidationDeLoffreDePrix)
+                .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
+                && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixCV) == true)
                 .AsQueryable();
 
             if (clientId.Any())
@@ -345,17 +365,24 @@ namespace Repository.Repositories
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
+             
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
             var commandes = await query.ToListAsync();
 
             var result = new List<Commande>();
-            foreach (var cmd in commandes)
+            /*foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
                 if (!cmd.DetailCommandes.Any(x => x.Montant != null && x.IdArticle != null && tarifs[x.IdArticle] - (double)x.Montant <= 5)) continue;
                 result.Add(cmd);
                 continue;
-            }
-            return result;
+            }*/
+            return commandes;
         }
 
         public async Task<List<Commande>> GetCommandesRL(List<int> clientIds, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
