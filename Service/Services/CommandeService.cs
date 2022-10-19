@@ -246,9 +246,9 @@ namespace Service.Services
                 }));*/
                 var commandeApi = new CommandeApiModel
                 {
-                    CommandeId = item.IdCommande,
+                     CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
-                    StatutCommande =item.Statut.Libelle,
+                    StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
                     DateLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
@@ -257,12 +257,13 @@ namespace Service.Services
                     TarifVentePompage = item.TarifVentePompage,
                     Conditions = item.Conditions,
                     DelaiPaiement = item.Delai_Paiement,
-                    // LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
                     //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
                     Commentaire = item.Commentaire,
                     ArticleFile = item.ArticleFile,
                     Ice = item.Client.Ice,
                     Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
                     RaisonSociale = item.Client.RaisonSociale,
                     CtnNom = item.Chantier.Ctn_Nom,
                     CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
