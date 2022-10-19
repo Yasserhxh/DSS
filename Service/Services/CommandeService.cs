@@ -228,9 +228,9 @@ namespace Service.Services
                 })
                 .ToList();
         }
-        public async Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch)
         {
-            var commandes = await _commandeRepository.GetCommandesPT(ClientId, DateCommande);
+            var commandes = await _commandeRepository.GetCommandesPT(ClientId, DateCommande,DateDebutSearch,DateFinSearch);
             var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             foreach (var item in commandes)

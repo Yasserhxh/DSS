@@ -22,7 +22,7 @@ namespace Service.IServices
         public Task<List<PaysModel>> GetPays();
         Task<double> GetTarifZone(int Id);
         Task<double> GetTarifPompe(int Id);
-        Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande);
+        Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId);
         Task<List<StatutModel>> GetCommandesStatuts(int? id);
         Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName);

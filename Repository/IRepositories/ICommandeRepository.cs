@@ -23,7 +23,7 @@ namespace Repository.IRepositories
         Task<Commande> GetCommande(int? Id);
         Task<List<TarifPompeRef>> GetTarifPompeRefs();
         Task<double> GetTarifPompe(int Id);
-        Task<List<Commande>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande);
+        Task<List<Commande>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<Commande> GetCommandeOnly(int? Id);
         Task<DetailCommande> GetDetailCommande(int? Id);
         Task CreateValidation(Validation validation);

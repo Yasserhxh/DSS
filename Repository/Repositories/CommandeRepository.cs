@@ -127,18 +127,25 @@ namespace Repository.Repositories
             //return await query.ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandesPT(List<int> clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandesPT(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
-            var query = _db.Commandes.Where(x => x.IdStatut == Statuts.EtudeEtPropositionDePrix)
+            var query = _db.Commandes
+                .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
+                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true)
                 .AsQueryable();
             if (clientId.Any())
-            {
                 query = query.Where(d => clientId.Contains((int)d.IdClient));
-            }
+            
             if (dateCommande.HasValue)
-            {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
-            }
+            
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
+
             return await query
                 .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
                 .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
@@ -354,7 +361,9 @@ namespace Repository.Repositories
         public async Task<List<Commande>> GetCommandesRL(List<int> clientIds, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var query = _db.Commandes
-                .Where(x => x.IdStatut == Statuts.FixationDePrixDuTransport)
+                .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
+                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true)
+                //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
                 .AsQueryable();
             if (clientIds.Any())
                 query = query.Where(d => clientIds.Contains((int)d.IdClient));
@@ -363,11 +372,11 @@ namespace Repository.Repositories
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
 
             if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
-                    x.DateCommande.Value >= Convert.ToDateTime(dateDebutSearch));
+                    x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
             
             if(!string.IsNullOrEmpty(dateFinSearch))
                 query = query.Where(x =>
-                    x.DateCommande.Value <= Convert.ToDateTime(dateFinSearch));
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
             
             //if(string.IsNullOrEmpty(dateFinSearch) && string.IsNullOrEmpty(dateDebutSearch))
                 //query = query.Where(x => x.DateCommande.Value.Date == DateTime.Now.Date);
