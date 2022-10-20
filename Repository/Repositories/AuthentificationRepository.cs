@@ -68,6 +68,13 @@ namespace Repository.Repositories
             return role;
         }
 
+        public async Task<string> FindUserRoleByEmail(string email)
+        {
+            if (await _userManager.FindByEmailAsync(email) is not { } user)
+                return null;
+            var roles= await _userManager.GetRolesAsync(user);
+            return roles.FirstOrDefault();
+        }
         public async Task<List<UserModel>> getListUsers()
         {
             var users = (_db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc")

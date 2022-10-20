@@ -15,5 +15,6 @@ namespace Service.IServices
         Task<Response> AjouterUnUtilisateur(RegisterModel registerModel);
         Task<Response> UpdateUser(UserModel model);
         Task<Response> UpdateProfil(UpdateUserModel model);
+        Task<string> FindUserRoleByEmail(string email);
     }
 }

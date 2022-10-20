@@ -11,11 +11,13 @@ public class CommandeController : ControllerBase
 {
     private readonly ICommandeService _commandeService;
     private readonly IBlobService blobService;
+    private readonly IAuthentificationService _authentificationService;
 
-    public CommandeController(ICommandeService commandeService, IBlobService blobService)
+    public CommandeController(ICommandeService commandeService, IBlobService blobService, IAuthentificationService authentificationService)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
+        _authentificationService = authentificationService;
     }
 
     [HttpPost]
@@ -42,6 +44,14 @@ public class CommandeController : ControllerBase
         
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
         return redirect ? Ok("La prospection est crée avec succées") : Problem();
+    }
+
+    [HttpGet]
+    [Route("FindUserRoleByEmail/{email}")]
+    public async Task<IActionResult> FindUserRoleByEmail(string email)
+    {
+        var res = await _authentificationService.FindUserRoleByEmail(email);
+        return string.IsNullOrEmpty(email) ? Problem(statusCode: StatusCodes.Status409Conflict, title:"Utilisateur introuvable!") : Ok(res);
     }
     [HttpPost("ListeCommandes")]
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
