@@ -374,7 +374,7 @@ namespace Repository.Repositories
                     x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
             var commandes = await query.ToListAsync();
 
-            var result = new List<Commande>();
+          //  var result = new List<Commande>();
             /*foreach (var cmd in commandes)
             {
                 var tarifs = await GetTarifsByArticleIds(cmd.DetailCommandes.Select(x => x.IdArticle).ToList());
