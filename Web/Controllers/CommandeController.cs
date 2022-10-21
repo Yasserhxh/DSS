@@ -16,11 +16,11 @@ namespace Web.Controllers
     public class CommandeController : Controller
     {
         private readonly ICommandeService commandeService;
-        //private readonly IBlobService blobService;
-        public CommandeController(ICommandeService commandeService)
+        private readonly IBlobService _blobService;
+        public CommandeController(ICommandeService commandeService, IBlobService blobService)
         {
             this.commandeService = commandeService;
-           // this.blobService = blobService;
+            _blobService = blobService;
         }
         
 
@@ -30,11 +30,14 @@ namespace Web.Controllers
             if (file != null)
             {
                 var mimeType = file.ContentType;
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
-                ms.ToArray();
+                byte[] fileData;
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    fileData = ms.ToArray();
+                }
 
-                //commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid().ToString() + "/" + file.FileName, "Beton Spécial", fileData, mimeType);
+                commandeViewModel.Commande.ArticleFile = _blobService.UploadFileToBlob(Guid.NewGuid()+ "/" + file.FileName, "Beton Spécial", fileData, mimeType);
             }
             var redirect = await commandeService.CreateCommande(commandeViewModel);
             if (redirect)
@@ -42,11 +45,9 @@ namespace Web.Controllers
                 TempData["Creation"] = "OK";
                 return Redirect("/Commande/ListeCommandes");
             }
-            else
-            {
-                TempData["Creation"] = "KO";
-                return Redirect("/Home/Index");
-            }
+
+            TempData["Creation"] = "KO";
+            return Redirect("/Home/Index");
         }
 
         [Authorize(Roles = "Admin,Commercial")]

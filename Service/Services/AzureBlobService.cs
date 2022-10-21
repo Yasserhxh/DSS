@@ -53,7 +53,7 @@ public class AzureBlobService : IBlobService
         {
             var cloudStorageAccount = CloudStorageAccount.Parse(_configuration["AzureBlob:AccessKey"]);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var strContainerName = "uploads";
+            var strContainerName = "CimarUploads";
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
             var fileName = this.GenerateFileName(filenameP, strFileName);
 
@@ -62,13 +62,10 @@ public class AzureBlobService : IBlobService
                 await cloudBlobContainer.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
             }
 
-            if (fileName != null && fileData != null)
-            {
-                var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
-                cloudBlockBlob.Properties.ContentType = fileMimeType;
-                await cloudBlockBlob.UploadFromByteArrayAsync(fileData, 0, fileData.Length);
-                return cloudBlockBlob.Uri.AbsoluteUri;
-            }
-            return "";
+            if (fileName == null || fileData == null) return "";
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(fileName);
+            cloudBlockBlob.Properties.ContentType = fileMimeType;
+            await cloudBlockBlob.UploadFromByteArrayAsync(fileData, 0, fileData.Length);
+            return cloudBlockBlob.Uri.AbsoluteUri;
         }
 }

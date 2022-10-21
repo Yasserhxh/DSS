@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
 
 namespace WEBAPI.Controllers;
+
 [Route("[controller]")]
 
 public class CommandeController : ControllerBase
@@ -13,7 +14,8 @@ public class CommandeController : ControllerBase
     private readonly IBlobService blobService;
     private readonly IAuthentificationService _authentificationService;
 
-    public CommandeController(ICommandeService commandeService, IBlobService blobService, IAuthentificationService authentificationService)
+    public CommandeController(ICommandeService commandeService, IBlobService blobService,
+        IAuthentificationService authentificationService)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
@@ -22,23 +24,43 @@ public class CommandeController : ControllerBase
 
     [HttpPost]
     [Route("CheckClient")]
-    public  IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
+    public IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
     {
-        var result =  _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient);
+        var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient);
         return Ok(result);
     }
+
+  /*  [HttpPost]
+    [Route("Convert")]
+    public IActionResult ConvertFile([FromBody] string File)
+    {
+        
+        var mystr = File.Replace("base64,",string.Empty);
+
+                                               
+        var testb = Convert.FromBase64String(mystr);
+
+        System.IO.File.WriteAllBytes(@"c:\yourfile", Convert.FromBase64String(mystr));    
+        
+       // var file = Server.MapPath("~/Documents/"+File.name);
+        //System.IO.File.WriteAllBytes(file, testb);
+    }*/
     [HttpPost]
     [Route("Create")]
-    public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
+
+public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
     {
         if (file != null)
         {
             var mimeType = file.ContentType;
-            using var ms = new MemoryStream();
-            await file.CopyToAsync(ms);
-            ms.ToArray();
+            byte[] fileData;
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                fileData = ms.ToArray();
+            }
 
-           // commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid().ToString() + "/" + file.FileName, "Beton Spécial", fileData, mimeType);
+            commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid()+ "/" + file.FileName, "Beton Spécial", fileData, mimeType);
         }
 
         
