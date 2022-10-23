@@ -46,7 +46,27 @@ public class CommandeController : ControllerBase
        // var file = Server.MapPath("~/Documents/"+File.name);
         //System.IO.File.WriteAllBytes(file, testb);
     }*/
-    [HttpPost]
+  [HttpPost]
+  [Route("ConvertFile")]
+
+  public string ConvertFile([FromBody]  IFormFile? file)
+  {
+      if (file == null) return "";
+      var mimeType = file.ContentType;
+      byte[] fileData;
+      using (var ms = new MemoryStream())
+      {
+          file.CopyTo(ms);
+          fileData = ms.ToArray();
+      }
+
+      var str=  blobService.UploadFileToBlob(Guid.NewGuid() + "/" + file.FileName,
+          "Beton Spécial", fileData, mimeType);
+      return str;
+
+  }
+
+  [HttpPost]
     [Route("Create")]
 
 public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
