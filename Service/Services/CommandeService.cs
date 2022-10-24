@@ -788,9 +788,16 @@ namespace Service.Services
             try
             {
                 var commande = await _commandeRepository.GetCommandeOnly(Id);
-                commande.TarifVenteTransport = VenteT;
-                commande.TarifVentePompage = VenteP;
-                commande.IdStatut = Statuts.Validé;
+                var statut =commande.CommandeStatuts
+                    .FirstOrDefault(p => p.StatutId == Statuts.FixationDePrixDuTransport);
+                if (statut != null)
+                    statut.StatutId = Statuts.Validé;
+                commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
+                commande.TarifAchatTransport = VenteT;
+                //commande.TarifVentePompage = VenteP;
+                var i = commande.CommandeStatuts.Count(statut => statut.StatutId == Statuts.Validé);
+                if (i == commande.CommandeStatuts.Count)
+                    commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
                 return true;
             }

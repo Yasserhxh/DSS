@@ -187,6 +187,7 @@ namespace Repository.Repositories
             var cmd = await _db.Commandes
                 .Include(x => x.DetailCommandes)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
+                .Include(x=>x.CommandeStatuts)
                 .FirstOrDefaultAsync(x => x.IdCommande == id);
             return cmd;
         } 
