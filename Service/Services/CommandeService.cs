@@ -200,9 +200,10 @@ namespace Service.Services
             return _mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<List<CommandeApiModel>> GetCommandes(List<int> ClientId, DateTime? DateCommande)
+        public async Task<List<CommandeApiModel>> GetCommandes(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
         {
-            var commandes = await _commandeRepository.GetCommandes(ClientId, DateCommande);
+            var commandes =
+                await _commandeRepository.GetCommandes(ClientId, DateCommande, dateDebutSearch, dateFinSearch);
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
             return commandes.Select(item => new CommandeApiModel
@@ -795,7 +796,7 @@ namespace Service.Services
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
                 //commande.TarifVentePompage = VenteP;
-                var i = commande.CommandeStatuts.Count(statut => statut.StatutId == Statuts.Validé);
+                var i = commande.CommandeStatuts.Count(commandeStatut => commandeStatut.StatutId == Statuts.Validé);
                 if (i == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();

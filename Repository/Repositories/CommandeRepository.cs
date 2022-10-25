@@ -103,13 +103,20 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande)
+        public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient)).AsQueryable();
             if (dateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
+
             return await query
                 .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
                 .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)

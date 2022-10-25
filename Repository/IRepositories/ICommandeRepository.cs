@@ -17,7 +17,7 @@ namespace Repository.IRepositories
         Task<int?> CreateCommande(Commande commande);
         Task<bool> CreateDetailCommande(List<DetailCommande> detailCommandes);
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
-        Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande);
+        Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id);
         Task<List<Statut>> GetCommandesStatuts(int? id);
         Task<Commande> GetCommande(int? Id);
