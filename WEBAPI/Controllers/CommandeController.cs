@@ -4,6 +4,7 @@ using Domain.Models.ApiModels;
 using Domain.Models.Commande;
 using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
+using WEBAPI.Tools;
 
 namespace WEBAPI.Controllers;
 
@@ -208,5 +209,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     [HttpGet("GetListValidation/{commandeId:int}")]
     public async Task<IActionResult> GetListValidation(int commandeId) =>
         Ok(await _commandeService.GetListValidation(commandeId));
+    
+    
 
 }

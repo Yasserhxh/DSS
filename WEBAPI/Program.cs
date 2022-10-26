@@ -30,6 +30,7 @@ builder.Services.AddScoped<IAuthentificationRepository, AuthentificationReposito
 builder.Services.AddScoped<ICommandeRepository, CommandeRepository>();
 builder.Services.AddScoped<IBlobService, AzureBlobService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//builder.Services.AddControllersWithViews().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
