@@ -195,8 +195,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
             commandeModifApi.CommandeTarifPomp, commandeModifApi.UserEmail);
         return success;
     }
-
-
+    
     [HttpPost]
     [Route("PropositionPrix")]
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
