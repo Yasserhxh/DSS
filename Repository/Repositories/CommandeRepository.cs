@@ -136,9 +136,9 @@ namespace Repository.Repositories
 
         public async Task<List<Commande>> GetCommandesPT(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
+            // x.IdStatut == Statuts.EnCoursDeTraitement && 
             var query = _db.Commandes
-                .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true)
+                .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true)
                 .AsQueryable();
             if (clientId.Any())
                 query = query.Where(d => clientId.Contains((int)d.IdClient));
@@ -240,12 +240,12 @@ namespace Repository.Repositories
         public async Task CreateValidation(Validation validation)
         {
             await _db.Validations.AddAsync(validation);
+            await _unitOfWork.Complete();
         }
 
         public async Task<List<Validation>> GetListValidation(int commandeId) =>
              await _db.Validations.Where(p => p.IdCommande == commandeId)
-                .Include(p=>p.Fonction)
-                .ToListAsync();
+                 .ToListAsync();
         
         public async Task<Dictionary<int?, double?>> GetTarifsByArticleIds(List<int?> ids)
         {
@@ -401,9 +401,9 @@ namespace Repository.Repositories
 
         public async Task<List<Commande>> GetCommandesRL(List<int> clientIds, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
+            // x.IdStatut == Statuts.EnCoursDeTraitement &&
             var query = _db.Commandes
-                .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true)
+                .Where(x =>  x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true)
                 //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
                 .AsQueryable();
             if (clientIds.Any())

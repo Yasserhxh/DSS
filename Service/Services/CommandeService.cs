@@ -371,7 +371,8 @@ namespace Service.Services
                 await _commandeRepository.CreateValidation(validation);
                 
                 var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
-                if (listValidateurs.Count == commande.CommandeStatuts.Count)
+                
+                if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
                 await transaction.CommitAsync();
@@ -789,18 +790,15 @@ namespace Service.Services
             }
         }
 
-        public async Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP)
+        public async Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP, string email)
         {
             try
             {
                 var commande = await _commandeRepository.GetCommandeOnly(Id);
-               // var statut =commande.CommandeStatuts
-               //     .FirstOrDefault(p => p.StatutId == Statuts.FixationDePrixDuTransport);
-               // if (statut != null)
-                //    statut.StatutId = Statuts.Validé;
+                var user = await _authentificationRepository.FindUserByEmail(email);
+                var userRole = await _authentificationRepository.GetUserRole(user);
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
-                //commande.TarifVentePompage = VenteP;
                 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
@@ -808,18 +806,17 @@ namespace Service.Services
                     IdCommande = commande.IdCommande,
                     IdStatut = Statuts.FixationDePrixDuTransport,
                     Date = DateTime.Now,
-                   // UserId = user.Id,
-                   // Nom = user.Nom,
-                   // Prenom = user.Prenom,
-                    Fonction = "Responsable logisitque",
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
                     ValidationLibelle = "Fixation de prix du transport"
                 };
-
                 var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
                 await _commandeRepository.CreateValidation(validation);
                 
                 var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
-                if (listValidateurs.Count == commande.CommandeStatuts.Count)
+                if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
                 return true;

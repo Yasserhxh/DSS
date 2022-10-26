@@ -191,7 +191,8 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     public async Task<bool> FixationPrixTransport([FromBody] CommandeModifApi commandeModifApi)
     {
         var success = await _commandeService.FixationPrixTransport(
-            commandeModifApi.CommandeId, commandeModifApi.CommandeTarifTrans, commandeModifApi.CommandeTarifPomp);
+            commandeModifApi.CommandeId, commandeModifApi.CommandeTarifTrans,
+            commandeModifApi.CommandeTarifPomp, commandeModifApi.UserEmail);
         return success;
     }
 
