@@ -185,6 +185,7 @@ namespace Repository.Repositories
                 .Include(x => x.DetailCommandes)
                 .ThenInclude(a => a.Article)
                 .Include(x => x.DetailCommandes)
+                .Include(p=>p.CommandeStatuts)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
                 .Include(d => d.Client).FirstOrDefaultAsync();
             return cmd;
@@ -241,6 +242,11 @@ namespace Repository.Repositories
             await _db.Validations.AddAsync(validation);
         }
 
+        public async Task<List<Validation>> GetListValidation(int commandeId) =>
+             await _db.Validations.Where(p => p.IdCommande == commandeId)
+                .Include(p=>p.Fonction)
+                .ToListAsync();
+        
         public async Task<Dictionary<int?, double?>> GetTarifsByArticleIds(List<int?> ids)
         {
             var A = await _db.Articles.Where(x => ids.Contains(x.Article_Id)).ToDictionaryAsync(x => (int?)x.Article_Id, x=> x.Tarif);

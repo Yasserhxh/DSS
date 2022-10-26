@@ -194,4 +194,15 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
             commandeModifApi.CommandeId, commandeModifApi.CommandeTarifTrans, commandeModifApi.CommandeTarifPomp);
         return success;
     }
+
+
+    [HttpPost]
+    [Route("PropositionPrix")]
+    public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
+    {
+        var res = await _commandeService.ProposerPrix(commandeModifApi.CommandeDetailId,
+            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail);
+        return res;
+    }
+    
 }

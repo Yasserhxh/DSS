@@ -38,6 +38,7 @@ namespace Repository.IRepositories
         Task<bool> UpdateClient(int id, Client client);
         Task<bool> UpdateDetailCommande(List<DetailCommande> detailCommandes);
         Client FindFormulaireClient(string Ice, string Cnie);
+        Task<List<Validation>> GetListValidation(int commandeId);
 
     }
 }

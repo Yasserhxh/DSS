@@ -68,6 +68,10 @@ namespace Repository.Repositories
             return role;
         }
 
+        public async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
         public async Task<string> FindUserRoleByEmail(string email)
         {
             if (await _userManager.FindByEmailAsync(email) is not { } user)

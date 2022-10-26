@@ -28,6 +28,7 @@ namespace Service.Mapping
             CreateMap<Pays,PaysModel>();
             CreateMap<Ville,VilleModel>();
             CreateMap<CommandeStatut,CommandeStatutModel>();
+            CreateMap<Validation,ValidationModel>();
 
             // Models to Entities mapping
             CreateMap<UserModel, ApplicationUser>();
@@ -48,6 +49,7 @@ namespace Service.Mapping
             CreateMap<PaysModel,Pays>();
             CreateMap<VilleModel,Ville>();
             CreateMap<CommandeStatutModel,CommandeStatut>();
+            CreateMap<ValidationModel,Validation>();
 
         }
     }

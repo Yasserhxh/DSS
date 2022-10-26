@@ -344,13 +344,15 @@ namespace Service.Services
             try
             {
                 var detail = await _commandeRepository.GetDetailCommande(Id);
-                var user = await _authentificationRepository.GetUserByName(UserName);
+                var commande = await _commandeRepository.GetCommande(detail.IdCommande);
+                var user = await _authentificationRepository.FindUserByEmail(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
 
                 //Update Detail + Commande
                 detail.Montant = Tarif;
-                detail.Commande.MontantCommande = detail.Commande.MontantCommande + detail.Montant;
-               // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+                detail.Commande.MontantCommande += detail.Montant;
+
+                // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
@@ -367,7 +369,10 @@ namespace Service.Services
 
                 var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
                 await _commandeRepository.CreateValidation(validation);
-
+                
+                var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
+                if (listValidateurs.Count == commande.CommandeStatuts.Count)
+                    commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
@@ -789,15 +794,32 @@ namespace Service.Services
             try
             {
                 var commande = await _commandeRepository.GetCommandeOnly(Id);
-                var statut =commande.CommandeStatuts
-                    .FirstOrDefault(p => p.StatutId == Statuts.FixationDePrixDuTransport);
-                if (statut != null)
-                    statut.StatutId = Statuts.Validé;
+               // var statut =commande.CommandeStatuts
+               //     .FirstOrDefault(p => p.StatutId == Statuts.FixationDePrixDuTransport);
+               // if (statut != null)
+                //    statut.StatutId = Statuts.Validé;
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
                 //commande.TarifVentePompage = VenteP;
-                var i = commande.CommandeStatuts.Count(commandeStatut => commandeStatut.StatutId == Statuts.Validé);
-                if (i == commande.CommandeStatuts.Count)
+                
+                // Trace Vlidateur
+                var validationModel = new ValidationModel
+                {
+                    IdCommande = commande.IdCommande,
+                    IdStatut = Statuts.FixationDePrixDuTransport,
+                    Date = DateTime.Now,
+                   // UserId = user.Id,
+                   // Nom = user.Nom,
+                   // Prenom = user.Prenom,
+                    Fonction = "Responsable logisitque",
+                    ValidationLibelle = "Fixation de prix du transport"
+                };
+
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
+                
+                var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
+                if (listValidateurs.Count == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
                 return true;
