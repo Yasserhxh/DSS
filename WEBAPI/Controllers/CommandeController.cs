@@ -206,4 +206,8 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
         return res;
     }
     
+    [HttpGet("GetListValidation/{commandeId:int}")]
+    public async Task<IActionResult> GetListValidation(int commandeId) =>
+        Ok(await _commandeService.GetListValidation(commandeId));
+
 }

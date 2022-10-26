@@ -827,10 +827,13 @@ namespace Service.Services
             }
         }
 
-        public ClientModel FindFormulaireClient(string Ice, string Cnie)
+        public ClientModel FindFormulaireClient(string ice, string cnie)
         {
-            var result =  _commandeRepository.FindFormulaireClient(Ice, Cnie);
+            var result =  _commandeRepository.FindFormulaireClient(ice, cnie);
             return _mapper.Map<Client,ClientModel>(result);
         }
+
+        public async Task<List<ValidationModel>> GetListValidation(int commandeId) =>
+            _mapper.Map<List<Validation>,List<ValidationModel>>(await _commandeRepository.GetListValidation(commandeId));
     }
 }
