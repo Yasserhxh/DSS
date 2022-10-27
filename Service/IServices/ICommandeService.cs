@@ -37,6 +37,8 @@ namespace Service.IServices
         Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP, string email);
         ClientModel FindFormulaireClient(string Ice, string Cnie);
         Task<List<ValidationModel>> GetListValidation(int commandeId);
-
+        Task<bool> SetCommande(int commandeId);
+        Task<List<CommandeApiModel>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,
+            string dateFinSearch);
     }
 }

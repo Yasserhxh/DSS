@@ -219,4 +219,23 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
         }
     }
 
+    [HttpPost]
+    [Route("SetCommande")]
+    public async Task<bool> SetCommande([FromBody] CommandeApiModel commandeApiModel)
+        => await _commandeService.SetCommande(commandeApiModel.CommandeId);
+
+    [HttpPost]
+    [Route("GetListCommandesValidee")]
+    public async Task<IActionResult> GetListCommandesValidee([FromBody] CommandeSearchVm vm)
+    {
+        var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
+        if (!client.Any())
+            return Ok(new List<CommandeApiModel>());
+        vm.IdClients = client.Select(x=>x.Client_Id).ToList();
+        vm.CommandesAPI =
+            await _commandeService.GetCommandesValide(vm.IdClients, vm.DateCommande, vm.DateDebutSearch,
+                vm.DateFinSearch);
+        return Ok(vm.CommandesAPI);
+    }
+
 }

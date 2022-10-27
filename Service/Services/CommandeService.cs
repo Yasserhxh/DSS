@@ -836,5 +836,49 @@ namespace Service.Services
 
         public async Task<List<ValidationModel>> GetListValidation(int commandeId) =>
             _mapper.Map<List<Validation>,List<ValidationModel>>(await _commandeRepository.GetListValidation(commandeId));
+
+        public async Task<bool> SetCommande(int commandeId) => await _commandeRepository.SetCommande(commandeId);
+        public async Task<List<CommandeApiModel>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch, string dateFinSearch)
+        { 
+            var commandes = await _commandeRepository.GetCommandesValide(clientId, dateTime,dateDebutSearch,dateFinSearch);
+            return commandes.Select(item => new CommandeApiModel
+                {
+                    CommandeId = item.IdCommande,
+                    CodeCommandeSap = item.CodeClientSap,
+                    StatutCommande = item.Statut.Libelle,
+                    DateCommande = item.DateCommande,
+                    DateLivraisonSouhaite = item.DateLivraisonSouhaite,
+                    TarifAchatTransport = item.TarifAchatTransport,
+                    TarifVenteTransport = item.TarifVenteTransport,
+                    TarifAchatPompage = item.TarifAchatPompage,
+                    TarifVentePompage = item.TarifVentePompage,
+                    Conditions = item.Conditions,
+                    DelaiPaiement = item.Delai_Paiement,
+                    //LongFlecheLibelle = item.Tarif_Pompe.LongFleche_Libelle,
+                    //LongFlechePrix = item.Tarif_Pompe.LongFleche_Prix,
+                    Commentaire = item.Commentaire,
+                    ArticleFile = item.ArticleFile,
+                    Ice = item.Client.Ice,
+                    Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
+                    RaisonSociale = item.Client.RaisonSociale,
+                    CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
+                    MaitreOuvrage = item.Chantier.MaitreOuvrage,
+                    VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
+                    Duree = item.Chantier.Duree,
+                    Rayon = item.Chantier.Rayon,
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                    // DetailsCommande  = listDetailCommandeApi
+                })
+                .ToList();        
+        }
     }
 }

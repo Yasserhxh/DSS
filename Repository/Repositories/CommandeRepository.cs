@@ -515,5 +515,48 @@ namespace Repository.Repositories
             
             return !string.IsNullOrEmpty(Cnie) ? _db.Clients.FirstOrDefault(p => p.Cnie == Cnie) : new Client();
         }
+
+        
+        public async Task<bool> SetCommande(int commandeId)
+        {
+            var commande = await _db.Commandes.FirstOrDefaultAsync(p => p.IdCommande == commandeId);
+            commande!.IsProspection = false;
+            var comfirm =await _unitOfWork.Complete();
+            return comfirm > 0;
+        }
+
+        public async Task<List<Commande>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch, string dateFinSearch)
+        {
+            var query = _db.Commandes
+                .Where(x =>  x.IsProspection == false )
+                //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
+                .AsQueryable();
+            if (clientId.Any())
+                query = query.Where(d => clientId.Contains((int)d.IdClient));
+            
+            if (dateTime.HasValue)
+                query = query.Where(d => d.DateCommande.Value.Date == dateTime);
+
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
+            
+            return await query
+                .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
+                .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
+                .Include(d => d.Chantier).ThenInclude(p=>p.Centrale_Beton)
+                .Include(d => d.Client).ThenInclude(p=>p.Forme_Juridique)
+                .Include(d => d.Client).ThenInclude(p=>p.Ville)
+                .Include(d => d.Client).ThenInclude(p=>p.Pays)
+                .Include(d => d.Statut)
+                .Include(p=>p.Tarif_Pompe)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Article)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Unite)
+                .ToListAsync();        }
     }
 }

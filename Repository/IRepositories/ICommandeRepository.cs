@@ -39,6 +39,9 @@ namespace Repository.IRepositories
         Task<bool> UpdateDetailCommande(List<DetailCommande> detailCommandes);
         Client FindFormulaireClient(string Ice, string Cnie);
         Task<List<Validation>> GetListValidation(int commandeId);
+        Task<bool> SetCommande(int commandeId);
+        Task<List<Commande>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,
+            string dateFinSearch);
 
     }
 }
