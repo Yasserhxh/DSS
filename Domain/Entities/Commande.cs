@@ -38,7 +38,7 @@ namespace Domain.Entities
         public string Delai_Paiement { get; set; }
         public string Commentaire { get; set; }
         public string ArticleFile { get; set; }
-
+        public bool IsProspection { get; set; }
         public Client Client { get; set; }
         public Statut Statut { get; set; }
         public Chantier Chantier { get; set; }

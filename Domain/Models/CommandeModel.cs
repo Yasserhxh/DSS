@@ -26,6 +26,7 @@
         public int? LongFleche_Id { get; set; }
         public string Commentaire { get; set; }
         public string ArticleFile { get; set; }
+        public bool IsProspection { get; set; }
         public ClientModel Client { get; set; }
         public StatutModel Statut { get; set; }
         public ChantierModel Chantier { get; set; }

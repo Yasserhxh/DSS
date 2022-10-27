@@ -211,7 +211,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
             
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
-            return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content!.FileContents, mimeType!);
+            return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
         }
         catch (Exception ex)
         {

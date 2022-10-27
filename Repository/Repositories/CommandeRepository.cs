@@ -105,7 +105,7 @@ namespace Repository.Repositories
 
         public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
-            var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient)).AsQueryable();
+            var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient) && d.IsProspection == true).AsQueryable();
             if (dateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
@@ -138,7 +138,8 @@ namespace Repository.Repositories
         {
             // x.IdStatut == Statuts.EnCoursDeTraitement && 
             var query = _db.Commandes
-                .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true)
+                .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true
+                            && x.IsProspection == true  )
                 .AsQueryable();
             if (clientId.Any())
                 query = query.Where(d => clientId.Contains((int)d.IdClient));
@@ -170,7 +171,8 @@ namespace Repository.Repositories
         }
 
         public async Task<List<Statut>> GetCommandesStatuts(int? id) =>
-            await _db.CommandeStatuts.Where(p => p.CommandeId == id).Select(p => p.Statut).ToListAsync();
+            await _db.CommandeStatuts.Where(p => p.CommandeId == id)
+                .Select(p => p.Statut).ToListAsync();
 
         public async Task<Commande> GetCommande(int? id)
         {
@@ -269,7 +271,7 @@ namespace Repository.Repositories
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
                 .Where(x =>  x.IdStatut == Statuts.EnCoursDeTraitement
-                             && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true)
+                             && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true    && x.IsProspection == true )
                 .AsQueryable();
 
             if (clientId.Any())
@@ -319,7 +321,7 @@ namespace Repository.Repositories
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
                     .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true)
+                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true   && x.IsProspection == true )
                     .AsQueryable();
 
             if (clientId.Any())
@@ -368,7 +370,7 @@ namespace Repository.Repositories
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
                 .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixCV) == true)
+                && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixCV) == true   && x.IsProspection == true )
                 .AsQueryable();
 
             if (clientId.Any())
@@ -403,7 +405,7 @@ namespace Repository.Repositories
         {
             // x.IdStatut == Statuts.EnCoursDeTraitement &&
             var query = _db.Commandes
-                .Where(x =>  x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true)
+                .Where(x =>  x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true   && x.IsProspection == true )
                 //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
                 .AsQueryable();
             if (clientIds.Any())
