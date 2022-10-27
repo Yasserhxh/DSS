@@ -11,7 +11,7 @@ namespace WEBAPI.Tools
 {
     public static class ConvertHTmlToPdf
     {
-        public static async Task<ActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName)
+        public static async Task<IActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName)
         {
             // Get the view HTML string
             var htmlToConvert = (await RenderViewAsync(pController, pViewName1, model));
@@ -77,7 +77,7 @@ namespace WEBAPI.Tools
                 viewName = controller.ControllerContext.ActionDescriptor.ActionName;
             }
 
-         //   controller.ViewData.Model = model;
+            controller.ViewData.Model = model;
 
             await using var writer = new StringWriter();
             var viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;

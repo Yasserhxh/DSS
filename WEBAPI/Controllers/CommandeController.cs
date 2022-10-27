@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using Domain.Models;
 using Domain.Models.ApiModels;
 using Domain.Models.Commande;
@@ -10,7 +11,7 @@ namespace WEBAPI.Controllers;
 
 [Route("[controller]")]
 
-public class CommandeController : ControllerBase
+public class CommandeController : Controller
 {
     private readonly ICommandeService _commandeService;
     private readonly IBlobService blobService;
@@ -72,20 +73,6 @@ public class CommandeController : ControllerBase
 
 public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
     {
-        if (file != null)
-        {
-            var mimeType = file.ContentType;
-            byte[] fileData;
-            using (var ms = new MemoryStream())
-            {
-                file.CopyTo(ms);
-                fileData = ms.ToArray();
-            }
-
-            commandeViewModel.Commande.ArticleFile = blobService.UploadFileToBlob(Guid.NewGuid()+ "/" + file.FileName, "Beton Spécial", fileData, mimeType);
-        }
-
-        
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
         return redirect ? Ok("La prospection est crée avec succées") : Problem();
     }
@@ -210,6 +197,26 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     public async Task<IActionResult> GetListValidation(int commandeId) =>
         Ok(await _commandeService.GetListValidation(commandeId));
     
-    
+    [HttpGet("GeneratePDF/{id:int}")]
+    public async Task<string> GeneratePDf(int id)
+    {
+        try
+        {
+
+            var commande = await _commandeService.GetCommande(id);
+            Controller controller = this;
+
+            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "Pdf",
+                "Devis" + commande.IdCommande);
+            
+            var content = lFileResult as FileContentResult;
+            var mimeType = content?.ContentType;
+            return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content!.FileContents, mimeType!);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
 }

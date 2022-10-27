@@ -187,7 +187,7 @@ namespace Repository.Repositories
                 .Include(x => x.DetailCommandes)
                 .Include(p=>p.CommandeStatuts)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
-                .Include(d => d.Client).FirstOrDefaultAsync();
+                .Include(d => d.Client.Forme_Juridique).FirstOrDefaultAsync();
             return cmd;
         }
         public async Task<Commande> GetCommandeOnly(int? id)

@@ -1,4 +1,5 @@
-﻿@model Domain.Models.CommandeModel
+﻿@using System.Globalization
+@model Domain.Models.CommandeModel
 @{
     Layout = null;
 }
@@ -100,7 +101,7 @@ h3.signature {
   <table>
     <tbody>
       <tr>
-        <td width="60%"><h1 class="gtitle">DEVIS N° : 12345678</h1></td>
+        <td width="60%"><h1 class="gtitle">DEVIS N° :@Model.IdCommande.ToString()</h1></td>
         
         <td class="text-right"><img src="https://gmsblobstoragedev.blob.core.windows.net/cimarpdfs/logo.svg" alt="" width="220"></td>
       </tr>
@@ -120,7 +121,7 @@ h3.signature {
               <tr>
                 <td>Référence du devis</td>
                 <td>:</td>
-                <td class="bold">12345678</td>
+                <td class="bold">@Model.IdCommande.ToString()</td>
               </tr>
                 <tr>
                 <td>Date de validité du devis</td>
@@ -135,95 +136,82 @@ h3.signature {
                 <tr>
                 <td>Contact Client</td>
                 <td>:</td>
-                <td class="bold">Nom & Prénom</td>
+                <td class="bold">@Model.Client.Destinataire_Interlocuteur</td>
               </tr>
                 <tr>
                 <td>Nom Chantier</td>
                 <td>:</td>
-                <td class="bold">Chantier 1</td>
+                <td class="bold">@Model.Chantier.Ctn_Nom</td>
               </tr>
                 <tr>
                 <td>Volume Prévisionnel</td>
                 <td>:</td>
-                <td class="bold">500 m<sup>3</sup></td>
+                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString("n2") m<sup>3</sup></td>
               </tr>
                 <tr>
                 <td>Zone de livraison</td>
                 <td>:</td>
-                <td class="bold">Zone 1</td>
+                <td class="bold">@Model.Chantier.ZONE_CHANTIER.Zone_Libelle</td>
               </tr>
             </tbody>
           </table></td>
         <td width="10%">&nbsp;</td>
         <td class="Destin2"><h2 class="Fb">Destinataire :</h2>
-          <p class="Fb">Société SA</p>
-          <p>265 Bd Moulay Ismail, 20300 Casablanca Maroc</p>
-          <p>ICE : 110125478885621</p>
-          <p>Tél : 05.22.01.02.03</p></td>
+          <p class="Fb">@Model.Client.RaisonSociale @Model.Client.Forme_Juridique.FormeJuridique_Libelle</p>
+          <p>@Model.Client.Adresse</p>
+          <p>ICE : @Model.Client.Ice</p>
+          <p>Tél : @Model.Client.Gsm</p></td>
       </tr>
     </tbody>
   </table>
     
     <h2>Articles :</h2>
   <table class="titable">
-    <thead>
+      <thead>
       <tr>
-        <th>Article</th>
-        <th>Tarif DH/m<sup>3</sup></th>
-        <th>Quantité</th>
-        <th>Total HT</th>
+          <th>Article</th>
+          <th>Tarif DH/m<sup>3</sup></th>
+          <th>Quantité</th>
+          <th>Total HT</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-    </tbody>
-  </table> 
+      </thead>
+      @foreach (var item in @Model.DetailCommandes)
+      {
+          <tbody>
+          
+          <tr>
+              <td>&nbsp; @item.Article.Designation</td>
+              <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
+              <td>&nbsp; @item.Volume!.Value.ToString("n2")</td>
+              @{ var s = item.Volume * item.Montant!.Value; }
+              <td>&nbsp;@s!.Value.ToString("n2") </td>
+          </tr>
+          </tbody>
+      }
+
+ </table> 
     <h2>Services :</h2>
   <table class="titable">
-    <thead>
+      <thead>
       <tr>
-        <th>Article</th>
-        <th>Tarif DH/m<sup>3</sup></th>
-        <th>Quantité</th>
-        <th>Total HT</th>
+          <th>Article</th>
+          <th>Tarif DH/m<sup>3</sup></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
+      
       <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+          <td>&nbsp; Tarifs de transport</td>
+          <td>&nbsp; @Model.TarifAchatTransport.ToString("n2")</td>
       </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
-    </tbody>
+      
+      </tbody>
+    
   </table>  
     
     <h2>Conditions & Délai de paiement</h2>
     <div class="textarea">
-    
+    @Model.Conditions
     </div>
     
     

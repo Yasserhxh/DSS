@@ -28,7 +28,7 @@ public class AzureBlobService : IBlobService
 
             var cloudStorageAccount = CloudStorageAccount.Parse(_configuration["AzureBlob:AccessKey"]);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var strContainerName = "uploads";
+            var strContainerName = "cimarpdfs";
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
 
             var pathPrefix = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-dd") + "/";
@@ -53,7 +53,7 @@ public class AzureBlobService : IBlobService
         {
             var cloudStorageAccount = CloudStorageAccount.Parse(_configuration["AzureBlob:AccessKey"]);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
-            var strContainerName = "CimarUploads";
+            var strContainerName = "cimarpdfs";
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
             var fileName = this.GenerateFileName(filenameP, strFileName);
 
