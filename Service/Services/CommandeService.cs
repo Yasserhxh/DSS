@@ -114,7 +114,17 @@ namespace Service.Services
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                     {
-                        StatutId = Statuts.EtudeEtPropositionDePrix 
+                        StatutId = Statuts.EtudeEtPropositionDePrix
+
+                    }); 
+                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+
+                    });  commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    {
+                        StatutId = Statuts.ValidationDeLoffreDePrixRC
+
                     });
                 }
                 
@@ -153,7 +163,16 @@ namespace Service.Services
                         StatutId = Statuts.Validé 
                     });
                 }
-                
+                // Distinct status en doublons
+                var status = commandeViewModel.Commande.CommandeStatuts.GroupBy(x => x.StatutId, (key,list)
+                    => new CommandeStatutModel
+                    {
+                        StatutId = key
+                     
+                    }).ToList();
+                // Add new Status
+                commandeViewModel.Commande.CommandeStatuts.Clear();
+                commandeViewModel.Commande.CommandeStatuts   = status;
 
                 // Add commande
                 commandeViewModel.Commande.IdClient = clientId;
