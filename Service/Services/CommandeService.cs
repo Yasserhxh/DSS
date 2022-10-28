@@ -159,7 +159,7 @@ namespace Service.Services
                 commandeViewModel.Commande.IdClient = clientId;
                 commandeViewModel.Commande.Currency = "MAD";
                 commandeViewModel.Commande.IdChantier = ctnId;
-                commandeViewModel.Commande.DateCommande = DateTime.Now;
+                commandeViewModel.Commande.DateCommande = DateTime.UtcNow;
                 commandeViewModel.Commande.IsProspection = true;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.Commande.MontantCommande = Mt.Sum();
