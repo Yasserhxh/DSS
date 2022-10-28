@@ -189,7 +189,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
     {
         var res = await _commandeService.ProposerPrix(commandeModifApi.CommandeDetailId,
-            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail);
+            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile);
         return res;
     }
     

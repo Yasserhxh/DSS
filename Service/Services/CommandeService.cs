@@ -358,7 +358,7 @@ namespace Service.Services
         public async Task<List<StatutModel>> GetCommandesStatuts(int? id) =>
             _mapper.Map<List<Statut>, List<StatutModel>>(
                 await _commandeRepository.GetCommandesStatuts(id));
-        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName)
+        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
@@ -370,6 +370,7 @@ namespace Service.Services
 
                 //Update Detail + Commande
                 detail.Montant = Tarif;
+                detail.ArticleFile = articleFile;
                 detail.Commande.MontantCommande += detail.Montant;
 
                 // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;

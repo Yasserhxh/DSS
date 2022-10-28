@@ -7,5 +7,7 @@ public class CommandeModifApi
     public double CommandeTarifPomp { get; set; }
     public int CommandeDetailId { get; set; }
     public string UserEmail { get; set; }
+    public string CommandeBetonArticleFile { get; set; }
+
     public decimal CommandeTarifBeton { get; set; }
 }

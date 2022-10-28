@@ -12,6 +12,7 @@ namespace Domain.Entities
         public int? IdCommande { get; set; }
         [Column(TypeName = "nvarchar(20)")]
         public string CodeCommandeSap { get; set; }
+        public string ArticleFile { get; set; }
         [ForeignKey("Article")]
         public int? IdArticle { get; set; }
         [Column(TypeName = "nvarchar(20)")]
