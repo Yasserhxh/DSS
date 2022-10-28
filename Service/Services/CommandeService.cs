@@ -346,7 +346,8 @@ namespace Service.Services
                     Montant = item.Montant,
                     DateProduction = item.DateProduction,
                     Volume = item.Volume,
-                    UniteLibelle = item.Unite.Libelle
+                    UniteLibelle = item.Unite.Libelle,
+                    ArticleFile = item.ArticleFile
                     
                 };
                 listDetailsApiModel.Add(detailcommandeApi);

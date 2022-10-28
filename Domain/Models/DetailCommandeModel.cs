@@ -8,6 +8,7 @@
         public int? IdArticle { get; set; }
         public string CodeArticleSap { get; set; }
         public string ArticleFile { get; set; }
+        public decimal? MontantRef { get; set; }
         public decimal? Montant { get; set; }
         public DateTime? DateProduction { get; set; }
         public int? IdStatut { get; set; }
