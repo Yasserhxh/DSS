@@ -137,7 +137,7 @@ namespace Service.Services
                         StatutId = Statuts.ValidationDeLoffreDePrixDABPE
                     });
                 }
-                if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 10 && tarifs[det.IdArticle] - (double)det.Montant  <13))
+                else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 10 && tarifs[det.IdArticle] - (double)det.Montant  <=13))
                 {
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -145,7 +145,7 @@ namespace Service.Services
                         StatutId = Statuts.ValidationDeLoffreDePrixRC
                     });
                 }
-                if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
+                else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
                 {
                     commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                     commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
