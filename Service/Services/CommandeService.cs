@@ -905,12 +905,12 @@ namespace Service.Services
                 .ToList();        
         }
         
-        public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail)
+        public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                var commande = await _commandeRepository.GetCommande(commandeModifApi.FirstOrDefault()!.IdCommande);
+                var commande = await _commandeRepository.GetCommande(IdCommande);
                 var user = await _authentificationRepository.FindUserByEmail(UserEmail);
                 var userRole = await _authentificationRepository.GetUserRole(user);
                 foreach (var item in commandeModifApi)
@@ -925,7 +925,7 @@ namespace Service.Services
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
                 {
-                    IdCommande = commandeModifApi.FirstOrDefault()!.IdCommande,
+                    IdCommande = IdCommande,
                     IdStatut = Statuts.ParametrageDesPrixPBE,
                     Date = DateTime.Now,
                     UserId = user.Id,

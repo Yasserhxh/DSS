@@ -196,7 +196,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     [Route("FixationPrixRC")]
     public async Task<bool> FixationPrixRC([FromBody] JsonBetonModifApi betonModifApi)
     {
-        var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail);
+        var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail, betonModifApi.IdCommande);
         return res;
     }
     [HttpGet("GetListValidation/{commandeId:int}")]
