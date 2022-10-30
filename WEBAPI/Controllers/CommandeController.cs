@@ -192,7 +192,13 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
             commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile);
         return res;
     }
-    
+    [HttpPost]
+    [Route("FixationPrixRC")]
+    public async Task<bool> FixationPrixRC([FromBody] JsonBetonModifApi betonModifApi)
+    {
+        var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail);
+        return res;
+    }
     [HttpGet("GetListValidation/{commandeId:int}")]
     public async Task<IActionResult> GetListValidation(int commandeId) =>
         Ok(await _commandeService.GetListValidation(commandeId));

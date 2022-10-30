@@ -191,7 +191,8 @@ namespace Service.Services
                     {
                         IdArticle = key,
                         Montant = list.FirstOrDefault().Montant,
-                        Volume = list.Sum(x => x.Volume)
+                        Volume = list.Sum(x => x.Volume),
+                        MontantRef = list.FirstOrDefault().MontantRef
                     };
                 }).ToList();
 
@@ -342,12 +343,14 @@ namespace Service.Services
                 var detailcommandeApi = new DetailCommandeApiModel
                 {
                     IdDetailCommande = item.IdDetailCommande,
+                    IdCommande = (int)item.IdCommande!,
                     ArticleDesignation = item.Article.Designation,
                     Montant = item.Montant,
                     DateProduction = item.DateProduction,
                     Volume = item.Volume,
                     UniteLibelle = item.Unite.Libelle,
-                    ArticleFile = item.ArticleFile
+                    ArticleFile = item.ArticleFile,
+                    MontantRef = item.MontantRef
                     
                 };
                 listDetailsApiModel.Add(detailcommandeApi);
@@ -900,6 +903,54 @@ namespace Service.Services
                     // DetailsCommande  = listDetailCommandeApi
                 })
                 .ToList();        
+        }
+        
+        public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail)
+        {
+            await using var transaction = _unitOfWork.BeginTransaction();
+            try
+            {
+                var commande = await _commandeRepository.GetCommande(commandeModifApi.FirstOrDefault()!.IdCommande);
+                var user = await _authentificationRepository.FindUserByEmail(UserEmail);
+                var userRole = await _authentificationRepository.GetUserRole(user);
+                foreach (var item in commandeModifApi)
+                {
+                    var detail = await _commandeRepository.GetDetailCommande(item.idDetailCommande);
+                    detail.Montant = item.montant;
+                  //  detail.ArticleFile = item.CommandeBetonArticleFile;
+                    detail.Commande.MontantCommande += detail.Montant;
+                }
+                // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
+
+                // Trace Vlidateur
+                var validationModel = new ValidationModel
+                {
+                    IdCommande = commandeModifApi.FirstOrDefault()!.IdCommande,
+                    IdStatut = Statuts.ParametrageDesPrixPBE,
+                    Date = DateTime.Now,
+                    UserId = user.Id,
+                    Nom = user.Nom,
+                    Prenom = user.Prenom,
+                    Fonction = userRole,
+                    ValidationLibelle = "Parametrage des prix PBE"
+                };
+
+                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
+                await _commandeRepository.CreateValidation(validation);
+                
+                var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
+                
+                if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
+                    commande.IdStatut = Statuts.Validé;
+                await _unitOfWork.Complete();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
     }
 }

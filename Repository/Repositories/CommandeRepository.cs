@@ -270,8 +270,7 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                .Where(x =>  x.IdStatut == Statuts.EnCoursDeTraitement
-                             && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true    && x.IsProspection == true )
+                .Where(x =>   x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true    && x.IsProspection == true )
                 .AsQueryable();
 
             if (clientId.Any())
@@ -320,8 +319,7 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                    .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                            && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true   && x.IsProspection == true )
+                    .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true   && x.IsProspection == true )
                     .AsQueryable();
 
             if (clientId.Any())
