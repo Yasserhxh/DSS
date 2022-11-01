@@ -98,62 +98,67 @@ namespace Service.Services
                 
                 
                 // Statut de la commande
+                if (commandeViewModel.Commande.IsProspection)
+                {
+                    if (commandeViewModel.Commande.TarifAchatTransport !=  0)
+                    {
+                        commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.FixationDePrixDuTransport, 
+                        });
+                    }
                 
-                if (commandeViewModel.Commande.TarifAchatTransport !=  0)
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                
+                    if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
                     {
-                        StatutId = Statuts.FixationDePrixDuTransport, 
-                    });
-                }
+                        commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.EtudeEtPropositionDePrix
+
+                        }); 
+                        /*  commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                          {
+                              StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+      
+                          });*/
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixRC
+
+                        });
+                    }
+
                 
                 
-                if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                    var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
+                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 13 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                     {
-                        StatutId = Statuts.EtudeEtPropositionDePrix
-
-                    }); 
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+                        });
+                    }
+                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 10 && tarifs[det.IdArticle] - (double)det.Montant  <=13))
                     {
-                        StatutId = Statuts.ValidationDeLoffreDePrixDABPE
-
-                    });  commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixRC
+                        });
+                    }
+                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
                     {
-                        StatutId = Statuts.ValidationDeLoffreDePrixRC
-
-                    });
-                }
+                        commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixCV
+                        });
+                    }
                 
-                var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 13 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
-                    {
-                        StatutId = Statuts.ValidationDeLoffreDePrixDABPE
-                    });
                 }
-                else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 10 && tarifs[det.IdArticle] - (double)det.Montant  <=13))
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
-                    {
-                        StatutId = Statuts.ValidationDeLoffreDePrixRC
-                    });
-                }
-                else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
-                {
-                    commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
-                    commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
-                    {
-                        StatutId = Statuts.ValidationDeLoffreDePrixCV
-                    });
-                }
-
                 //var statuts = new List<int>{1,3,41};
                 if (commandeViewModel.Commande.IdStatut is null)
                 {
@@ -179,7 +184,7 @@ namespace Service.Services
                 commandeViewModel.Commande.Currency = "MAD";
                 commandeViewModel.Commande.IdChantier = ctnId;
                 commandeViewModel.Commande.DateCommande = DateTime.UtcNow;
-                commandeViewModel.Commande.IsProspection = true;
+                //commandeViewModel.Commande.IsProspection = true;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.Commande.MontantCommande = Mt.Sum();
                 var commande = _mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
@@ -908,6 +913,7 @@ namespace Service.Services
         public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
+            var isSpecial = false;
             try
             {
                 var commande = await _commandeRepository.GetCommande(IdCommande);
@@ -916,6 +922,8 @@ namespace Service.Services
                 foreach (var item in commandeModifApi)
                 {
                     var detail = await _commandeRepository.GetDetailCommande(item.idDetailCommande);
+                    if (detail.IdArticle == 4)
+                        isSpecial = true;
                     detail.Montant = item.montant;
                   //  detail.ArticleFile = item.CommandeBetonArticleFile;
                     detail.Commande.MontantCommande += detail.Montant;
@@ -937,11 +945,24 @@ namespace Service.Services
 
                 var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
                 await _commandeRepository.CreateValidation(validation);
+                if (isSpecial && userRole == "Responsable commercial")
+                {
+
+                    commande.IdStatut = Statuts.EnCoursDeTraitement;
+                    commande.CommandeStatuts.Add(new CommandeStatut
+                    {
+                        StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+
+                    });
+                }
+                else
+                {
+                    var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
                 
-                var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
-                
-                if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
-                    commande.IdStatut = Statuts.Validé;
+                    if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
+                        commande.IdStatut = Statuts.Validé;
+                }
+              
                 await _unitOfWork.Complete();
                 await transaction.CommitAsync();
                 return true;
