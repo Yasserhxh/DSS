@@ -29,7 +29,7 @@ public class CommandeController : Controller
     [Route("CheckClient")]
     public IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
     {
-        var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient);
+        var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient, clientInFos.RsClient);
         return Ok(result);
     }
 

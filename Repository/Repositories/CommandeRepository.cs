@@ -506,11 +506,13 @@ namespace Repository.Repositories
             }
         }
 
-        public Client FindFormulaireClient(string Ice, string Cnie)
+        public Client FindFormulaireClient(string Ice, string Cnie, string Rs)
         {
             if (!string.IsNullOrEmpty(Ice))
                 return _db.Clients.FirstOrDefault(p => p.Ice == Ice);
-            
+            if (!string.IsNullOrEmpty(Rs))
+                return _db.Clients.FirstOrDefault(p => p.RaisonSociale == Rs);
+
             return !string.IsNullOrEmpty(Cnie) ? _db.Clients.FirstOrDefault(p => p.Cnie == Cnie) : new Client();
         }
 

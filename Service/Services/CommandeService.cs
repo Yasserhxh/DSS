@@ -79,7 +79,7 @@ namespace Service.Services
                 // Add client
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
                 var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
-                        commandeViewModel.Client.Cnie);
+                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
                 int? clientId;
                 if (result == null)
                 {
@@ -852,9 +852,9 @@ namespace Service.Services
             }
         }
 
-        public ClientModel FindFormulaireClient(string ice, string cnie)
+        public ClientModel FindFormulaireClient(string ice, string cnie, string Rs)
         {
-            var result =  _commandeRepository.FindFormulaireClient(ice, cnie);
+            var result =  _commandeRepository.FindFormulaireClient(ice, cnie, Rs);
             return _mapper.Map<Client,ClientModel>(result);
         }
 
