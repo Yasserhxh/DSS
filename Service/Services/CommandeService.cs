@@ -342,10 +342,8 @@ namespace Service.Services
         public async Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId)
         {
             var commandes = await _commandeRepository.GetListDetailsCommande(commandeId);
-            List<DetailCommandeApiModel> listDetailsApiModel = new();
-            foreach (var item in commandes)
-            {
-                var detailcommandeApi = new DetailCommandeApiModel
+            //return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
+            return commandes.Select(item => new DetailCommandeApiModel
                 {
                     IdDetailCommande = item.IdDetailCommande,
                     IdCommande = (int)item.IdCommande!,
@@ -356,12 +354,8 @@ namespace Service.Services
                     UniteLibelle = item.Unite.Libelle,
                     ArticleFile = item.ArticleFile,
                     MontantRef = item.MontantRef
-                    
-                };
-                listDetailsApiModel.Add(detailcommandeApi);
-            }
-            //return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
-            return listDetailsApiModel;
+                })
+                .ToList();
         }
 
         public async Task<List<StatutModel>> GetCommandesStatuts(int? id) =>
@@ -417,22 +411,11 @@ namespace Service.Services
         public async Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var commandes = await _commandeRepository.GetCommandesDAPBE(ClientId, DateCommande , dateDebutSearch,dateFinSearch);
-                        var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
-            foreach (var item in commandes)
-            {
-               /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
+            return commandes.Select(item => new CommandeApiModel
                 {
-                    IdDetailCommande = detail.IdDetailCommande,
-                    ArticleDesignation = detail.Article.Designation,
-                    Montant = detail.Montant,
-                    DateProduction = detail.DateProduction,
-                    Volume = detail.Volume,
-                    UniteLibelle = detail.Unite.Libelle
-                }));*/
-                var commandeApi = new CommandeApiModel
-                {
-                      CommandeId = item.IdCommande,
+                    CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
                     StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
@@ -466,11 +449,8 @@ namespace Service.Services
                     Ville = item.Client.Ville.NomVille,
                     Pays = item.Client.Pays.NomPays
                     // DetailsCommande  = listDetailCommandeApi
-                };
-                commandesApi.Add(commandeApi);
-            }
-            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
-            return commandesApi;
+                })
+                .ToList();
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
         public async Task<List<CommandeApiModel>> GetCommandesRC(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
@@ -535,22 +515,11 @@ namespace Service.Services
         public async Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSrearch)
         {
             var commandes = await _commandeRepository.GetCommandesCV(ClientId, DateCommande, dateDebutSearch, dateFinSrearch);
-                        var commandesApi = new List<CommandeApiModel>();
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
-            foreach (var item in commandes)
-            {
-                /*listDetailCommandeApi.AddRange(item.DetailCommandes.Select(detail => new DetailCommandeApiModel
+            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
+            return commandes.Select(item => new CommandeApiModel
                 {
-                    IdDetailCommande = detail.IdDetailCommande,
-                    ArticleDesignation = detail.Article.Designation,
-                    Montant = detail.Montant,
-                    DateProduction = detail.DateProduction,
-                    Volume = detail.Volume,
-                    UniteLibelle = detail.Unite.Libelle
-                }));*/
-                var commandeApi = new CommandeApiModel
-                {
-                      CommandeId = item.IdCommande,
+                    CommandeId = item.IdCommande,
                     CodeCommandeSap = item.CodeClientSap,
                     StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
@@ -584,11 +553,8 @@ namespace Service.Services
                     Ville = item.Client.Ville.NomVille,
                     Pays = item.Client.Pays.NomPays
                     // DetailsCommande  = listDetailCommandeApi
-                };
-                commandesApi.Add(commandeApi);
-            }
-            //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
-            return commandesApi;
+                })
+                .ToList();
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
         }
 
