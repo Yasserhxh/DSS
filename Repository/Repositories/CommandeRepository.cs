@@ -331,8 +331,9 @@ namespace Repository.Repositories
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             }
              
-            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
-                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            if (!string.IsNullOrEmpty(dateDebutSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
             
             if(!string.IsNullOrEmpty(dateFinSearch))
                 query = query.Where(x =>
