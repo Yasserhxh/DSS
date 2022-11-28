@@ -133,7 +133,7 @@ namespace Service.Services
                 
                 
                     var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 13 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                     {
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -141,7 +141,7 @@ namespace Service.Services
                             StatutId = Statuts.ValidationDeLoffreDePrixDABPE
                         });
                     }
-                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 10 && tarifs[det.IdArticle] - (double)det.Montant  <=13))
+                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  > 5 && tarifs[det.IdArticle] - (double)det.Montant  <=10))
                     {
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -149,7 +149,7 @@ namespace Service.Services
                             StatutId = Statuts.ValidationDeLoffreDePrixRC
                         });
                     }
-                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 5 && tarifs[det.IdArticle] - (double)det.Montant  <10))
+                    else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 1 && tarifs[det.IdArticle] - (double)det.Montant  <=5))
                     {
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
