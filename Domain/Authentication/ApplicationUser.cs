@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities;
 
 #nullable disable
 
@@ -12,5 +13,8 @@ namespace Domain.Authentication
         [Column(TypeName = "nvarchar(256)")]
         public string Prenom { get; set; }
         public bool IsActive { get; set; } = false;
+        [ForeignKey("Ville")]
+        public int VilleId { get; set; }
+        public Ville Ville { get; set; }
     }
 }

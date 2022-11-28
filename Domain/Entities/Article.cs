@@ -11,5 +11,8 @@ namespace Domain.Entities
         [Column(TypeName = "nvarchar(100)")]
         public string Designation { get; set; }
         public double? Tarif { get; set; }
+        [ForeignKey("Ville")]
+        public int Region { get; set; }
+        public Ville Ville { get; set; }
     }
 }
