@@ -1,0 +1,449 @@
+﻿@using System.Globalization
+@model Domain.Models.CommandeModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<style>
+body {
+    font-family: 'Trebuchet MS', sans-serif;
+}
+table {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+.Fb {
+    font-weight: bold
+}
+.text-left {
+    text-align: left
+}
+.text-right {
+    text-align: right
+}
+.text-center {
+    text-align: center
+}
+.entetp {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: left
+}
+.entetitle {
+    width: 30%;
+    text-align: left
+}
+.entet td {
+    border: none;
+    font-size: 12px;
+    line-height: 18px;
+}
+h3.gtitle {
+    text-align: center;
+    font-size: 12px;
+    margin: 15px 0;
+    font-weight: 600;
+}
+    h1.gtitle {
+    text-align: center;
+    font-size: 20px;
+    margin: 15px 0;
+    font-weight: 600;
+}
+h2{ font-size: 20px;}
+h3.signature {
+    text-align: center;
+    font-size: 18px;
+    margin: 40px auto 120px;
+    font-weight: bold
+}
+       hr.hr{border:6px solid #000}
+.Destin1 {
+    margin-top: 20px;
+    background: #fff;
+    border: 1px solid #000;
+}
+.Destin1 td {
+    padding: 2px 5px 2px;
+}
+.Destin2 {
+    line-height: 12px
+}
+.Destin2 h2 {
+    font-size: 20px;
+}
+.Destin2 p {
+        color: #616161;
+    line-height: 20px;
+    margin: 5px 5px 5px 0;
+    
+}
+.titable {
+    margin-top: 20px
+}
+.titable th {
+    background: #f1f1f1;
+    padding: 6px 0;
+    border: 1px solid #000
+}
+.titable td {
+    background: #ffffff;
+    padding: 2px 0;
+    border: 1px solid #000
+}
+    td.bold{font-weight: bold}
+    .textarea{ border:2px solid #000; width: 100%; min-height: 140px;}
+</style>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<div style=" width:95%; margin: 30px auto">
+  
+  <table>
+    <tbody>
+      <tr><td width="60%"><img src="https://gmsblobstoragedev.blob.core.windows.net/cimarpdfs/logo.svg" alt="" width="220"></td>
+        <td class="text-center" width="40%"><h3 class="gtitle">Département Administratif & Control de Gestion Administration des ventes matériaux</h3> <span>BETOMAR</span></td>
+        
+        
+      </tr>
+    </tbody>
+  </table>
+   <h1 class="gtitle">Fiche tarif/chantier BPE</h1>
+    <table>
+        <tr>
+            <td width="14%">Référence :</td>
+            <td width="18%"><b>DOM/FT/04/21</b></td>
+            <td width="14%">Date :</td>
+            <td width="18%"></td>
+            <td width="14%">Secteur : </td>
+            <td width="18%"></td>
+        </tr>
+    </table>
+  <table class="Destin1">
+    <tbody>
+      <tr>
+        <td width="50%"><table>
+            <tbody>
+              <tr>
+                <td width="55%"><b>CHANTIER</b></td>
+                <td width="5%">:</td>
+                <td class="bold"> @Model.Chantier.Ctn_Nom</td>
+              </tr>
+              <tr>
+                <td>Code SAP donneur d’ordre</td>
+                <td>:</td>
+                <td class="bold"> @Model.Chantier.Ctn_Id.ToString()</td>
+              </tr>
+                <tr>
+                <td>Code SAP Chantier</td>
+                <td>:</td>
+                <td class="bold"> </td>
+              </tr>
+                <tr>
+                <td>Ident. chantier/Localisation</td>
+                <td>:</td>
+                <td class="bold">@Model.Chantier.Ctn_Adresse</td>
+              </tr>
+                <tr>
+                <td>Nature du chantier</td>
+                <td>:</td>
+                <td class="bold"></td>
+              </tr>
+                <tr>
+                <td>Volume (Prévisionnel)</td>
+                <td>:</td>
+                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString(CultureInfo.CurrentCulture)</td>
+              </tr>
+                <tr>
+                <td>Régime de Taxe (HT/TTC)</td>
+                <td>:</td>
+                <td class="bold"></td>
+              </tr>
+            </tbody>
+          </table></td>
+
+        <td width="50%"><table>
+            <tbody>
+              <tr>
+                <td width="55%"><b></b></td>
+                <td width="5%"></td>
+                <td class="bold"></td>
+              </tr>
+              <tr>
+                <td>Visite chantier (Obligatoire) </td>
+                <td>:</td>
+                <td class="bold"></td>
+              </tr>
+                <tr>
+                <td>Chantier Contrôlé</td>
+                <td>:</td>
+                <td class="bold"><span>Oui <font style="margin-left: 5px; margin-right: 5px;   height: 15px; width:15px; border:1px solid #000; display: inline-block"></font></span> <span>Non <font style="margin-left: 5px; height: 15px; width:15px; border:1px solid #000; display: inline-block"></font></span></td>
+              </tr>
+                <tr>
+                <td>Labo. de Contrôle</td>
+                <td>:</td>
+                <td class="bold"></td>
+              </tr>
+                <tr>
+                <td>Distance de CAB <font style="color:red">*</font></td>
+                <td>:</td>
+                <td class="bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Km</td>
+              </tr>
+                <tr>
+                <td>Volume Pompé (Estimatif)</td>
+                <td>:</td>
+                <td class="bold"></td>
+              </tr>
+                <tr>
+                <td></td>
+                <td></td>
+                <td class="bold"></td>
+              </tr>
+                <tr>
+                <td><font style="font-size:11px; color:red">* CAB la plus proche</font></td>
+                <td></td>
+                <td class="bold"></td>
+              </tr>
+            </tbody>
+          </table></td>
+      </tr>
+    </tbody>
+  </table>
+    
+    
+  <table>
+        <tr>
+          <td width="60%"><table class="titable">
+
+    <tbody>
+        <tr>
+          <th rowspan="2">ZONE (x)</th>
+        <th>S/C</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+    </tbody>
+  </table> </td>
+          <td>
+            <table style=" width: 200px;  margin:20px auto 0" class="titable">
+                  <tr>
+                <td style="height: 52px; text-align: center" width="50%">Prix de Transport</td>
+                <td>@Model.TarifAchatTransport.ToString(CultureInfo.CurrentCulture)</td>
+                </tr>
+              </table>
+            </td>
+      </tr>
+    </table>
+
+  <table align="center" class="titable">
+    <thead>
+      <tr>
+        <th>Résistance</th>
+        <th>Exposition</th>
+        <th>D. Max Grv.</th>
+        <th>Consistance</th>        <th>Chlorures</th>        <th>Prix H.T</th> <th>Pompe</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr align="center">
+        <td><b>B30</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr align="center">
+        <td><b>B25 XCA2</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td><b>B20</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td><b>B15</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td><b>...</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td><b>...</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+        <tr align="center">
+        <td><b>...</b></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>  
+    
+    <table align="center" class="titable">
+    <thead>
+      <tr>
+        <th>Adjuvant</th>
+        <th>Hydro.</th>
+        <th>Accélérateur</th>
+        <th>Retardateur</th>        <th>Teinte</th>        <th>Fibre Polypr.</th> <th>Fibre Métal.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr align="center">
+        <td>Plus Value/m<sup>3</sup></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+    </tbody>
+  </table>
+    
+    <table align="center" class="titable">
+    <thead>
+      <tr>
+        <th>Teneur Ciment</th>
+        <th>400</th>
+        <th>350</th>
+        <th>300</th>        <th>250</th>        <th>200</th> <th>150</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr align="center">
+        <td>Plus Value/m<sup>3</sup></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+    </tbody>
+  </table>
+    
+   <table class="Destin1">
+    <tbody>
+      <tr>
+        <td width="33%"><table>
+            <tbody>
+              <tr>
+                <td><b>Signature:</b></td>
+              </tr>
+              <tr>
+                <td><b>Commercial</b></td>
+              </tr>
+                <tr>
+                <td>Nom : .......</td>
+              </tr>
+                <tr>
+                <td>Date et signature :</td>
+              </tr>
+            </tbody>
+          </table></td>
+
+        <td width="33%"><table>
+            <tbody>
+                <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><b>Chef de Bassin</b></td>
+              </tr>
+                <tr>
+                <td>Nom : .......</td>
+              </tr>
+                <tr>
+                <td>Date et signature :</td>
+              </tr>
+            </tbody>
+          </table></td>
+          <td width="33%"><table>
+            <tbody>
+                <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td><b>Directeur Activité BPE <span style="color:red">(*)</span></b></td>
+              </tr>
+                <tr>
+                <td>Nom : .......</td>
+              </tr>
+                <tr>
+                <td>Date et signature : <br> <span style="font-size: 12px; color:red">(*) Cas de tarif spécial</span></td>
+              </tr>
+            </tbody>
+          </table></td>
+      </tr>
+    </tbody>
+  </table>
+    <h1 style="font-style: italic; font-size: 16px">Enregistrement par l’Administration des Ventes le :</h1>
+</div>
+</body>
+</html>

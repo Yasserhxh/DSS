@@ -114,14 +114,14 @@ namespace Service.Services
                     }
                 
                 
-                    if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
+                    if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 14))
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Prescripteur technique",
                             1).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
-                        var email2 = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            1).Result.Email;                        
-                        commandeViewModel.Commande.Emails.Add(email2);
+                       // var email2 = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
+                        //    1).Result.Email;                        
+                       // commandeViewModel.Commande.Emails.Add(email2);
                         
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel

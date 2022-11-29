@@ -31,7 +31,7 @@ namespace Repository.Repositories
         }
         public async Task<List<Article>> GetArticles()
         {
-            return await _db.Articles.Where(p => p.Article_Id != 4 && p.Article_Id != 5).ToListAsync();
+            return await _db.Articles.Where(p => p.Article_Id != 14 && p.Article_Id != 15).ToListAsync();
         }
         
         public async Task<List<DelaiPaiement>> GetDelaiPaiements()

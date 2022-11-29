@@ -224,7 +224,27 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
             throw;
         }
     }
+    [HttpGet("GeneratePDfChantier/{id:int}")]
+    public async Task<string> GeneratePDfChantier(int id)
+    {
+        try
+        {
 
+            var commande = await _commandeService.GetCommande(id);
+            Controller controller = this;
+
+            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",
+                "FicheChantier" + commande.IdCommande);
+            
+            var content = lFileResult as FileContentResult;
+            var mimeType = content?.ContentType;
+            return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
     [HttpPost]
     [Route("SetCommande")]
     public async Task<bool> SetCommande([FromBody] CommandeApiModel commandeApiModel)
