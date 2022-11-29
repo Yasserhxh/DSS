@@ -157,7 +157,7 @@ h3.signature {
                 <tr>
                 <td>Volume (Prévisionnel)</td>
                 <td>:</td>
-                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString(CultureInfo.CurrentCulture)</td>
+                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString("G29")</td>
               </tr>
                 <tr>
                 <td>Régime de Taxe (HT/TTC)</td>
@@ -241,7 +241,7 @@ h3.signature {
             <table style=" width: 200px;  margin:20px auto 0" class="titable">
                   <tr>
                 <td style="height: 52px; text-align: center" width="50%">Prix de Transport</td>
-                <td>@Model.TarifAchatTransport.ToString(CultureInfo.CurrentCulture)</td>
+                <td>&nbsp; &nbsp; @Model.TarifAchatTransport.ToString("G29")</td>
                 </tr>
               </table>
             </td>
