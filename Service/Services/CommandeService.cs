@@ -67,7 +67,7 @@ namespace Service.Services
         }
         public async Task<List<VilleModel>> GetVilles() => _mapper.Map<List<Ville>, List<VilleModel>> (await _commandeRepository.GetVilles());
         public async Task<List<PaysModel>> GetPays() => _mapper.Map<List<Pays>, List<PaysModel>> (await _commandeRepository.GetPays());
-        public async Task<bool> CreateCommande (CommandeViewModel commandeViewModel)
+        public async Task<List<string>> CreateCommande (CommandeViewModel commandeViewModel)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
@@ -91,7 +91,7 @@ namespace Service.Services
                     var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
                     var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
                     if(!resUpdate)
-                        return false;
+                        return null;
                     clientId = result.Client_Id;
 
                 }
@@ -102,6 +102,10 @@ namespace Service.Services
                 {
                     if (commandeViewModel.Commande.TarifAchatTransport !=  0)
                     {
+                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable logistique",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email);
+
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
@@ -112,6 +116,13 @@ namespace Service.Services
                 
                     if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 4))
                     {
+                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Prescripteur technique",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email);
+                        var email2 = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email2);
+                        
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
@@ -135,6 +146,9 @@ namespace Service.Services
                     var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
                     if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
                     {
+                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email);
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
@@ -143,6 +157,9 @@ namespace Service.Services
                     }
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  > 5 && tarifs[det.IdArticle] - (double)det.Montant  <=10))
                     {
+                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email);
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
@@ -150,7 +167,9 @@ namespace Service.Services
                         });
                     }
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 1 && tarifs[det.IdArticle] - (double)det.Montant  <=5))
-                    {
+                    {  var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
+                            1).Result.Email;                        
+                        commandeViewModel.Commande.Emails.Add(email);
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
@@ -168,6 +187,8 @@ namespace Service.Services
                         StatutId = Statuts.Validé 
                     });
                 }
+                // Distinct emails en doublons
+                commandeViewModel.Commande.Emails = commandeViewModel.Commande.Emails.Distinct().ToList();
                 // Distinct status en doublons
                 var status = commandeViewModel.Commande.CommandeStatuts.GroupBy(x => x.StatutId, (key,list)
                     => new CommandeStatutModel
@@ -211,12 +232,12 @@ namespace Service.Services
                 await _commandeRepository.CreateDetailCommande(detailCommandes);
 
                 await transaction.CommitAsync();
-                return true;
+                return commandeViewModel.Commande.Emails;
             }
             catch (Exception exception)
             {
                 await transaction.RollbackAsync();
-                return false;
+                return null;
             }
         }
 

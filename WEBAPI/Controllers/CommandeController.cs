@@ -74,7 +74,7 @@ public class CommandeController : Controller
 public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
     {
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
-        return redirect ? Ok("La prospection est crée avec succées") : Problem();
+        return redirect.Any()  ? Ok(redirect) : Problem();
     }
 
     [HttpGet]

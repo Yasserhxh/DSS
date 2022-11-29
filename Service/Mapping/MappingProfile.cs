@@ -15,7 +15,8 @@ namespace Service.Mapping
             CreateMap<ApplicationUser, UpdateUserModel>();
             CreateMap<Client, ClientModel>();
             CreateMap<Chantier, ChantierModel>();
-            CreateMap<Commande, CommandeModel>();
+            CreateMap<Commande, CommandeModel>()
+                .ForMember(c => c.Emails, opt => opt.Ignore());
             CreateMap<DetailCommande, DetailCommandeModel>();
             CreateMap<CentraleBeton, CentraleBetonModel>();
             CreateMap<FormeJuridique, FormeJuridiqueModel>();

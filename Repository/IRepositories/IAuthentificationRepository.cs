@@ -20,5 +20,7 @@ namespace Repository.IRepositories
         Task<Response> UpdateProfil(UpdateUserModel model);
         Task<string> FindUserRoleByEmail(string email);
         Task<ApplicationUser> FindUserByEmail(string email);
+        Task<UserModel> FindUserByEmailByRoleAndRegion(string role, int regionID);
+        
     }
 }

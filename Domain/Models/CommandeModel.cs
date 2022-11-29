@@ -5,6 +5,7 @@
         public CommandeModel()
         {
             CommandeStatuts = new List<CommandeStatutModel>();
+            Emails = new List<string>();
 
         }
         public int IdCommande { get; set; }
@@ -32,6 +33,7 @@
         public ChantierModel Chantier { get; set; }
         public List<CommandeStatutModel> CommandeStatuts { get; set; }
         public List<DetailCommandeModel> DetailCommandes { get; set; }
+        public List<string> Emails { get; set; }
         public TarifPompeRefModel Tarif_Pompe { get; set; }
     }
 }

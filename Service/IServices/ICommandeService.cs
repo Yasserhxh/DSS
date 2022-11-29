@@ -13,7 +13,7 @@ namespace Service.IServices
         Task<List<DelaiPaiementModel>> GetDelaiPaiements();
         Task<List<CentraleBetonModel>> GetCentraleBetons();
         Task<double> GetTarifArticle(int Id);
-        Task<bool> CreateCommande(CommandeViewModel commandeViewModel);
+        Task<List<string>> CreateCommande(CommandeViewModel commandeViewModel);
         Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null);
         Task<List<CommandeApiModel>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<CommandeModel> GetCommande(int? id);

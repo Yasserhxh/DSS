@@ -71,6 +71,23 @@ namespace Repository.Repositories
         public async Task<ApplicationUser> FindUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }  
+        public async Task<UserModel> FindUserByEmailByRoleAndRegion(string role, int regionId)
+        { 
+            var users = await (_db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc" && x.VilleId ==regionId) .Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+                .Join(_db.Roles, @t => @t.ur.RoleId, r => r.Id,
+                    (@t, r) => new UserModel
+                    {
+                        Id = @t.u.Id,
+                        UserName = @t.u.UserName,
+                        Email = @t.u.Email,
+                        Role = r.Name,
+                        Nom = @t.u.Nom,
+                        Prenom = @t.u.Prenom,
+                        PhoneNumber = @t.u.PhoneNumber,
+                        Statut = @t.u.IsActive
+                    })).ToListAsync();
+            return users.FirstOrDefault(p => p.Role == role);
         }
         public async Task<string> FindUserRoleByEmail(string email)
         {
