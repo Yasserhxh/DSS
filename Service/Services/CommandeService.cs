@@ -807,16 +807,18 @@ namespace Service.Services
             }
         }
 
-        public async Task<bool> FixationPrixTransport(int Id, double VenteT, double VenteP, string email)
+        public async Task<string> FixationPrixTransport(int Id, double VenteT, double VenteP, string email)
         {
             try
             {
                 var commande = await _commandeRepository.GetCommandeOnly(Id);
                 var user = await _authentificationRepository.FindUserByEmail(email);
+                var region = user.VilleId;
                 var userRole = await _authentificationRepository.GetUserRole(user);
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
-                
+                var commercialEmail = _authentificationRepository.FindUserByEmailByRoleAndRegion("Commercial", region).Result.Email;
+
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
                 {
@@ -836,11 +838,11 @@ namespace Service.Services
                 if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
-                return true;
+                return commercialEmail;
             }
             catch(Exception ex)
             {
-                return false;
+                return string.Empty;
             }
         }
 

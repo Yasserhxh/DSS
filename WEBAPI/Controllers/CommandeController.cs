@@ -176,7 +176,7 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
     }
     [HttpPost]
     [HttpPost("FixationPrixTransport")]
-    public async Task<bool> FixationPrixTransport([FromBody] CommandeModifApi commandeModifApi)
+    public async Task<string> FixationPrixTransport([FromBody] CommandeModifApi commandeModifApi)
     {
         var success = await _commandeService.FixationPrixTransport(
             commandeModifApi.CommandeId, commandeModifApi.CommandeTarifTrans,

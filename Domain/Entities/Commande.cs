@@ -39,6 +39,7 @@ namespace Domain.Entities
         public string Commentaire { get; set; }
         public string ArticleFile { get; set; }
         public bool IsProspection { get; set; }
+        //public string Commercial_ID { get; set; }
         public Client Client { get; set; }
         public Statut Statut { get; set; }
         public Chantier Chantier { get; set; }
