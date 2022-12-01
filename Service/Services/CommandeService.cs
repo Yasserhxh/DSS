@@ -911,7 +911,7 @@ namespace Service.Services
                 foreach (var item in commandeModifApi)
                 {
                     var detail = await _commandeRepository.GetDetailCommande(item.idDetailCommande);
-                    if (detail.IdArticle == 4)
+                    if (detail.IdArticle == 14)
                         isSpecial = true;
                     detail.Montant = item.montant;
                   //  detail.ArticleFile = item.CommandeBetonArticleFile;
