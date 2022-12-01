@@ -19,7 +19,7 @@ namespace Repository.IRepositories
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
         Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id);
-        Task<List<Statut>> GetCommandesStatuts(int? id);
+        Task<List<string>> GetCommandesStatuts(int? id);
         Task<Commande> GetCommande(int? Id);
         Task<List<TarifPompeRef>> GetTarifPompeRefs();
         Task<double> GetTarifPompe(int Id);

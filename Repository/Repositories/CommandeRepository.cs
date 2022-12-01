@@ -137,9 +137,10 @@ namespace Repository.Repositories
         public async Task<List<Commande>> GetCommandesPT(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             // x.IdStatut == Statuts.EnCoursDeTraitement && 
+            
             var query = _db.Commandes
                 .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.EtudeEtPropositionDePrix) == true
-                            && x.IsProspection == true  )
+                            && x.IsProspection == true  && x.IdStatut == Statuts.EnCoursDeTraitement)
                 .AsQueryable();
             if (clientId.Any())
                 query = query.Where(d => clientId.Contains((int)d.IdClient));
@@ -148,12 +149,12 @@ namespace Repository.Repositories
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
             
             if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
-                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date);
             
             if(!string.IsNullOrEmpty(dateFinSearch))
                 query = query.Where(x =>
-                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
-
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date);
+           // var validateursQuery = _db.Validations.Where(p=>query.Any(x=>x.IdCommande==p.IdCommande))
             return await query
                 .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
                 .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
@@ -170,9 +171,97 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Statut>> GetCommandesStatuts(int? id) =>
-            await _db.CommandeStatuts.Where(p => p.CommandeId == id)
+        public async Task<List<string>> GetCommandesStatuts(int? id)
+        {
+            var listeStatus = await _db.CommandeStatuts.Where(p => p.CommandeId == id)
                 .Select(p => p.Statut).ToListAsync();
+            var ListeStatutsRes = new List<string>();
+            foreach (var item in listeStatus)
+            {
+                switch (item.IdStatut)
+                {
+                    case Statuts.ParametrageDesPrixPBE:
+                    {
+                        var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "Prescripteur technique");
+                        if (validateur == null)
+                        {
+                            var statut = "En attente: Prescripteur technique";
+                            ListeStatutsRes.Add(statut);
+
+                        }
+                        else
+                        {
+                            var statut = "Validée par: Prescripteur technique";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        break;
+                    }
+                    case Statuts.FixationDePrixDuTransport:
+                    {
+                        var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "Responsable logistique");
+                        if (validateur == null)
+                        { 
+                            var statut = "En attente: Responsable logistique";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        else
+                        {
+                            var statut = "Validée par: Responsable logistique";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        break;
+                    }
+                    case Statuts.ValidationDeLoffreDePrixDABPE:
+                    {
+                        var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "DA BPE");
+                        if (validateur == null)
+                        {
+                            var statut = "En attente: Directeur d'activité";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        else
+                        {
+                            var statut = "Validée par: Directeur d'activité";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        
+                        break;
+                    }
+                    case Statuts.ValidationDeLoffreDePrixRC:
+                    {
+                        var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "Responsable commercial");
+                        if (validateur == null)
+                        {
+                            var statut = "En attente: Responsable commercial";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        else
+                        {
+                            var statut = "Validée par: Responsable commercial";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        break;
+                    }
+                    case Statuts.ValidationDeLoffreDePrixCV:
+                    {
+                        var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "Chef de ventes");
+                        if (validateur == null)
+                        {
+                            var statut = "En attente: Chef de ventes";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        else
+                        {
+                            var statut = "Validée par: Chef de ventes";
+                            ListeStatutsRes.Add(statut);
+                        }
+                        break;
+                    }
+                }
+            }
+            return ListeStatutsRes;
+        }
+
 
         public async Task<Commande> GetCommande(int? id)
         {
@@ -270,7 +359,7 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                .Where(x =>   x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true    && x.IsProspection == true )
+                .Where(x =>   x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixDABPE) == true    && x.IsProspection == true  && x.IdStatut == Statuts.EnCoursDeTraitement)
                 .AsQueryable();
 
             if (clientId.Any())
@@ -319,7 +408,7 @@ namespace Repository.Repositories
                     .ThenInclude(p=>p.Article)
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
-                    .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true   && x.IsProspection == true )
+                    .Where(x => x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixRC) == true   && x.IsProspection == true && x.IdStatut == Statuts.EnCoursDeTraitement)
                     .AsQueryable();
 
             if (clientId.Any())
@@ -369,7 +458,7 @@ namespace Repository.Repositories
                     .Include(d => d.DetailCommandes)
                     .ThenInclude(p=>p.Unite)
                 .Where(x => x.IdStatut == Statuts.EnCoursDeTraitement
-                && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixCV) == true   && x.IsProspection == true )
+                && x.CommandeStatuts.Any(p => p.StatutId == Statuts.ValidationDeLoffreDePrixCV) == true   && x.IsProspection == true && x.IdStatut == Statuts.EnCoursDeTraitement)
                 .AsQueryable();
 
             if (clientId.Any())
@@ -404,7 +493,7 @@ namespace Repository.Repositories
         {
             // x.IdStatut == Statuts.EnCoursDeTraitement &&
             var query = _db.Commandes
-                .Where(x =>  x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true   && x.IsProspection == true )
+                .Where(x =>  x.CommandeStatuts.Any(p => p.StatutId == Statuts.FixationDePrixDuTransport) == true   && x.IsProspection == true && x.IdStatut == Statuts.EnCoursDeTraitement)
                 //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
                 .AsQueryable();
             if (clientIds.Any())

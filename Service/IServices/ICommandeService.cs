@@ -24,7 +24,7 @@ namespace Service.IServices
         Task<double> GetTarifPompe(int Id);
         Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId);
-        Task<List<StatutModel>> GetCommandesStatuts(int? id);
+        Task<List<string>> GetCommandesStatuts(int? id);
         Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile);
         Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<CommandeApiModel>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
