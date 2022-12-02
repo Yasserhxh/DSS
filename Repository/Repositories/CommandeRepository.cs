@@ -180,14 +180,13 @@ namespace Repository.Repositories
             {
                 switch (item.IdStatut)
                 {
-                    case Statuts.ParametrageDesPrixPBE:
+                    case Statuts.EtudeEtPropositionDePrix:
                     {
                         var validateur =  _db.Validations.FirstOrDefault(p => p.IdCommande == id && p.Fonction == "Prescripteur technique");
                         if (validateur == null)
                         {
                             var statut = "En attente: Prescripteur technique";
                             ListeStatutsRes.Add(statut);
-
                         }
                         else
                         {
@@ -224,7 +223,6 @@ namespace Repository.Repositories
                             var statut = "Validée par: Directeur d'activité";
                             ListeStatutsRes.Add(statut);
                         }
-                        
                         break;
                     }
                     case Statuts.ValidationDeLoffreDePrixRC:
