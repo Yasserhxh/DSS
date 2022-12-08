@@ -379,8 +379,8 @@ namespace Service.Services
                 .ToList();
         }
 
-        public async Task<List<string>> GetCommandesStatuts(int? id) =>
-            await _commandeRepository.GetCommandesStatuts(id);
+        public async Task<List<ValidationEtatModel>> GetCommandesStatuts(int? id) =>
+        _mapper.Map<List<ValidationEtat>,List<ValidationEtatModel>>(await _commandeRepository.GetCommandesStatuts(id));
         public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile)
         {
             await using var transaction = _unitOfWork.BeginTransaction();

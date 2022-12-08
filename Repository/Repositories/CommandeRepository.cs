@@ -171,11 +171,12 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<string>> GetCommandesStatuts(int? id)
+        public async Task<List<ValidationEtat>> GetCommandesStatuts(int? id)
         {
             var listeStatus = await _db.CommandeStatuts.Where(p => p.CommandeId == id)
                 .Select(p => p.Statut).ToListAsync();
             var ListeStatutsRes = new List<string>();
+            var ValidationEtatList = new List<ValidationEtat>();
             foreach (var item in listeStatus)
             {
                 switch (item.IdStatut)
@@ -186,12 +187,23 @@ namespace Repository.Repositories
                         if (validateur == null)
                         {
                             var statut = "En attente: Prescripteur technique";
+                            
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat = "En attente: Prescripteur technique"
+                            });
                         }
                         else
                         {
                             var statut = "Validée par: Prescripteur technique";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat ="Validée par: Prescripteur technique",
+                                NomPrenomVal = validateur.Nom + validateur.Prenom,
+                                DateValdiation = validateur.Date
+                            });
                         }
                         break;
                     }
@@ -202,11 +214,21 @@ namespace Repository.Repositories
                         { 
                             var statut = "En attente: Responsable logistique";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat = "En attente: Responsable logistique"
+                            });
                         }
                         else
                         {
                             var statut = "Validée par: Responsable logistique";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat ="Validée par: Responsable logistique",
+                                NomPrenomVal = validateur.Nom + validateur.Prenom,
+                                DateValdiation = validateur.Date
+                            });
                         }
                         break;
                     }
@@ -217,11 +239,21 @@ namespace Repository.Repositories
                         {
                             var statut = "En attente: Directeur d'activité";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat =  "En attente: Directeur d'activité"
+                            });
                         }
                         else
                         {
                             var statut = "Validée par: Directeur d'activité";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat ="Validée par: Directeur d'activité",
+                                NomPrenomVal = validateur.Nom + validateur.Prenom,
+                                DateValdiation = validateur.Date
+                            });
                         }
                         break;
                     }
@@ -232,11 +264,21 @@ namespace Repository.Repositories
                         {
                             var statut = "En attente: Responsable commercial";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat =  "En attente: Responsable commercial"
+                            });
                         }
                         else
                         {
                             var statut = "Validée par: Responsable commercial";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat ="Validée par: Responsable commercial",
+                                NomPrenomVal = validateur.Nom + validateur.Prenom,
+                                DateValdiation = validateur.Date
+                            });
                         }
                         break;
                     }
@@ -247,17 +289,27 @@ namespace Repository.Repositories
                         {
                             var statut = "En attente: Chef de ventes";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat = "En attente: Chef de ventes"
+                            });
                         }
                         else
                         {
                             var statut = "Validée par: Chef de ventes";
                             ListeStatutsRes.Add(statut);
+                            ValidationEtatList.Add(new ValidationEtat
+                            {
+                                Etat = "Validée par: Chef de ventes",
+                                NomPrenomVal = validateur.Nom + validateur.Prenom,
+                                DateValdiation = validateur.Date
+                            });
                         }
                         break;
                     }
                 }
             }
-            return ListeStatutsRes;
+            return ValidationEtatList;
         }
 
 
