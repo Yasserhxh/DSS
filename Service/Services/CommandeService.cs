@@ -240,44 +240,66 @@ namespace Service.Services
                 return null;
             }
         }
-        public async Task<List<string>> CreateCommandeProspection (CommandeViewModel commandeViewModel)
+        public async Task<bool> CreateCommandeProspection(CommandeViewModel commandeViewModel)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                // Add chantier
-                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                var ctnId = await _commandeRepository.CreateChantier(chantier);
-
-                // Add client
-                commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
-                var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
-                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
-                int? clientId;
-                if (result == null)
+                if (commandeViewModel.ProspectionID is not null)
                 {
-                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                     clientId = await _commandeRepository.CreateClient(client);
+                    var prospection = await _commandeRepository.GetCommande(commandeViewModel.ProspectionID);
+                    // Add commande
+                    commandeViewModel.CommandeV.IdClient = prospection.IdClient;
+                    commandeViewModel.CommandeV.IdChantier = prospection.IdChantier;
+                    commandeViewModel.CommandeV.CodeClientSap = prospection.CodeClientSap;
+                    commandeViewModel.CommandeV.MontantCommande = prospection.MontantCommande;
+                    commandeViewModel.CommandeV.TarifAchatTransport = prospection.TarifAchatTransport;
+                    commandeViewModel.CommandeV.TarifAchatPompage = prospection.TarifAchatPompage;
+                    commandeViewModel.CommandeV.TarifVentePompage = prospection.TarifVentePompage;
+                    commandeViewModel.CommandeV.TarifVenteTransport = prospection.TarifVenteTransport;
+                    commandeViewModel.CommandeV.Conditions = prospection.Conditions;
+                    commandeViewModel.CommandeV.Delai_Paiement = prospection.Delai_Paiement;
+                    commandeViewModel.CommandeV.LongFleche_Id = prospection.LongFleche_Id;
+                    //commandeViewModel.CommandeV.Commentaire = prospection.Commentaire;
+                    commandeViewModel.CommandeV.ArticleFile = prospection.ArticleFile;
+                    commandeViewModel.CommandeV.ProspectionId = prospection.IdCommande;
+                    
                 }
                 else
                 {
-                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                    var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
-                    if(!resUpdate)
-                        return null;
-                    clientId = result.Client_Id;
+                    // Add chantier
+                    var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                    var ctnId = await _commandeRepository.CreateChantier(chantier);
 
+                    // Add client
+                    commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
+                    var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
+                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                    int? clientId;
+                    if (result == null)
+                    {
+                        var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                        clientId = await _commandeRepository.CreateClient(client);
+                        
+                    }
+                    else
+                    {
+                        var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                        var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
+                        if(!resUpdate)
+                            return false;
+                        clientId = result.Client_Id;
+
+                    }
+                    // Add commande
+                    commandeViewModel.CommandeV.IdClient = clientId;
+                    commandeViewModel.CommandeV.IdChantier = ctnId;
+                    
                 }
-                commandeViewModel.CommandeV.IdStatut = Statuts.EnCoursDeTraitement;
 
-               
-               
-                
-                // Add commande
-                commandeViewModel.CommandeV.IdClient = clientId;
+                commandeViewModel.CommandeV.IdStatut = Statuts.EnCoursDeTraitement;
                 commandeViewModel.CommandeV.Currency = "MAD";
-                commandeViewModel.CommandeV.IdChantier = ctnId;
-                commandeViewModel.CommandeV.DateCommande = DateTime.UtcNow;
+                commandeViewModel.CommandeV.DateCommande = DateTime.Now;
                 //commandeViewModel.Commande.IsProspection = true;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.CommandeV.MontantCommande = Mt.Sum();
@@ -305,12 +327,12 @@ namespace Service.Services
                 await _commandeRepository.CreateDetailCommandeV(detailCommandes);
 
                 await transaction.CommitAsync();
-                return commandeViewModel.Commande.Emails;
+                return true;
             }
             catch (Exception exception)
             {
                 await transaction.RollbackAsync();
-                return null;
+                return false;
             }
         }
 

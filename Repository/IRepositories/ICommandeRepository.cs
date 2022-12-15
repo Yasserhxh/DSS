@@ -15,7 +15,9 @@ namespace Repository.IRepositories
         Task<int?> CreateChantier(Chantier chantier);
         Task<int?> CreateClient(Client client);
         Task<int?> CreateCommande(Commande commande);
+        Task<int?>  CreateCommandeV(CommandeV commande);
         Task<bool> CreateDetailCommande(List<DetailCommande> detailCommandes);
+        Task<bool> CreateDetailCommandeV(List<DetailCommandeV> detailCommandesV);
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
         Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id);

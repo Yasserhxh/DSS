@@ -25,7 +25,9 @@ namespace Repository.Data
         public DbSet<Ville> Villes { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<Commande> Commandes { get; set; }
+        public DbSet<CommandeV> CommandesV { get; set; }
         public DbSet<DetailCommande> DetailCommandes { get; set; }
+        public DbSet<DetailCommandeV> DetailCommandesV { get; set; }
         public DbSet<CommandeStatut> CommandeStatuts { get; set; }
         public DbSet<Statut> Statuts { get; set; }
         public DbSet<Unite> Unites { get; set; }

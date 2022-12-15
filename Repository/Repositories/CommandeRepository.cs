@@ -76,12 +76,25 @@ namespace Repository.Repositories
             var confirm = await _unitOfWork.Complete();
             if (confirm > 0)
                 return commande.IdCommande;
-            else
-                return null;
+            return null;
+        } 
+        public async Task<int?> CreateCommandeV(CommandeV commande)
+        {
+            await _db.CommandesV.AddAsync(commande);
+            var confirm = await _unitOfWork.Complete();
+            if (confirm > 0)
+                return commande.IdCommande;
+            return null;
         }
         public async Task<bool> CreateDetailCommande(List<DetailCommande> detailCommandes)
         {
             await _db.DetailCommandes.AddRangeAsync(detailCommandes);
+            var confirm = await _unitOfWork.Complete();
+            return confirm > 0;
+        }   
+        public async Task<bool> CreateDetailCommandeV(List<DetailCommandeV> detailCommandesV)
+        {
+            await _db.DetailCommandesV.AddRangeAsync(detailCommandesV);
             var confirm = await _unitOfWork.Complete();
             return confirm > 0;
         }

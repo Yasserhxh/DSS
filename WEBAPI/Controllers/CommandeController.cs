@@ -79,11 +79,10 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
 
 [HttpPost]
 [Route("CreateCommandeProspection")]
-
 public async Task<IActionResult> CreateCommandeProspection([FromBody] CommandeViewModel commandeViewModel)
 {
     var redirect = await _commandeService.CreateCommandeProspection(commandeViewModel);
-    return redirect.Any()  ? Ok(redirect) : Problem();
+    return redirect ? Ok() : Problem();
 }
 
     [HttpGet]
