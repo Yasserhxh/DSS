@@ -282,7 +282,7 @@ namespace Service.Services
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.CommandeV.MontantCommande = Mt.Sum();
                 var commande = _mapper.Map<CommandeVModel, CommandeV>(commandeViewModel.CommandeV);              
-                var commandeId = await _commandeRepository.CreateCommande(commande);
+                var commandeId = await _commandeRepository.CreateCommandeV(commande);
 
                 // Distinct articles en doublons
                 var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
@@ -302,7 +302,7 @@ namespace Service.Services
                     detail.Unite_Id = 1;
                 }
                 var detailCommandes = _mapper.Map<List<DetailCommandeVModel>, List<DetailCommandeV>>(details);
-                await _commandeRepository.CreateDetailCommande(detailCommandes);
+                await _commandeRepository.CreateDetailCommandeV(detailCommandes);
 
                 await transaction.CommitAsync();
                 return commandeViewModel.Commande.Emails;
