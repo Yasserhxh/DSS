@@ -77,6 +77,15 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
         return redirect.Any()  ? Ok(redirect) : Problem();
     }
 
+[HttpPost]
+[Route("CreateCommandeProspection")]
+
+public async Task<IActionResult> CreateCommandeProspection([FromBody] CommandeViewModel commandeViewModel)
+{
+    var redirect = await _commandeService.CreateCommandeProspection(commandeViewModel);
+    return redirect.Any()  ? Ok(redirect) : Problem();
+}
+
     [HttpGet]
     [Route("FindUserRoleByEmail/{email}")]
     public async Task<IActionResult> FindUserRoleByEmail(string email)

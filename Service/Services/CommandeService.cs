@@ -240,6 +240,79 @@ namespace Service.Services
                 return null;
             }
         }
+        public async Task<List<string>> CreateCommandeProspection (CommandeViewModel commandeViewModel)
+        {
+            await using var transaction = _unitOfWork.BeginTransaction();
+            try
+            {
+                // Add chantier
+                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                var ctnId = await _commandeRepository.CreateChantier(chantier);
+
+                // Add client
+                commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
+                var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
+                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                int? clientId;
+                if (result == null)
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                     clientId = await _commandeRepository.CreateClient(client);
+                }
+                else
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                    var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
+                    if(!resUpdate)
+                        return null;
+                    clientId = result.Client_Id;
+
+                }
+                commandeViewModel.CommandeV.IdStatut = Statuts.EnCoursDeTraitement;
+
+               
+               
+                
+                // Add commande
+                commandeViewModel.CommandeV.IdClient = clientId;
+                commandeViewModel.CommandeV.Currency = "MAD";
+                commandeViewModel.CommandeV.IdChantier = ctnId;
+                commandeViewModel.CommandeV.DateCommande = DateTime.UtcNow;
+                //commandeViewModel.Commande.IsProspection = true;
+                var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
+                commandeViewModel.CommandeV.MontantCommande = Mt.Sum();
+                var commande = _mapper.Map<CommandeVModel, CommandeV>(commandeViewModel.CommandeV);              
+                var commandeId = await _commandeRepository.CreateCommande(commande);
+
+                // Distinct articles en doublons
+                var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
+                    return new DetailCommandeVModel
+                    {
+                        IdArticle = key,
+                        Montant = list.FirstOrDefault().Montant,
+                        Volume = list.Sum(x => x.Volume),
+                        MontantRef = list.FirstOrDefault().MontantRef
+                    };
+                }).ToList();
+
+                // Add details
+                foreach (var detail in details)
+                {
+                    detail.IdCommande = commandeId;
+                    detail.Unite_Id = 1;
+                }
+                var detailCommandes = _mapper.Map<List<DetailCommandeVModel>, List<DetailCommandeV>>(details);
+                await _commandeRepository.CreateDetailCommande(detailCommandes);
+
+                await transaction.CommitAsync();
+                return commandeViewModel.Commande.Emails;
+            }
+            catch (Exception exception)
+            {
+                await transaction.RollbackAsync();
+                return null;
+            }
+        }
 
         public async Task<List<ClientModel>> GetClients(string Ice = null, string Cnie = null, string RS = null)
         {
