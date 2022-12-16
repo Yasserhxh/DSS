@@ -320,6 +320,13 @@ namespace Service.Services
                 // Add details
                 foreach (var detail in details)
                 {
+                    if (detail.IdArticle is null)
+                    {
+                        var article = await _commandeRepository.GetDetailCommande(detail.IdArticle);
+                        //var unite = await  _commandeRepository.GetUniteByName(detail.)
+                        detail.IdArticle = article.IdArticle;
+                        detail.IdDetailCommande = 0;
+                    }
                     detail.IdCommande = commandeId;
                     detail.Unite_Id = 1;
                 }

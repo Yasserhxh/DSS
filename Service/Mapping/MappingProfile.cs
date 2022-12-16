@@ -19,6 +19,7 @@ namespace Service.Mapping
                 .ForMember(c => c.Emails, opt => opt.Ignore());
             CreateMap<CommandeV, CommandeVModel>();
             CreateMap<DetailCommande, DetailCommandeModel>();
+            CreateMap<DetailCommandeV, DetailCommandeVModel>();
             CreateMap<CentraleBeton, CentraleBetonModel>();
             CreateMap<FormeJuridique, FormeJuridiqueModel>();
             CreateMap<TypeChantier, TypeChantierModel>();
@@ -42,6 +43,7 @@ namespace Service.Mapping
             CreateMap<CommandeModel, Commande>();
             CreateMap<CommandeVModel, CommandeV>();
             CreateMap<DetailCommandeModel, DetailCommande>();
+            CreateMap<DetailCommandeVModel, DetailCommandeV>();
             CreateMap<CentraleBetonModel, CentraleBeton>();
             CreateMap<FormeJuridiqueModel, FormeJuridique>();
             CreateMap<TypeChantierModel, TypeChantier>();
