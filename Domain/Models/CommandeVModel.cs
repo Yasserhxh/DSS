@@ -29,6 +29,6 @@ public class CommandeVModel
     public StatutModel Statut { get; set; }
     public ChantierModel Chantier { get; set; }
     public CommandeModel Commande { get; set; }
-    public List<DetailCommandeModel> DetailCommandes { get; set; }
+    public List<DetailCommandeVModel> DetailCommandes { get; set; }
     public TarifPompeRefModel Tarif_Pompe { get; set; }
 }

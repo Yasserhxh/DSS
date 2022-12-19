@@ -7,6 +7,7 @@ public class CommandeApiModel
     public string StatutCommande { get; set; }
     public DateTime? DateCommande { get; set; }
     public DateTime? DateLivraisonSouhaite { get; set; }
+    public string HeureLivraisonSouhaite { get; set; }
     public double TarifAchatTransport { get; set; }
     public double TarifAchatPompage { get; set; }
     public double TarifVenteTransport { get; set; }

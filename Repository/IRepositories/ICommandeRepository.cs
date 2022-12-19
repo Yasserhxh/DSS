@@ -18,11 +18,13 @@ namespace Repository.IRepositories
         Task<int?>  CreateCommandeV(CommandeV commande);
         Task<bool> CreateDetailCommande(List<DetailCommande> detailCommandes);
         Task<bool> CreateDetailCommandeV(List<DetailCommandeV> detailCommandesV);
+        Task<Article> GetArticleByDesi(string articleDesi);
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
         Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id);
         Task<List<ValidationEtat>> GetCommandesStatuts(int? id);
         Task<Commande> GetCommande(int? Id);
+        Task<CommandeV> GetCommandeV(int? Id);
         Task<List<TarifPompeRef>> GetTarifPompeRefs();
         Task<double> GetTarifPompe(int Id);
         Task<List<Commande>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
@@ -42,8 +44,10 @@ namespace Repository.IRepositories
         Client FindFormulaireClient(string Ice, string Cnie, string Rs);
         Task<List<Validation>> GetListValidation(int commandeId);
         Task<bool> SetCommande(int commandeId);
-        Task<List<Commande>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,
+        Task<List<CommandeV>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,
             string dateFinSearch);
 
+        Task<List<CommandeV>> GetCommandesV(List<int> clientId, DateTime? dateCommande, string dateDebutSearch,
+            string dateFinSearch);
     }
 }

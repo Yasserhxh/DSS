@@ -11,5 +11,6 @@
         public const int EnCoursDeTraitement = 7;
         public const int ValidationDeLoffreDePrixRC = 8;
         public const int ValidationDeLoffreDePrixCV = 9;
+        public const int CommandeCree = 10;
     }
 }

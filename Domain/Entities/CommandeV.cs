@@ -38,7 +38,7 @@ public class CommandeV
     public Statut Statut { get; set; }
     public Chantier Chantier { get; set; }
     public Commande Commande { get; set; }
-    public List<DetailCommande> DetailCommandes { get; set; }
+    public List<DetailCommandeV> DetailCommandes { get; set; }
     public TarifPompeRef Tarif_Pompe { get; set; }
 
 }

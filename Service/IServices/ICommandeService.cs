@@ -42,6 +42,7 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,
             string dateFinSearch);
 
+        Task<CommandeVModel> GetCommandeV(int? id);
         Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande);
     }
 }

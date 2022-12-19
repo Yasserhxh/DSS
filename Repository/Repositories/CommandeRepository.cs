@@ -98,6 +98,11 @@ namespace Repository.Repositories
             var confirm = await _unitOfWork.Complete();
             return confirm > 0;
         }
+        public async Task<Article> GetArticleByDesi(string articleDesi)
+        {
+            return await _db.Articles.Where(p=>p.Designation == articleDesi).FirstOrDefaultAsync();
+            
+        }
 
         public async Task<List<Client>> GetClients(string ice, string cnie, string rs)
         {
@@ -119,6 +124,36 @@ namespace Repository.Repositories
         public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
         {
             var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient) && d.IsProspection == true).AsQueryable();
+            if (dateCommande is not null)
+            {
+                query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
+            }
+            if (!string.IsNullOrEmpty(dateDebutSearch))query = query.Where(x =>
+                x.DateCommande.Value.Date >= DateTime.ParseExact(dateDebutSearch, "dd/MM/yyyy", null).Date );
+            
+            if(!string.IsNullOrEmpty(dateFinSearch))
+                query = query.Where(x =>
+                    x.DateCommande.Value.Date <= DateTime.ParseExact(dateFinSearch, "dd/MM/yyyy", null).Date );
+
+            return await query
+                .Include(d => d.Chantier).ThenInclude(p=>p.Type_Chantier)
+                .Include(d => d.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
+                .Include(d => d.Chantier).ThenInclude(p=>p.Centrale_Beton)
+                .Include(d => d.Client).ThenInclude(p=>p.Forme_Juridique)
+                .Include(d => d.Client).ThenInclude(p=>p.Ville)
+                .Include(d => d.Client).ThenInclude(p=>p.Pays)
+                .Include(d => d.Statut)
+                .Include(p=>p.Tarif_Pompe)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Article)
+                .Include(d => d.DetailCommandes)
+                .ThenInclude(p=>p.Unite)
+                .ToListAsync();
+            //return await query.ToListAsync();
+        }
+        public async Task<List<CommandeV>> GetCommandesV(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
+        {
+            var query = _db.CommandesV.Where(d => clientId.Contains((int)d.IdClient)).AsQueryable();
             if (dateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);
@@ -340,6 +375,24 @@ namespace Repository.Repositories
                 .ThenInclude(a => a.Article)
                 .Include(x => x.DetailCommandes)
                 .Include(p=>p.CommandeStatuts)
+                .Include(d => d.Chantier.ZONE_CHANTIER)
+                .Include(d => d.Client.Forme_Juridique).FirstOrDefaultAsync();
+            return cmd;
+        }
+        public async Task<CommandeV> GetCommandeV(int? id)
+        {
+           /* var cmd = await _db.Commandes
+                .Include(x => x.DetailCommandes)
+                .ThenInclude(a => a.Article)
+                .Include(x => x.DetailCommandes)
+                .Include(d => d.Chantier.ZONE_CHANTIER)
+                .Include(d => d.Client)
+                .FirstOrDefaultAsync(x => x.IdCommande == Id);*/
+            var cmd = await _db.CommandesV.Where(x => x.IdCommande == id)
+                .Include(x => x.DetailCommandes)
+                .ThenInclude(a => a.Article)
+                .Include(x => x.DetailCommandes)
+                //.Include(p=>p.CommandeStatuts)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
                 .Include(d => d.Client.Forme_Juridique).FirstOrDefaultAsync();
             return cmd;
@@ -678,10 +731,10 @@ namespace Repository.Repositories
             return comfirm > 0;
         }
 
-        public async Task<List<Commande>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch, string dateFinSearch)
+        public async Task<List<CommandeV>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch, string dateFinSearch)
         {
-            var query = _db.Commandes
-                .Where(x =>  x.IsProspection == false )
+            var query = _db.CommandesV
+                //.Where(x =>  x.IsProspection == false )
                 //.Where(x=>x.CommandeStatuts.Any(p=>p.CommandeStatutId == Statuts.FixationDePrixDuTransport))
                 .AsQueryable();
             if (clientId.Any())

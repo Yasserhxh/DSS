@@ -124,6 +124,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     {
         if (commandeId is null) return Problem("Veuillez selectionner une commande");
         var status = await _commandeService.GetCommandesStatuts(commandeId);
+       
         return !status.Any() ? Problem("Commande non trouvée") : Ok(status);
 
     }

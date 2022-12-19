@@ -297,7 +297,7 @@ namespace Service.Services
                     
                 }
 
-                commandeViewModel.CommandeV.IdStatut = Statuts.EnCoursDeTraitement;
+                commandeViewModel.CommandeV.IdStatut = Statuts.CommandeCree;
                 commandeViewModel.CommandeV.Currency = "MAD";
                 commandeViewModel.CommandeV.DateCommande = DateTime.Now;
                 //commandeViewModel.Commande.IsProspection = true;
@@ -305,7 +305,13 @@ namespace Service.Services
                 commandeViewModel.CommandeV.MontantCommande = Mt.Sum();
                 var commande = _mapper.Map<CommandeVModel, CommandeV>(commandeViewModel.CommandeV);              
                 var commandeId = await _commandeRepository.CreateCommandeV(commande);
-
+                /*if (commandeViewModel.CommandeV.DetailCommandes.Any(p => p.IdArticle == null))
+                {
+                    foreach (var item in commandeViewModel.CommandeV.DetailCommandes)
+                    {
+                        var article = _commandeRepository.GetArticleByDesi(item.)
+                    }
+                }*/
                 // Distinct articles en doublons
                 var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
                     return new DetailCommandeVModel
@@ -394,6 +400,8 @@ namespace Service.Services
                 })
                 .ToList();
         }
+                
+        
         public async Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch)
         {
             var commandes = await _commandeRepository.GetCommandesPT(ClientId, DateCommande,DateDebutSearch,DateFinSearch);
@@ -456,6 +464,10 @@ namespace Service.Services
         public async Task<CommandeModel> GetCommande(int? id)
         {
             return _mapper.Map<CommandeModel>(await _commandeRepository.GetCommande(id));
+        } 
+        public async Task<CommandeVModel> GetCommandeV(int? id)
+        {
+            return _mapper.Map<CommandeVModel>(await _commandeRepository.GetCommandeV(id));
         }
 
         public async Task<List<TarifPompeRefModel>> GetTarifPompeRefs()
@@ -476,7 +488,8 @@ namespace Service.Services
                     Volume = item.Volume,
                     UniteLibelle = item.Unite.Libelle,
                     ArticleFile = item.ArticleFile,
-                    MontantRef = item.MontantRef
+                    MontantRef = item.MontantRef,
+                    IdArticle = item.IdArticle
                 })
                 .ToList();
         }
@@ -966,7 +979,7 @@ namespace Service.Services
                     CodeCommandeSap = item.CodeClientSap,
                     StatutCommande = item.Statut.Libelle,
                     DateCommande = item.DateCommande,
-                    DateLivraisonSouhaite = item.DateLivraisonSouhaite,
+                    HeureLivraisonSouhaite = item.DateLivraisonSouhaite,
                     TarifAchatTransport = item.TarifAchatTransport,
                     TarifVenteTransport = item.TarifVenteTransport,
                     TarifAchatPompage = item.TarifAchatPompage,

@@ -4,6 +4,7 @@ public class DetailCommandeApiModel
 {
     public int IdDetailCommande { get; set; }
     public int IdCommande { get; set; }
+    public int? IdArticle { get; set; }
     public string ArticleDesignation { get; set; }
     public decimal? Montant { get; set; }
     public decimal? MontantRef { get; set; }
