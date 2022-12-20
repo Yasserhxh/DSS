@@ -90,7 +90,7 @@ namespace Web.Controllers
         {
             vm.CLients = await commandeService.GetClients();
             //vm.Commandes = await commandeService.GetCommandesRL(vm.IdClient, vm.DateCommande);
-            return View(vm);
+           // return View(vm);
         }
         public async Task<IActionResult> Detail(int? id)
         {
