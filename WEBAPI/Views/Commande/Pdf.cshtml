@@ -171,8 +171,8 @@ h3.signature {
       <tr>
           <th>Article</th>
           <th>Tarif DH/m<sup>3</sup></th>
-          <th>Quantité</th>
-          <th>Total HT</th>
+          @*<th>Quantité</th>
+          <th>Total HT</th>*@
       </tr>
       </thead>
       @foreach (var item in @Model.DetailCommandes)
@@ -182,9 +182,9 @@ h3.signature {
           <tr>
               <td>&nbsp; @item.Article.Designation</td>
               <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
-              <td>&nbsp; @item.Volume!.Value.ToString("n2")</td>
+              @*<td>&nbsp; @item.Volume!.Value.ToString("n2")</td>
               @{ var s = item.Volume * item.Montant!.Value; }
-              <td>&nbsp;@s!.Value.ToString("n2") </td>
+              <td>&nbsp;@s!.Value.ToString("n2") </td>*@
           </tr>
           </tbody>
       }
