@@ -107,6 +107,7 @@ namespace Service.Services
                     CheckOffre = false
                 };
                 var prospectId = await _commandeRepository.CreateProspect(prospect);
+                await transaction.CommitAsync();
                 return prospectId != null;
             }
             catch (Exception exception)
