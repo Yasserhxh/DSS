@@ -23,7 +23,11 @@ namespace Repository.IRepositories
         Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id);
         Task<List<ValidationEtat>> GetCommandesStatuts(int? id);
+        Task<List<Prospect>> GetListProspects();
         Task<Commande> GetCommande(int? Id);
+        Task<int?> CreateProspect(Prospect prospect);
+        Task<bool> CreateDetailOffreDePrix(List<OffreDePrix_Details> detailsOffre);
+        Task<int?> CreateOffreDePrix(OffreDePrix offre);
         Task<CommandeV> GetCommandeV(int? Id);
         Task<List<TarifPompeRef>> GetTarifPompeRefs();
         Task<double> GetTarifPompe(int Id);

@@ -10,6 +10,7 @@ using Service.IServices;
 
 namespace Service.Services
 {
+    
     public class CommandeService : ICommandeService
     {
         private readonly ICommandeRepository _commandeRepository;
@@ -67,6 +68,54 @@ namespace Service.Services
         }
         public async Task<List<VilleModel>> GetVilles() => _mapper.Map<List<Ville>, List<VilleModel>> (await _commandeRepository.GetVilles());
         public async Task<List<PaysModel>> GetPays() => _mapper.Map<List<Pays>, List<PaysModel>> (await _commandeRepository.GetPays());
+
+        public async Task<bool> CreateProspect(CommandeViewModel commandeViewModel)
+        {
+            await using var transaction = _unitOfWork.BeginTransaction();
+            try
+            {
+                // Add chantier
+                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
+                var ctnId = await _commandeRepository.CreateChantier(chantier);
+                // Add client
+                commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
+                var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
+                    commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                int? clientId;
+                if (result == null)
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                    clientId = await _commandeRepository.CreateClient(client);
+                }
+                else
+                {
+                    var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
+                    var resUpdate = await _commandeRepository.UpdateClient(result.Client_Id, client);
+                    if(!resUpdate)
+                        return false;
+                    clientId = result.Client_Id;
+
+                }
+                
+                //Add Prospect
+                var prospect = new Prospect
+                {
+                    IdChantier = ctnId,
+                    IdClient = clientId,
+                    //CodeClientSap = client
+                    DateProspect = DateTime.Now,
+                    CheckOffre = false
+                };
+                var prospectId = await _commandeRepository.CreateProspect(prospect);
+                return prospectId != null;
+            }
+            catch (Exception exception)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
+        }
+
         public async Task<List<string>> CreateCommande (CommandeViewModel commandeViewModel)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
@@ -96,6 +145,17 @@ namespace Service.Services
 
                 }
                 
+                //Add Prospect
+                var prospect = new Prospect
+                {
+                    IdChantier = ctnId,
+                    IdClient = clientId,
+                    //CodeClientSap = client
+                    DateProspect = DateTime.Now,
+                    CheckOffre = true
+
+                };
+                var prospectId = await _commandeRepository.CreateProspect(prospect);
                 
                 // Statut de la commande
                 if (commandeViewModel.Commande.IsProspection)
@@ -199,6 +259,7 @@ namespace Service.Services
                 // Add new Status
                 commandeViewModel.Commande.CommandeStatuts.Clear();
                 commandeViewModel.Commande.CommandeStatuts   = status;
+                var ListStatusOffre = commandeViewModel.Commande.CommandeStatuts.Select(item => new OffreDePrix_Statut() { StatutId = item.StatutId, }).ToList();
 
                 // Add commande
                 commandeViewModel.Commande.IdClient = clientId;
@@ -208,9 +269,32 @@ namespace Service.Services
                 //commandeViewModel.Commande.IsProspection = true;
                 var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
                 commandeViewModel.Commande.MontantCommande = Mt.Sum();
+
                 var commande = _mapper.Map<CommandeModel, Commande>(commandeViewModel.Commande);              
                 var commandeId = await _commandeRepository.CreateCommande(commande);
 
+                //Add Offre de Prix
+                var offreDePrix = new OffreDePrix
+                {
+                    ProspectId = prospectId,
+                    Currency = commandeViewModel.Commande.Currency,
+                    DateOffre = DateTime.Now,
+                    MontantOffre = commandeViewModel.Commande.MontantCommande,
+                    IdStatut = commandeViewModel.Commande.IdStatut,
+                    LongFlech_Id = commandeViewModel.Commande.LongFleche_Id,
+                    TarifAchatPompage = commandeViewModel.Commande.TarifAchatPompage,
+                    TarifAchatTransport = commandeViewModel.Commande.TarifAchatTransport,
+                    TarifVenteTransport = commandeViewModel.Commande.TarifVenteTransport,
+                    TarifVentePompage = commandeViewModel.Commande.TarifVentePompage,
+                    Conditions = commandeViewModel.Commande.Conditions,
+                    Delai_Paiement = commandeViewModel.Commande.Delai_Paiement,
+                    Commentaire = commandeViewModel.Commande.Commentaire,
+                    ArticleFile = commandeViewModel.Commande.ArticleFile,
+                    OffreStatuts = ListStatusOffre
+                    //ArticleDescription = commandeViewModel.Commande.ArticleDescription
+                };
+                var offreid = await _commandeRepository.CreateOffreDePrix(offreDePrix);
+                
                 // Distinct articles en doublons
                 var details = commandeViewModel.DetailCommandes.GroupBy(x => x.IdArticle, (key,list) => {
                     return new DetailCommandeModel
@@ -223,13 +307,29 @@ namespace Service.Services
                 }).ToList();
 
                 // Add details
+                var listDetailsOffre = new List<OffreDePrix_Details>();
                 foreach (var detail in details)
                 {
                     detail.IdCommande = commandeId;
                     detail.Unite_Id = 1;
+                    var detailOffre = new OffreDePrix_Details
+                    {
+                        IdOffre = offreid,
+                        MontantRef = detail.MontantRef,
+                        ArticleFile = detail.ArticleFile,
+                        IdArticle = detail.IdArticle,
+                        CodeArticleSap = detail.CodeArticleSap,
+                        Montant = detail.Montant,
+                        Volume = detail.Volume,
+                        Unite_Id = detail.Unite_Id
+                    };
+                    listDetailsOffre.Add(detailOffre);
+
                 }
+               
                 var detailCommandes = _mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(details);
                 await _commandeRepository.CreateDetailCommande(detailCommandes);
+                await _commandeRepository.CreateDetailOffreDePrix(listDetailsOffre);
 
                 await transaction.CommitAsync();
                 return commandeViewModel.Commande.Emails;
@@ -240,6 +340,37 @@ namespace Service.Services
                 return null;
             }
         }
+
+        public async Task<List<CommandeApiModel>> GetListProspects()
+        {
+            var prosepcts = await _commandeRepository.GetListProspects();
+            return prosepcts.Select(item => new CommandeApiModel
+                {
+                    CommandeId = item.IdProspect,
+                    CodeCommandeSap = item.CodeClientSap,
+                    DateCommande = item.DateProspect,
+                    Ice = item.Client.Ice,
+                    Cnie = item.Client.Cnie,
+                    FormeJuridique = item.Client.Forme_Juridique.FormeJuridique_Libelle,
+                    RaisonSociale = item.Client.RaisonSociale,
+                    CtnNom = item.Chantier.Ctn_Nom,
+                    CtnType = item.Chantier.Type_Chantier.Tc_Libelle,
+                    CtnZone = item.Chantier.ZONE_CHANTIER.Zone_Libelle,
+                    MaitreOuvrage = item.Chantier.MaitreOuvrage,
+                    VolumePrevisonnel = item.Chantier.VolumePrevisonnel,
+                    Duree = item.Chantier.Duree,
+                    Rayon = item.Chantier.Rayon,
+                    CtrNom = item.Chantier.Centrale_Beton.Ctr_Nom,
+                    Gsm = item.Client.Gsm,
+                    Adresse = item.Client.Adresse,
+                    Email = item.Client.Email,
+                    DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
+                    Ville = item.Client.Ville.NomVille,
+                    Pays = item.Client.Pays.NomPays
+                })
+                .ToList();
+        }
+
         public async Task<bool> CreateCommandeProspection(CommandeViewModel commandeViewModel)
         {
             await using var transaction = _unitOfWork.BeginTransaction();

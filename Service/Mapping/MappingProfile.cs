@@ -15,6 +15,11 @@ namespace Service.Mapping
             CreateMap<ApplicationUser, UpdateUserModel>();
             CreateMap<Client, ClientModel>();
             CreateMap<Chantier, ChantierModel>();
+            CreateMap<OffreDePrix, OffreDePrixModel>();
+            CreateMap<CommandeFinale, CommandeFinaleModel>();
+            CreateMap<Prospect, ProspectModel>();
+            CreateMap<OffreDePrix_Details, OffreDePrix_DetailsModel>();
+            CreateMap<CommandeFinale_Details, CommandeFinale_DetailsModel>();
             CreateMap<Commande, CommandeModel>()
                 .ForMember(c => c.Emails, opt => opt.Ignore());
             CreateMap<CommandeV, CommandeVModel>();
@@ -33,6 +38,7 @@ namespace Service.Mapping
             CreateMap<CommandeStatut,CommandeStatutModel>();
             CreateMap<Validation,ValidationModel>();
             CreateMap<ValidationEtat,ValidationEtatModel>();
+            CreateMap<OffreDePrix_Statut,OffreDePrix_StatutModel >();
 
             // Models to Entities mapping
             CreateMap<UserModel, ApplicationUser>();
@@ -57,7 +63,12 @@ namespace Service.Mapping
             CreateMap<CommandeStatutModel,CommandeStatut>();
             CreateMap<ValidationModel,Validation>();
             CreateMap<ValidationEtatModel,ValidationEtat>();
-
+            CreateMap<OffreDePrixModel, OffreDePrix>();
+            CreateMap<CommandeFinaleModel,CommandeFinale >();
+            CreateMap<ProspectModel,Prospect >();
+            CreateMap<OffreDePrix_DetailsModel,OffreDePrix_Details >();
+            CreateMap<CommandeFinale_DetailsModel,CommandeFinale_Details >();
+            CreateMap<OffreDePrix_StatutModel,OffreDePrix_Statut >();
         }
     }
 }

@@ -31,6 +31,12 @@ namespace Repository.Data
         public DbSet<CommandeStatut> CommandeStatuts { get; set; }
         public DbSet<Statut> Statuts { get; set; }
         public DbSet<Unite> Unites { get; set; }
+        
+        public DbSet<OffreDePrix> OffreDePrix { get; set; }
+        public DbSet<Prospect> Prospects { get; set; }
+        public DbSet<CommandeFinale> CommandeFinales { get; set; }
+        public DbSet<OffreDePrix_Details> OffreDePrixDetails { get; set; }
+        public DbSet<CommandeFinale_Details> CommandeFinaleDetails { get; set; }
         public DbSet<Validation> Validations {  get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

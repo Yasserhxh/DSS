@@ -76,6 +76,14 @@ public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeVie
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
         return redirect.Any()  ? Ok(redirect) : Problem();
     }
+[HttpPost]
+[Route("CreateProspect")]
+
+public async Task<bool> CreateProspect([FromBody] CommandeViewModel commandeViewModel)
+{
+    var redirect = await _commandeService.CreateProspect(commandeViewModel);
+    return redirect;
+}
 
 [HttpPost]
 [Route("CreateCommandeProspection")]
@@ -117,6 +125,13 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
         if (commandeId is null) return Problem("Veuillez selectionner une commande");
         var details = await _commandeService.GetCommandesDetails(commandeId);
         return !details.Any() ? Problem("Commande non trouvée") : Ok(details);
+
+    }
+    [HttpGet("getListProspects")]
+    public async Task<IActionResult> getListProspects()
+    {
+        var prospects = await _commandeService.GetListProspects();
+        return !prospects.Any() ? Problem("Prospects non trouvés") : Ok(prospects);
 
     }
     [HttpGet("StatusCommande/{commandeId}")]

@@ -69,6 +69,22 @@ namespace Repository.Repositories
                 return client.Client_Id;
             return null;
         }
+        public async Task<int?> CreateProspect(Prospect prospect)
+        {
+            await _db.Prospects.AddAsync(prospect);
+            var confirm = await _unitOfWork.Complete();
+            if (confirm > 0)
+                return prospect.IdProspect;
+            return null;
+        } 
+        public async Task<int?> CreateOffreDePrix(OffreDePrix offre)
+        {
+            await _db.OffreDePrix.AddAsync(offre);
+            var confirm = await _unitOfWork.Complete();
+            if (confirm > 0)
+                return offre.OffreId;
+            return null;
+        }
 
         public async Task<int?> CreateCommande(Commande commande)
         {
@@ -89,6 +105,12 @@ namespace Repository.Repositories
         public async Task<bool> CreateDetailCommande(List<DetailCommande> detailCommandes)
         {
             await _db.DetailCommandes.AddRangeAsync(detailCommandes);
+            var confirm = await _unitOfWork.Complete();
+            return confirm > 0;
+        }    
+        public async Task<bool> CreateDetailOffreDePrix(List<OffreDePrix_Details> detailsOffre)
+        {
+            await _db.OffreDePrixDetails.AddRangeAsync(detailsOffre);
             var confirm = await _unitOfWork.Complete();
             return confirm > 0;
         }   
@@ -435,6 +457,17 @@ namespace Repository.Repositories
         public async Task<List<TarifPompeRef>> GetTarifPompeRefs()
         {
             return await _db.TarifPompeRefs.ToListAsync();
+        }
+        public async Task<List<Prospect>> GetListProspects()
+        {
+            return await _db.Prospects.Where(p=>p.CheckOffre == false)
+                .Include(p=>p.Chantier).ThenInclude(p=>p.Type_Chantier)
+                .Include(p=>p.Chantier).ThenInclude(p=>p.ZONE_CHANTIER)
+                .Include(p=>p.Chantier).ThenInclude(p=>p.Centrale_Beton)
+                .Include(p=>p.Client).ThenInclude(p=>p.Forme_Juridique)
+                .Include(p=>p.Client).ThenInclude(p=>p.Ville)
+                .Include(p=>p.Client).ThenInclude(p=>p.Pays)
+                .ToListAsync();
         }
 
         public async Task<double> GetTarifPompe(int id)
