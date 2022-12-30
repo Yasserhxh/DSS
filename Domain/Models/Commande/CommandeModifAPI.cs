@@ -10,4 +10,5 @@ public class CommandeModifApi
     public string CommandeBetonArticleFile { get; set; }
 
     public decimal CommandeTarifBeton { get; set; }
+    public decimal CommandeCoutDeProdBeton { get; set; }
 }

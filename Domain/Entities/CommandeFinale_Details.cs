@@ -11,6 +11,8 @@ public class CommandeFinale_Details
     public int? IdCommandeFinale { get; set; }
     public decimal MontantRef { get; set; }
     public string ArticleFile { get; set; }
+    public string ArticleDescription { get; set; }
+    public string ArticleName { get; set; }
     [ForeignKey("Article")]
     public int? IdArticle { get; set; }
     public string CodeArticleSap { get; set; }

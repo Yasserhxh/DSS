@@ -23,7 +23,8 @@ namespace Domain.Entities
         public DateTime? DateProduction { get; set; }
         [ForeignKey("Unite")]
         public int Unite_Id { get; set; }
-
+        public string ArticleDescription { get; set; }
+        public string ArticleName { get; set; }
         public Commande Commande { get; set; }
         public Article Article { get; set; }
         public Unite Unite { get; set; }

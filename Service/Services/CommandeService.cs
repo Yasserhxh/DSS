@@ -80,7 +80,7 @@ namespace Service.Services
                 // Add client
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
                 var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
-                    commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                    commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale, null);
                 int? clientId;
                 if (result == null)
                 {
@@ -129,7 +129,7 @@ namespace Service.Services
                 // Add client
                 commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
                 var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
-                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale, null);
                 int? clientId;
                 if (result == null)
                 {
@@ -195,22 +195,38 @@ namespace Service.Services
                               StatutId = Statuts.ValidationDeLoffreDePrixDABPE
       
                           });*/
-                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        /*commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
                             StatutId = Statuts.ValidationDeLoffreDePrixRC
 
-                        });
+                        });*/
                     }
 
                 
                 
                     var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 || long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60))
+                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 /*|| long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60*/))
                     {
-                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
-                            1).Result.Email;                        
-                        commandeViewModel.Commande.Emails.Add(email);
+                        commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
+                            1).Result.Email);
+                        commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
+                            1).Result.Email); 
+                        commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
+                            1).Result.Email);
+                        
+                       
+                        
+                        
+                        
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixCV
+                        });
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixRC
+                        });
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
                             StatutId = Statuts.ValidationDeLoffreDePrixDABPE
@@ -218,10 +234,16 @@ namespace Service.Services
                     }
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  > 5 && tarifs[det.IdArticle] - (double)det.Montant  <=10))
                     {
-                        var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            1).Result.Email;                        
-                        commandeViewModel.Commande.Emails.Add(email);
+                        commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
+                            1).Result.Email);
+                        commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
+                            1).Result.Email);
+                        
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
+                        commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
+                        {
+                            StatutId = Statuts.ValidationDeLoffreDePrixCV
+                        });
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
                         {
                             StatutId = Statuts.ValidationDeLoffreDePrixRC
@@ -406,7 +428,7 @@ namespace Service.Services
                     // Add client
                     commandeViewModel.Client.Client_Ctn_Id = (int)ctnId;
                     var result = _commandeRepository.FindFormulaireClient(commandeViewModel.Client.Ice,
-                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale);
+                        commandeViewModel.Client.Cnie, commandeViewModel.Client.RaisonSociale, null);
                     int? clientId;
                     if (result == null)
                     {
@@ -609,26 +631,45 @@ namespace Service.Services
         public async Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId)
         {
             var commandes = await _commandeRepository.GetListDetailsCommande(commandeId);
+            if (commandes.Any())
+                return commandes.Select(item => new DetailCommandeApiModel
+                    {
+                        IdDetailCommande = item.IdDetailCommande,
+                        IdCommande = (int)item.IdCommande!,
+                        ArticleDesignation = item.Article.Designation,
+                        Montant = item.Montant,
+                        DateProduction = item.DateProduction,
+                        Volume = item.Volume,
+                        UniteLibelle = item.Unite.Libelle,
+                        ArticleFile = item.ArticleFile,
+                        MontantRef = item.MontantRef,
+                        IdArticle = item.IdArticle
+                    })
+                    .ToList();
+            {
+                var commandesV = await _commandeRepository.GetListDetailsCommandeV(commandeId);
+                return commandesV.Select(item => new DetailCommandeApiModel
+                    {
+                        IdDetailCommande = item.IdDetailCommande,
+                        IdCommande = (int)item.IdCommande!,
+                        ArticleDesignation = item.Article.Designation,
+                        Montant = item.Montant,
+                        DateProduction = item.DateProduction,
+                        Volume = item.Volume,
+                        UniteLibelle = item.Unite.Libelle,
+                        ArticleFile = item.ArticleFile,
+                        MontantRef = item.MontantRef,
+                        IdArticle = item.IdArticle
+                    })
+                    .ToList();
+            }
             //return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
-            return commandes.Select(item => new DetailCommandeApiModel
-                {
-                    IdDetailCommande = item.IdDetailCommande,
-                    IdCommande = (int)item.IdCommande!,
-                    ArticleDesignation = item.Article.Designation,
-                    Montant = item.Montant,
-                    DateProduction = item.DateProduction,
-                    Volume = item.Volume,
-                    UniteLibelle = item.Unite.Libelle,
-                    ArticleFile = item.ArticleFile,
-                    MontantRef = item.MontantRef,
-                    IdArticle = item.IdArticle
-                })
-                .ToList();
+            
         }
 
         public async Task<List<ValidationEtatModel>> GetCommandesStatuts(int? id) =>
         _mapper.Map<List<ValidationEtat>,List<ValidationEtatModel>>(await _commandeRepository.GetCommandesStatuts(id));
-        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile)
+        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
@@ -662,7 +703,32 @@ namespace Service.Services
                 await _commandeRepository.CreateValidation(validation);
                 
                 var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
+                decimal marge = ((Tarif - tarifAchat) / tarifAchat) * 100;
                 
+                switch (marge)
+                {
+                    case < 25 and >= 20:
+                    {
+                        await _commandeRepository.AddStatutCommande( new CommandeStatut
+                        {
+                            CommandeId = commande.IdCommande,
+                            StatutId = Statuts.ValidationDeLoffreDePrixRC
+                        });
+                        break;
+                    }
+                    case < 20:
+                        await _commandeRepository.AddStatutCommande(new CommandeStatut
+                        {
+                            CommandeId = commande.IdCommande,
+                            StatutId = Statuts.ValidationDeLoffreDePrixRC
+                        });
+                        await _commandeRepository.AddStatutCommande( new CommandeStatut
+                        {
+                            CommandeId = commande.IdCommande,
+                            StatutId = Statuts.ValidationDeLoffreDePrixDABPE
+                        });
+                        break;
+                }
                 if (listValidateurs.Any() && listValidateurs.Count == commande.CommandeStatuts.Count)
                     commande.IdStatut = Statuts.Validé;
                 await _unitOfWork.Complete();
@@ -1092,10 +1158,15 @@ namespace Service.Services
             }
         }
 
-        public ClientModel FindFormulaireClient(string ice, string cnie, string Rs)
+        public ClientModel FindFormulaireClient(string ice, string cnie, string Rs, int? IdClient)
         {
-            var result =  _commandeRepository.FindFormulaireClient(ice, cnie, Rs);
+            var result =  _commandeRepository.FindFormulaireClient(ice, cnie, Rs, IdClient);
             return _mapper.Map<Client,ClientModel>(result);
+        }  
+        public ChantierModel FindFormulaireChantier(int? IdChantier)
+        {
+            var result =  _commandeRepository.FindFormulaireChantier(IdChantier);
+            return _mapper.Map<Chantier,ChantierModel>(result);
         }
 
         public async Task<List<ValidationModel>> GetListValidation(int commandeId) =>
@@ -1139,7 +1210,8 @@ namespace Service.Services
                     Email = item.Client.Email,
                     DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
                     Ville = item.Client.Ville.NomVille,
-                    Pays = item.Client.Pays.NomPays
+                    Pays = item.Client.Pays.NomPays,
+                    PresenceLabo = item.PresenceLabo
                     // DetailsCommande  = listDetailCommandeApi
                 })
                 .ToList();        
@@ -1157,8 +1229,8 @@ namespace Service.Services
                 foreach (var item in commandeModifApi)
                 {
                     var detail = await _commandeRepository.GetDetailCommande(item.idDetailCommande);
-                    if (detail.IdArticle == 14)
-                        isSpecial = true;
+                   // if (detail.IdArticle == 14)
+                       // isSpecial = true;
                     detail.Montant = item.montant;
                   //  detail.ArticleFile = item.CommandeBetonArticleFile;
                     detail.Commande.MontantCommande += detail.Montant;

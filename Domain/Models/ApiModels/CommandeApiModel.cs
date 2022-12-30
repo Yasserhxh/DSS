@@ -36,6 +36,7 @@ public class CommandeApiModel
     public decimal Duree { get; set; }
     public decimal Rayon { get; set; }
     public string CtrNom { get; set; }
+    public string PresenceLabo { get; set; }
 
     // public List<DetailCommandeApiModel> DetailsCommande { get; set; }
 }

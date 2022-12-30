@@ -9,6 +9,9 @@ namespace Domain.Models.Commande
         public string IceClient { get; set; }
         public string CnieClient { get; set; }
         public string RsClient { get; set; }
+        public int? IdClient { get; set; }
+        public string CodeSap { get; set; }
+        public int? IdChantier { get; set; }
         public DateTime? DateCommande { get; set; }
         public string DateDebutSearch { get; set; }
         public string DateFinSearch { get; set; }

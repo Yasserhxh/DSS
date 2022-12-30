@@ -21,7 +21,8 @@ namespace Repository.IRepositories
         Task<Article> GetArticleByDesi(string articleDesi);
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
         Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
-        Task<List<DetailCommande>> GetListDetailsCommande(int? id);
+        Task<List<DetailCommande>> GetListDetailsCommande(int? id); 
+        Task<List<DetailCommandeV>> GetListDetailsCommandeV(int? id);
         Task<List<ValidationEtat>> GetCommandesStatuts(int? id);
         Task<List<Prospect>> GetListProspects();
         Task<Commande> GetCommande(int? Id);
@@ -45,7 +46,9 @@ namespace Repository.IRepositories
         Task<bool> UpdateChantier(int id, Chantier chantier);
         Task<bool> UpdateClient(int id, Client client);
         Task<bool> UpdateDetailCommande(List<DetailCommande> detailCommandes);
-        Client FindFormulaireClient(string Ice, string Cnie, string Rs);
+        Task<bool> AddStatutCommande(CommandeStatut commandeStatut);
+        Client FindFormulaireClient(string Ice, string Cnie, string Rs, int? clientId);
+        Chantier FindFormulaireChantier(int? chantierId);
         Task<List<Validation>> GetListValidation(int commandeId);
         Task<bool> SetCommande(int commandeId);
         Task<List<CommandeV>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,

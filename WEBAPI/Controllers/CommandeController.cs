@@ -29,7 +29,14 @@ public class CommandeController : Controller
     [Route("CheckClient")]
     public IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
     {
-        var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient, clientInFos.RsClient);
+        var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient, clientInFos.RsClient, clientInFos.IdClient);
+        return Ok(result);
+    }
+    [HttpGet]
+    [Route("CheckChantier/{chantierId}")]
+    public IActionResult CheckChantier(int? chantierId)
+    {
+        var result = _commandeService.FindFormulaireChantier(chantierId);
         return Ok(result);
     }
 
@@ -214,7 +221,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
     {
         var res = await _commandeService.ProposerPrix(commandeModifApi.CommandeDetailId,
-            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile);
+            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile, commandeModifApi.CommandeCoutDeProdBeton);
         return res;
     }
     [HttpPost]

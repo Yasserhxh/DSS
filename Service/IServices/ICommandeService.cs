@@ -28,7 +28,7 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetListProspects();
         Task<bool> CreateCommandeProspection(CommandeViewModel commandeViewModel);
         Task<bool> CreateProspect(CommandeViewModel commandeViewModel);
-        Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile);
+        Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat);
         Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<CommandeApiModel>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
@@ -38,7 +38,8 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
         Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName);
         Task<string> FixationPrixTransport(int Id, double VenteT, double VenteP, string email);
-        ClientModel FindFormulaireClient(string Ice, string Cnie, string Rs);
+        ClientModel FindFormulaireClient(string Ice, string Cnie, string Rs,int? IdClient);
+        ChantierModel FindFormulaireChantier(int? chantierId);
         Task<List<ValidationModel>> GetListValidation(int commandeId);
         Task<bool> SetCommande(int commandeId);
         Task<List<CommandeApiModel>> GetCommandesValide(List<int> clientId, DateTime? dateTime, string dateDebutSearch,

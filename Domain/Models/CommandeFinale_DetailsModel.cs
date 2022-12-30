@@ -10,6 +10,8 @@ public class CommandeFinale_DetailsModel
     public string CodeArticleSap { get; set; }
     public decimal Montant { get; set; }
     public decimal Volume { get; set; }
+    public string ArticleDescription { get; set; }
+    public string ArticleName { get; set; }
     public int? Unite_Id { get; set; }
     public CommandeFinaleModel CommandeFinale { get; set; }
     public ArticleModel Article { get; set; }

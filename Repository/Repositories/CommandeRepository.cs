@@ -107,6 +107,12 @@ namespace Repository.Repositories
             await _db.DetailCommandes.AddRangeAsync(detailCommandes);
             var confirm = await _unitOfWork.Complete();
             return confirm > 0;
+        }     
+        public async Task<bool> AddStatutCommande(CommandeStatut commandeStatut)
+        {
+            await _db.CommandeStatuts.AddAsync(commandeStatut);
+            var confirm = await _unitOfWork.Complete();
+            return confirm > 0;
         }    
         public async Task<bool> CreateDetailOffreDePrix(List<OffreDePrix_Details> detailsOffre)
         {
@@ -436,6 +442,15 @@ namespace Repository.Repositories
                 .Include(d => d.Unite)
                 .ToListAsync();
             return cmd;
+        }  
+        public async Task<List<DetailCommandeV>> GetListDetailsCommandeV(int? id)
+        {
+            var cmd = await _db.DetailCommandesV
+                .Where(x => x.IdCommande == id)
+                .Include(d => d.Article)
+                .Include(d => d.Unite)
+                .ToListAsync();
+            return cmd;
         }
         public async Task<DetailCommande> GetDetailCommande(int? id)
         {
@@ -745,14 +760,20 @@ namespace Repository.Repositories
             }
         }
 
-        public Client FindFormulaireClient(string Ice, string Cnie, string Rs)
+        public Client FindFormulaireClient(string Ice, string Cnie, string Rs, int? clientId)
         {
             if (!string.IsNullOrEmpty(Ice))
                 return _db.Clients.FirstOrDefault(p => p.Ice == Ice);
             if (!string.IsNullOrEmpty(Rs))
                 return _db.Clients.FirstOrDefault(p => p.RaisonSociale == Rs);
+            if (clientId is not null)
+                return _db.Clients.FirstOrDefault(p => p.Client_Id == clientId);
 
             return !string.IsNullOrEmpty(Cnie) ? _db.Clients.FirstOrDefault(p => p.Cnie == Cnie) : new Client();
+        }
+        public Chantier FindFormulaireChantier(int? chantierId)
+        {
+            return chantierId is not null? _db.Chantiers.FirstOrDefault(p => p.Ctn_Id == chantierId) : new Chantier();
         }
 
         
