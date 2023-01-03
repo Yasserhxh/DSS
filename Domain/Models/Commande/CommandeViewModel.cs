@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
+﻿
 namespace Domain.Models.Commande
 {
     public class CommandeViewModel
