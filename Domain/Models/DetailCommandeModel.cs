@@ -12,6 +12,10 @@
         public string ArticleDescription { get; set; }
         public string ArticleName { get; set; }
         public decimal? Montant { get; set; }
+        public decimal? MargeBenef { get; set; }
+        public decimal? MontantV1 { get; set; }
+        public decimal? MontantRC { get; set; }
+        public decimal? MontantDA { get; set; }
         public DateTime? DateProduction { get; set; }
         public int? IdStatut { get; set; }
         public int Unite_Id { get; set; }

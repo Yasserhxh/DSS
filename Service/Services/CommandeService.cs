@@ -678,9 +678,11 @@ namespace Service.Services
                 var commande = await _commandeRepository.GetCommande(detail.IdCommande);
                 var user = await _authentificationRepository.FindUserByEmail(UserName);
                 var userRole = await _authentificationRepository.GetUserRole(user);
+                decimal marge = ((Tarif - tarifAchat) / tarifAchat) * 100;
 
                 //Update Detail + Commande
-                detail.Montant = Tarif;
+                detail.MontantV1 = Tarif;
+                detail.MargeBenef = marge;
                 detail.ArticleFile = articleFile;
                 detail.Commande.MontantCommande += detail.Montant;
 
@@ -703,7 +705,6 @@ namespace Service.Services
                 await _commandeRepository.CreateValidation(validation);
                 
                 var listValidateurs = await _commandeRepository.GetListValidation(commande.IdCommande);
-                decimal marge = ((Tarif - tarifAchat) / tarifAchat) * 100;
                 
                 switch (marge)
                 {
