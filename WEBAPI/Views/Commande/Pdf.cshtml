@@ -181,7 +181,24 @@ h3.signature {
           
           <tr>
               <td>&nbsp; @item.Article.Designation</td>
-              <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
+              @if (item.MontantDA is not null)
+              {
+                  <td>&nbsp; @item.MontantDA!.Value.ToString("n2")</td>
+
+              }else if(item.MontantRC is not null)
+              {
+                  <td>&nbsp; @item.MontantRC!.Value.ToString("n2")</td>
+                  
+              }else if(item.MontantV1 is not null)
+              {
+                  <td>&nbsp; @item.MontantV1!.Value.ToString("n2")</td>
+                  
+              }
+              else
+              {
+                  <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
+
+              }
               @*<td>&nbsp; @item.Volume!.Value.ToString("n2")</td>
               @{ var s = item.Volume * item.Montant!.Value; }
               <td>&nbsp;@s!.Value.ToString("n2") </td>*@

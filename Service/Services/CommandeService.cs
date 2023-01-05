@@ -643,7 +643,11 @@ namespace Service.Services
                         UniteLibelle = item.Unite.Libelle,
                         ArticleFile = item.ArticleFile,
                         MontantRef = item.MontantRef,
-                        IdArticle = item.IdArticle
+                        IdArticle = item.IdArticle,
+                        MontantV1 = item.MontantV1,
+                        MargeBenef = item.MargeBenef,
+                        MontantRC = item.MontantRC,
+                        MontantDA = item.MontantDA
                     })
                     .ToList();
             {
@@ -1230,11 +1234,26 @@ namespace Service.Services
                 foreach (var item in commandeModifApi)
                 {
                     var detail = await _commandeRepository.GetDetailCommande(item.idDetailCommande);
-                   // if (detail.IdArticle == 14)
-                       // isSpecial = true;
-                    detail.Montant = item.montant;
+                    switch (userRole)
+                    {
+                        // if (detail.IdArticle == 14)
+                        // isSpecial = true;
+                        case "Responsable commercial":
+                            detail.MontantRC = item.montant;
+                            detail.Commande.MontantCommande += detail.MontantRC;
+                            break;
+                        case "Chef de ventes":
+                            detail.MontantV1 = item.montant;
+                            detail.Commande.MontantCommande += detail.MontantV1;
+                            break;
+                        case "DA BPE":
+                            detail.MontantDA = item.montant;
+                            detail.Commande.MontantCommande += detail.MontantDA;
+                            break;
+                    }
+                    //detail.Montant = item.montant;
                   //  detail.ArticleFile = item.CommandeBetonArticleFile;
-                    detail.Commande.MontantCommande += detail.Montant;
+                   // detail.Commande.MontantCommande += detail.Montant;
                 }
                 // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 

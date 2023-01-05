@@ -8,6 +8,10 @@ public class DetailCommandeApiModel
     public string ArticleDesignation { get; set; }
     public decimal? Montant { get; set; }
     public decimal? MontantRef { get; set; }
+    public decimal? MargeBenef { get; set; }
+    public decimal? MontantV1 { get; set; }
+    public decimal? MontantRC { get; set; }
+    public decimal? MontantDA { get; set; }
     public DateTime? DateProduction { get; set; }
     public decimal? Volume { get; set; }
     public string UniteLibelle { get; set; }
