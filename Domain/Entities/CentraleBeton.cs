@@ -28,6 +28,12 @@ namespace Domain.Entities
         [Column(TypeName = "nvarchar(30)")]
         public string Ctr_Longitude { get; set; }
         public decimal? Rayon { get; set; }
+        [Column(TypeName = "nvarchar(50)")]
+
+        public string Ctr_CodeSap { get; set; }
+        [Column(TypeName = "nvarchar(50)")]
+
+        public string Ctr_CodeCentrale { get; set; }
 
         public Ville VILLE { get; set; }
     }

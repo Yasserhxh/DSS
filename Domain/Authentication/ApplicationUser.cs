@@ -14,7 +14,7 @@ namespace Domain.Authentication
         public string Prenom { get; set; }
         public bool IsActive { get; set; }
         [ForeignKey("Ville")]
-        public int VilleId { get; set; }
+        public int? VilleId { get; set; }
         public Ville Ville { get; set; }
     }
 }

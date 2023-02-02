@@ -14,7 +14,8 @@
         public string Ctr_Latiture { get; set; }
         public string Ctr_Longitude { get; set; }
         public decimal? Rayon { get; set; }
-
+        public string Ctr_CodeSap { get; set; }
+        public string Ctr_CodeCentrale { get; set; }
         public VilleModel VILLE { get; set; }
     }
 }

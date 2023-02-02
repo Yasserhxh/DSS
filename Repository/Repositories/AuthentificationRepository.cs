@@ -91,7 +91,8 @@ namespace Repository.Repositories
         }
         public async Task<string> FindUserRoleByEmail(string email)
         {
-            if (await _userManager.FindByEmailAsync(email) is not { } user)
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
                 return null;
             var roles= await _userManager.GetRolesAsync(user);
             return roles.FirstOrDefault();

@@ -1134,7 +1134,7 @@ namespace Service.Services
                 var userRole = await _authentificationRepository.GetUserRole(user);
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
-                var commercialEmail = _authentificationRepository.FindUserByEmailByRoleAndRegion("Commercial", region).Result.Email;
+                var commercialEmail = _authentificationRepository.FindUserByEmailByRoleAndRegion("Commercial", (int)region).Result.Email;
 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
