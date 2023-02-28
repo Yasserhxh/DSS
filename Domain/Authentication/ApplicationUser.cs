@@ -13,8 +13,8 @@ namespace Domain.Authentication
         [Column(TypeName = "nvarchar(256)")]
         public string Prenom { get; set; }
         public bool IsActive { get; set; }
-        [ForeignKey("Ville")]
+        [ForeignKey("Region")]
         public int? VilleId { get; set; }
-        public Ville Ville { get; set; }
+        public Region Region { get; set; }
     }
 }
