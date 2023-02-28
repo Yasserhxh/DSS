@@ -16,5 +16,6 @@ namespace Service.IServices
         Task<Response> UpdateUser(UserModel model);
         Task<Response> UpdateProfil(UpdateUserModel model);
         Task<string> FindUserRoleByEmail(string email);
+        Task<ApplicationUser> FindUserByEmail(string email);
     }
 }

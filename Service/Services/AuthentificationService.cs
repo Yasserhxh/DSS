@@ -68,5 +68,9 @@ namespace Service.Services
         {
             return await _authentificationRepository.FindUserRoleByEmail(email);
         }
+        public async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            return await _authentificationRepository.FindUserByEmail(email);
+        }
     }
 }

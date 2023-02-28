@@ -167,11 +167,14 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     public async Task<IActionResult> GetZones()
     {
         return Ok(await _commandeService.GetZones());
-    }[HttpGet("GetArticles")]
-    public async Task<IActionResult> GetArticles()
+    }
+    [HttpGet("GetArticles")]
+    [Route("GetArticles/{email}")]
+
+    public async Task<IActionResult> GetArticles(string email)
     {
-        var regionId = _userManager.GetUserAsync(User).Result.VilleId;
-        return Ok(await _commandeService.GetArticles(regionId));
+        var user = await  _authentificationService.FindUserByEmail(email);
+        return Ok(await _commandeService.GetArticles(user.VilleId));
     }
     [HttpGet("GetDelaiPaiements")]
     public async Task<IActionResult> GetDelaiPaiements()
