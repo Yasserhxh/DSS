@@ -141,7 +141,7 @@ namespace Web.Controllers
             ViewData["FormeJuridique"] = new SelectList( await commandeService.GetFormeJuridiques(), "FormeJuridique_Id", "FormeJuridique_Libelle");
             ViewData["TypeChantier"] = new SelectList(await commandeService.GetTypeChantiers(), "Tc_Id", "Tc_Libelle");
             ViewData["Zone"] = new SelectList( await commandeService.GetZones(), "Zone_Id", "Zone_Libelle");
-            ViewData["Article"] = new SelectList( await commandeService.GetArticles(), "Article_Id", "Designation");
+            ViewData["Article"] = new SelectList( await commandeService.GetArticles(null), "Article_Id", "Designation");
             ViewData["DelaiPaiement"] = new SelectList( await commandeService.GetDelaiPaiements(), "Delai_Id", "Delai_Libelle");
             ViewData["Centrale"] = new SelectList(await commandeService.GetCentraleBetons(), "Ctr_Id", "Ctr_Nom");
             ViewData["Pompe"] = new SelectList(await commandeService.GetTarifPompeRefs(), "Tpr_Id", "LongFleche_Libelle");
@@ -170,7 +170,7 @@ namespace Web.Controllers
             ViewData["FormeJuridique"] = new SelectList(await commandeService.GetFormeJuridiques(), "FormeJuridique_Id", "FormeJuridique_Libelle");
             ViewData["TypeChantier"] = new SelectList(await commandeService.GetTypeChantiers(), "Tc_Id", "Tc_Libelle");
             ViewData["Zone"] = new SelectList(await commandeService.GetZones(), "Zone_Id", "Zone_Libelle");
-            ViewData["Article"] = new SelectList(await commandeService.GetArticles(), "Article_Id", "Designation");
+            ViewData["Article"] = new SelectList(await commandeService.GetArticles(null), "Article_Id", "Designation");
             ViewData["DelaiPaiement"] = new SelectList(await commandeService.GetDelaiPaiements(), "Delai_Id", "Delai_Libelle");
             ViewData["Centrale"] = new SelectList(await commandeService.GetCentraleBetons(), "Ctr_Id", "Ctr_Nom");
             ViewData["Pompe"] = new SelectList(await commandeService.GetTarifPompeRefs(), "Tpr_Id", "LongFleche_Libelle");

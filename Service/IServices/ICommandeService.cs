@@ -9,7 +9,7 @@ namespace Service.IServices
         Task<List<FormeJuridiqueModel>> GetFormeJuridiques();
         Task<List<TypeChantierModel>> GetTypeChantiers();
         Task<List<ZoneModel>> GetZones();
-        Task<List<ArticleModel>> GetArticles();
+        Task<List<ArticleModel>> GetArticles(int? villeId);
         Task<List<DelaiPaiementModel>> GetDelaiPaiements();
         Task<List<CentraleBetonModel>> GetCentraleBetons();
         Task<double> GetTarifArticle(int Id);

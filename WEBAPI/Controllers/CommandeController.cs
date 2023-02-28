@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using Domain.Authentication;
 using Domain.Models;
 using Domain.Models.ApiModels;
 using Domain.Models.Commande;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
 using WEBAPI.Tools;
@@ -16,13 +18,15 @@ public class CommandeController : Controller
     private readonly ICommandeService _commandeService;
     private readonly IBlobService blobService;
     private readonly IAuthentificationService _authentificationService;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public CommandeController(ICommandeService commandeService, IBlobService blobService,
-        IAuthentificationService authentificationService)
+        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
         _authentificationService = authentificationService;
+        _userManager = userManager;
     }
 
     [HttpPost]
@@ -166,7 +170,8 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     }[HttpGet("GetArticles")]
     public async Task<IActionResult> GetArticles()
     {
-        return Ok(await _commandeService.GetArticles());
+        var regionId = _userManager.GetUserAsync(User).Result.VilleId;
+        return Ok(await _commandeService.GetArticles(regionId));
     }
     [HttpGet("GetDelaiPaiements")]
     public async Task<IActionResult> GetDelaiPaiements()

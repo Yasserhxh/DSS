@@ -7,7 +7,7 @@ namespace Repository.IRepositories
         Task<List<FormeJuridique>> GetFormeJuridiques();
         Task<List<TypeChantier>> GetTypeChantiers();
         Task<List<Zone>> GetZones();
-        Task<List<Article>> GetArticles();
+        Task<List<Article>> GetArticles(int? villeId);
         Task<List<DelaiPaiement>> GetDelaiPaiements();
         Task<List<CentraleBeton>> GetCentraleBetons();
         Task<double> GetTarifArticle(int Id);

@@ -29,9 +29,13 @@ namespace Repository.Repositories
         {
             return await _db.Zones.ToListAsync();
         }
-        public async Task<List<Article>> GetArticles()
+        public async Task<List<Article>> GetArticles(int? villeId)
         {
-            return await _db.Articles.Where(p => p.Article_Id != 14 && p.Article_Id != 15).ToListAsync();
+            var query =  _db.Articles.Where(p => p.Article_Id != 14 && p.Article_Id != 15).AsQueryable();
+            if(villeId is not null)
+                query = query.Where(p=>p.Region ==  villeId);
+
+            return await query.ToListAsync();
         }
         
         public async Task<List<DelaiPaiement>> GetDelaiPaiements()

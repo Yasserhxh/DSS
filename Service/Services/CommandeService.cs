@@ -39,9 +39,9 @@ namespace Service.Services
         {
             return _mapper.Map<List<Zone>, List<ZoneModel>>( await this._commandeRepository.GetZones());
         }
-        public async Task<List<ArticleModel>> GetArticles()
+        public async Task<List<ArticleModel>> GetArticles(int? villeId)
         {
-            return _mapper.Map<List<Article>, List<ArticleModel>>(await this._commandeRepository.GetArticles());
+            return _mapper.Map<List<Article>, List<ArticleModel>>(await this._commandeRepository.GetArticles(villeId));
         }
         public async Task<List<DelaiPaiementModel>> GetDelaiPaiements()
         {
