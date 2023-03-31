@@ -331,7 +331,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
                 var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
                 return Ok(response);
         */
-        const string _urlSuffix = "ZBAPI_CUSTOMER_GETLIST";
+        const string _urlSuffix = "ZBAPI_CUSTOMER_GETLIST?sap-client=150";
         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
             _configuration["Sap:Username"], _configuration["Sap:Password"]);
         var request = new BAPI_CUSTOMER_GETLIST()
