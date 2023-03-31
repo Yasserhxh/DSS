@@ -8,6 +8,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
 using WEBAPI.Tools;
+using ServiceReference1;
+using System.ServiceModel;
+using Domain.Entities;
+using System.Net;
+using NwRfcNet;
+using NwRfcNet.Bapi;
+using Microsoft.Extensions.Configuration;
 
 namespace WEBAPI.Controllers;
 
@@ -19,14 +26,16 @@ public class CommandeController : Controller
     private readonly IBlobService blobService;
     private readonly IAuthentificationService _authentificationService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private IConfiguration _configuration;
 
     public CommandeController(ICommandeService commandeService, IBlobService blobService,
-        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager)
+        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager, IConfiguration configuration)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
         _authentificationService = authentificationService;
         _userManager = userManager;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -303,5 +312,49 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
                 vm.DateFinSearch);
         return Ok(vm.CommandesAPI);
     }
+    [HttpGet]
+    [Route("GetListSAP")]
+    public async Task<IActionResult> GetListSAPAsync()
+    {
+        /*        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002P111AD1/sdef_url/ZBAPI_CUSTOMER_GETLIST?sap-client=150";
+                BasicHttpBinding binding = new BasicHttpBinding();
 
+                binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Windows;
+
+                EndpointAddress endpoint = new(endpointurl);
+                var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding, endpoint);
+
+                wsclient.ClientCredentials.Windows.ClientCredential.UserName = "MAR_DSSRMC";
+                wsclient.ClientCredentials.Windows.ClientCredential.Password =  "Init2023**";
+                var request = new BAPI_CUSTOMER_GETLIST();
+                var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
+                return Ok(response);
+        */
+        const string _urlSuffix = "ZBAPI_CUSTOMER_GETLIST";
+        var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
+            _configuration["Sap:Username"], _configuration["Sap:Password"]);
+        var request = new BAPI_CUSTOMER_GETLIST()
+        {
+            CPDONLY = "",
+            ADDRESSDATA = new[]
+                  {
+                        new BAPICUSTOMER_ADDRESSDATA()
+                        {
+
+                        }
+                    }
+        };
+        var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
+        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA;
+        if (!clientsFromSap.Any())
+        {
+            return Ok();
+        }
+        var clients = clientsFromSap.Select(c => new DSSClient()
+        {
+            Gsm = c.TEL1_NUMBR.ToUpper()
+        }).ToList();
+        return Ok(clients);
+    }
 }
