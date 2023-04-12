@@ -331,29 +331,19 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
                 var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
                 return Ok(response);
         */
-        const string _urlSuffix = "ZBAPI_CUSTOMER_GETLIST?sap-client=150";
-        var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
+        const string _urlSuffix = "";
+        var serviceClient = new ZSD_BAPI_CUSTOMER_FINDClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
             _configuration["Sap:Username"], _configuration["Sap:Password"]);
-        var request = new BAPI_CUSTOMER_GETLIST()
-        {
-            CPDONLY = "",
-            ADDRESSDATA = new[]
-                  {
-                        new BAPICUSTOMER_ADDRESSDATA()
-                        {
-
-                        }
-                    }
-        };
-        var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
-        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA;
+        var request = new CustomerFind();
+        var response = await serviceClient.CustomerFindAsync(request);
+        var clientsFromSap = response.CustomerFindResponse.ResultTab;
         if (!clientsFromSap.Any())
         {
             return Ok();
         }
         var clients = clientsFromSap.Select(c => new DSSClient()
         {
-            Gsm = c.TEL1_NUMBR.ToUpper()
+            Gsm = c.Id
         }).ToList();
         return Ok(clients);
     }
