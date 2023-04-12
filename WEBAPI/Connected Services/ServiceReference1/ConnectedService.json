@@ -1,7 +1,7 @@
 {
   "ExtendedData": {
     "inputs": [
-      "../../../../ZBAPIGET.wsdl"
+      "../../../../../../Downloads/BAPI_CUSTOMER_GETLIST.wsdl"
     ],
     "collectionTypes": [
       "System.Array",

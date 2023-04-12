@@ -332,19 +332,11 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
                 return Ok(response);
         */
         const string _urlSuffix = "";
-        var serviceClient = new ZSD_BAPI_CUSTOMER_FINDClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
+        var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
             _configuration["Sap:Username"], _configuration["Sap:Password"]);
-        var request = new CustomerFind();
-        var response = await serviceClient.CustomerFindAsync(request);
-        var clientsFromSap = response.CustomerFindResponse.ResultTab;
-        if (!clientsFromSap.Any())
-        {
-            return Ok();
-        }
-        var clients = clientsFromSap.Select(c => new DSSClient()
-        {
-            Gsm = c.Id
-        }).ToList();
-        return Ok(clients);
+        var request = new BAPI_CUSTOMER_GETLIST();
+        var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
+        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
+        return Ok(clientsFromSap);
     }
 }

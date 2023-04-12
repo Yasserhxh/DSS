@@ -12,717 +12,679 @@ namespace ServiceReference1
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style", ConfigurationName="ServiceReference1.ZSD_BAPI_CUSTOMER_FIND")]
-    public interface ZSD_BAPI_CUSTOMER_FIND
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", ConfigurationName="ServiceReference1.zBAPI_CUSTOMER_GETLIST")]
+    public interface zBAPI_CUSTOMER_GETLIST
     {
         
-        // CODEGEN : La génération du contrat de message depuis l'opération CustomerFind n'est ni RPC, ni encapsulée dans un document.
-        [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:soap:functions:mc-style:ZSD_BAPI_CUSTOMER_FIND:CustomerF" +
-            "indRequest", ReplyAction="*")]
+        // CODEGEN : La génération du contrat de message depuis l'opération BAPI_CUSTOMER_GETLIST n'est ni RPC, ni encapsulée dans un document.
+        [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
+            "STRequest", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        ServiceReference1.CustomerFindResponse1 CustomerFind(ServiceReference1.CustomerFindRequest request);
+        ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:soap:functions:mc-style:ZSD_BAPI_CUSTOMER_FIND:CustomerF" +
-            "indRequest", ReplyAction="*")]
-        System.Threading.Tasks.Task<ServiceReference1.CustomerFindResponse1> CustomerFindAsync(ServiceReference1.CustomerFindRequest request);
+        [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
+            "STRequest", ReplyAction="*")]
+        System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
     }
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:soap:functions:mc-style")]
-    public partial class CustomerFind
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPI_CUSTOMER_GETLIST
     {
         
-        private int maxCntField;
+        private BAPICUSTOMER_ADDRESSDATA[] aDDRESSDATAField;
         
-        private bool maxCntFieldSpecified;
+        private string cPDONLYField;
         
-        private string plHoldField;
+        private BAPICUSTOMER_IDRANGE[] iDRANGEField;
         
-        private Bapikna111[] resultTabField;
+        private int mAXROWSField;
         
-        private Bapikna110[] seloptTabField;
+        private bool mAXROWSFieldSpecified;
+        
+        private BAPICUSTOMER_SPECIALDATA[] sPECIALDATAField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public int MaxCnt
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public BAPICUSTOMER_ADDRESSDATA[] ADDRESSDATA
         {
             get
             {
-                return this.maxCntField;
+                return this.aDDRESSDATAField;
             }
             set
             {
-                this.maxCntField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool MaxCntSpecified
-        {
-            get
-            {
-                return this.maxCntFieldSpecified;
-            }
-            set
-            {
-                this.maxCntFieldSpecified = value;
+                this.aDDRESSDATAField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string PlHold
+        public string CPDONLY
         {
             get
             {
-                return this.plHoldField;
+                return this.cPDONLYField;
             }
             set
             {
-                this.plHoldField = value;
+                this.cPDONLYField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
-        public Bapikna111[] ResultTab
+        public BAPICUSTOMER_IDRANGE[] IDRANGE
         {
             get
             {
-                return this.resultTabField;
+                return this.iDRANGEField;
             }
             set
             {
-                this.resultTabField = value;
+                this.iDRANGEField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public int MAXROWS
+        {
+            get
+            {
+                return this.mAXROWSField;
+            }
+            set
+            {
+                this.mAXROWSField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool MAXROWSSpecified
+        {
+            get
+            {
+                return this.mAXROWSFieldSpecified;
+            }
+            set
+            {
+                this.mAXROWSFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public BAPICUSTOMER_SPECIALDATA[] SPECIALDATA
+        {
+            get
+            {
+                return this.sPECIALDATAField;
+            }
+            set
+            {
+                this.sPECIALDATAField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPICUSTOMER_ADDRESSDATA
+    {
+        
+        private string cUSTOMERField;
+        
+        private string sORT1Field;
+        
+        private string nAMEField;
+        
+        private string cOUNTRYField;
+        
+        private string cOUNTRYISOField;
+        
+        private string cITYField;
+        
+        private string pOSTL_COD1Field;
+        
+        private string rEGIONField;
+        
+        private string sTREETField;
+        
+        private string tEL1_NUMBRField;
+        
+        private string fAX_NUMBERField;
+        
+        private string aDDRESSField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CUSTOMER
+        {
+            get
+            {
+                return this.cUSTOMERField;
+            }
+            set
+            {
+                this.cUSTOMERField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string SORT1
+        {
+            get
+            {
+                return this.sORT1Field;
+            }
+            set
+            {
+                this.sORT1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string NAME
+        {
+            get
+            {
+                return this.nAMEField;
+            }
+            set
+            {
+                this.nAMEField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string COUNTRY
+        {
+            get
+            {
+                return this.cOUNTRYField;
+            }
+            set
+            {
+                this.cOUNTRYField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string COUNTRYISO
+        {
+            get
+            {
+                return this.cOUNTRYISOField;
+            }
+            set
+            {
+                this.cOUNTRYISOField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string CITY
+        {
+            get
+            {
+                return this.cITYField;
+            }
+            set
+            {
+                this.cITYField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string POSTL_COD1
+        {
+            get
+            {
+                return this.pOSTL_COD1Field;
+            }
+            set
+            {
+                this.pOSTL_COD1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public string REGION
+        {
+            get
+            {
+                return this.rEGIONField;
+            }
+            set
+            {
+                this.rEGIONField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string STREET
+        {
+            get
+            {
+                return this.sTREETField;
+            }
+            set
+            {
+                this.sTREETField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string TEL1_NUMBR
+        {
+            get
+            {
+                return this.tEL1_NUMBRField;
+            }
+            set
+            {
+                this.tEL1_NUMBRField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string FAX_NUMBER
+        {
+            get
+            {
+                return this.fAX_NUMBERField;
+            }
+            set
+            {
+                this.fAX_NUMBERField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public string ADDRESS
+        {
+            get
+            {
+                return this.aDDRESSField;
+            }
+            set
+            {
+                this.aDDRESSField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPIRETURN1
+    {
+        
+        private string tYPEField;
+        
+        private string idField;
+        
+        private string nUMBERField;
+        
+        private string mESSAGEField;
+        
+        private string lOG_NOField;
+        
+        private string lOG_MSG_NOField;
+        
+        private string mESSAGE_V1Field;
+        
+        private string mESSAGE_V2Field;
+        
+        private string mESSAGE_V3Field;
+        
+        private string mESSAGE_V4Field;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string TYPE
+        {
+            get
+            {
+                return this.tYPEField;
+            }
+            set
+            {
+                this.tYPEField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string ID
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string NUMBER
+        {
+            get
+            {
+                return this.nUMBERField;
+            }
+            set
+            {
+                this.nUMBERField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string MESSAGE
+        {
+            get
+            {
+                return this.mESSAGEField;
+            }
+            set
+            {
+                this.mESSAGEField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string LOG_NO
+        {
+            get
+            {
+                return this.lOG_NOField;
+            }
+            set
+            {
+                this.lOG_NOField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string LOG_MSG_NO
+        {
+            get
+            {
+                return this.lOG_MSG_NOField;
+            }
+            set
+            {
+                this.lOG_MSG_NOField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string MESSAGE_V1
+        {
+            get
+            {
+                return this.mESSAGE_V1Field;
+            }
+            set
+            {
+                this.mESSAGE_V1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public string MESSAGE_V2
+        {
+            get
+            {
+                return this.mESSAGE_V2Field;
+            }
+            set
+            {
+                this.mESSAGE_V2Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string MESSAGE_V3
+        {
+            get
+            {
+                return this.mESSAGE_V3Field;
+            }
+            set
+            {
+                this.mESSAGE_V3Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string MESSAGE_V4
+        {
+            get
+            {
+                return this.mESSAGE_V4Field;
+            }
+            set
+            {
+                this.mESSAGE_V4Field = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPICUSTOMER_SPECIALDATA
+    {
+        
+        private string cUSTOMERField;
+        
+        private string aCC_1_TIMEField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CUSTOMER
+        {
+            get
+            {
+                return this.cUSTOMERField;
+            }
+            set
+            {
+                this.cUSTOMERField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string ACC_1_TIME
+        {
+            get
+            {
+                return this.aCC_1_TIMEField;
+            }
+            set
+            {
+                this.aCC_1_TIMEField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPICUSTOMER_IDRANGE
+    {
+        
+        private string sIGNField;
+        
+        private string oPTIONField;
+        
+        private string lOWField;
+        
+        private string hIGHField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string SIGN
+        {
+            get
+            {
+                return this.sIGNField;
+            }
+            set
+            {
+                this.sIGNField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string OPTION
+        {
+            get
+            {
+                return this.oPTIONField;
+            }
+            set
+            {
+                this.oPTIONField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string LOW
+        {
+            get
+            {
+                return this.lOWField;
+            }
+            set
+            {
+                this.lOWField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string HIGH
+        {
+            get
+            {
+                return this.hIGHField;
+            }
+            set
+            {
+                this.hIGHField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class BAPI_CUSTOMER_GETLISTResponse
+    {
+        
+        private BAPICUSTOMER_ADDRESSDATA[] aDDRESSDATAField;
+        
+        private BAPICUSTOMER_IDRANGE[] iDRANGEField;
+        
+        private BAPIRETURN1 rETURNField;
+        
+        private BAPICUSTOMER_SPECIALDATA[] sPECIALDATAField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public BAPICUSTOMER_ADDRESSDATA[] ADDRESSDATA
+        {
+            get
+            {
+                return this.aDDRESSDATAField;
+            }
+            set
+            {
+                this.aDDRESSDATAField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public BAPICUSTOMER_IDRANGE[] IDRANGE
+        {
+            get
+            {
+                return this.iDRANGEField;
+            }
+            set
+            {
+                this.iDRANGEField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public BAPIRETURN1 RETURN
+        {
+            get
+            {
+                return this.rETURNField;
+            }
+            set
+            {
+                this.rETURNField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
-        public Bapikna110[] SeloptTab
+        public BAPICUSTOMER_SPECIALDATA[] SPECIALDATA
         {
             get
             {
-                return this.seloptTabField;
+                return this.sPECIALDATAField;
             }
             set
             {
-                this.seloptTabField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style")]
-    public partial class Bapikna111
-    {
-        
-        private string compCodeField;
-        
-        private string tabnameField;
-        
-        private string fieldnameField;
-        
-        private string fieldvalueField;
-        
-        private string customerField;
-        
-        private string pstgBlkGField;
-        
-        private string pstgBlkCField;
-        
-        private string delFlagGField;
-        
-        private string delFlagCField;
-        
-        private string typeField;
-        
-        private string idField;
-        
-        private string numberField;
-        
-        private string messageField;
-        
-        private string logNoField;
-        
-        private string logMsgNoField;
-        
-        private string messageV1Field;
-        
-        private string messageV2Field;
-        
-        private string messageV3Field;
-        
-        private string messageV4Field;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string CompCode
-        {
-            get
-            {
-                return this.compCodeField;
-            }
-            set
-            {
-                this.compCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string Tabname
-        {
-            get
-            {
-                return this.tabnameField;
-            }
-            set
-            {
-                this.tabnameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public string Fieldname
-        {
-            get
-            {
-                return this.fieldnameField;
-            }
-            set
-            {
-                this.fieldnameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
-        public string Fieldvalue
-        {
-            get
-            {
-                return this.fieldvalueField;
-            }
-            set
-            {
-                this.fieldvalueField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
-        public string Customer
-        {
-            get
-            {
-                return this.customerField;
-            }
-            set
-            {
-                this.customerField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
-        public string PstgBlkG
-        {
-            get
-            {
-                return this.pstgBlkGField;
-            }
-            set
-            {
-                this.pstgBlkGField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
-        public string PstgBlkC
-        {
-            get
-            {
-                return this.pstgBlkCField;
-            }
-            set
-            {
-                this.pstgBlkCField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
-        public string DelFlagG
-        {
-            get
-            {
-                return this.delFlagGField;
-            }
-            set
-            {
-                this.delFlagGField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
-        public string DelFlagC
-        {
-            get
-            {
-                return this.delFlagCField;
-            }
-            set
-            {
-                this.delFlagCField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
-        public string Type
-        {
-            get
-            {
-                return this.typeField;
-            }
-            set
-            {
-                this.typeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
-        public string Id
-        {
-            get
-            {
-                return this.idField;
-            }
-            set
-            {
-                this.idField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
-        public string Number
-        {
-            get
-            {
-                return this.numberField;
-            }
-            set
-            {
-                this.numberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
-        public string Message
-        {
-            get
-            {
-                return this.messageField;
-            }
-            set
-            {
-                this.messageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=13)]
-        public string LogNo
-        {
-            get
-            {
-                return this.logNoField;
-            }
-            set
-            {
-                this.logNoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=14)]
-        public string LogMsgNo
-        {
-            get
-            {
-                return this.logMsgNoField;
-            }
-            set
-            {
-                this.logMsgNoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=15)]
-        public string MessageV1
-        {
-            get
-            {
-                return this.messageV1Field;
-            }
-            set
-            {
-                this.messageV1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
-        public string MessageV2
-        {
-            get
-            {
-                return this.messageV2Field;
-            }
-            set
-            {
-                this.messageV2Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
-        public string MessageV3
-        {
-            get
-            {
-                return this.messageV3Field;
-            }
-            set
-            {
-                this.messageV3Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
-        public string MessageV4
-        {
-            get
-            {
-                return this.messageV4Field;
-            }
-            set
-            {
-                this.messageV4Field = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style")]
-    public partial class Bapireturn1
-    {
-        
-        private string typeField;
-        
-        private string idField;
-        
-        private string numberField;
-        
-        private string messageField;
-        
-        private string logNoField;
-        
-        private string logMsgNoField;
-        
-        private string messageV1Field;
-        
-        private string messageV2Field;
-        
-        private string messageV3Field;
-        
-        private string messageV4Field;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string Type
-        {
-            get
-            {
-                return this.typeField;
-            }
-            set
-            {
-                this.typeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string Id
-        {
-            get
-            {
-                return this.idField;
-            }
-            set
-            {
-                this.idField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public string Number
-        {
-            get
-            {
-                return this.numberField;
-            }
-            set
-            {
-                this.numberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
-        public string Message
-        {
-            get
-            {
-                return this.messageField;
-            }
-            set
-            {
-                this.messageField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
-        public string LogNo
-        {
-            get
-            {
-                return this.logNoField;
-            }
-            set
-            {
-                this.logNoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
-        public string LogMsgNo
-        {
-            get
-            {
-                return this.logMsgNoField;
-            }
-            set
-            {
-                this.logMsgNoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
-        public string MessageV1
-        {
-            get
-            {
-                return this.messageV1Field;
-            }
-            set
-            {
-                this.messageV1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
-        public string MessageV2
-        {
-            get
-            {
-                return this.messageV2Field;
-            }
-            set
-            {
-                this.messageV2Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
-        public string MessageV3
-        {
-            get
-            {
-                return this.messageV3Field;
-            }
-            set
-            {
-                this.messageV3Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
-        public string MessageV4
-        {
-            get
-            {
-                return this.messageV4Field;
-            }
-            set
-            {
-                this.messageV4Field = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style")]
-    public partial class Bapikna110
-    {
-        
-        private string compCodeField;
-        
-        private string tabnameField;
-        
-        private string fieldnameField;
-        
-        private string fieldvalueField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string CompCode
-        {
-            get
-            {
-                return this.compCodeField;
-            }
-            set
-            {
-                this.compCodeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string Tabname
-        {
-            get
-            {
-                return this.tabnameField;
-            }
-            set
-            {
-                this.tabnameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public string Fieldname
-        {
-            get
-            {
-                return this.fieldnameField;
-            }
-            set
-            {
-                this.fieldnameField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
-        public string Fieldvalue
-        {
-            get
-            {
-                return this.fieldvalueField;
-            }
-            set
-            {
-                this.fieldvalueField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:soap:functions:mc-style")]
-    public partial class CustomerFindResponse
-    {
-        
-        private Bapikna111[] resultTabField;
-        
-        private Bapireturn1 returnField;
-        
-        private Bapikna110[] seloptTabField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
-        public Bapikna111[] ResultTab
-        {
-            get
-            {
-                return this.resultTabField;
-            }
-            set
-            {
-                this.resultTabField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public Bapireturn1 Return
-        {
-            get
-            {
-                return this.returnField;
-            }
-            set
-            {
-                this.returnField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
-        public Bapikna110[] SeloptTab
-        {
-            get
-            {
-                return this.seloptTabField;
-            }
-            set
-            {
-                this.seloptTabField = value;
+                this.sPECIALDATAField = value;
             }
         }
     }
@@ -731,19 +693,19 @@ namespace ServiceReference1
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class CustomerFindRequest
+    public partial class BAPI_CUSTOMER_GETLISTRequest
     {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style", Order=0)]
-        public ServiceReference1.CustomerFind CustomerFind;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", Order=0)]
+        public ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST;
         
-        public CustomerFindRequest()
+        public BAPI_CUSTOMER_GETLISTRequest()
         {
         }
         
-        public CustomerFindRequest(ServiceReference1.CustomerFind CustomerFind)
+        public BAPI_CUSTOMER_GETLISTRequest(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
         {
-            this.CustomerFind = CustomerFind;
+            this.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST;
         }
     }
     
@@ -751,64 +713,36 @@ namespace ServiceReference1
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
-    public partial class CustomerFindResponse1
+    public partial class BAPI_CUSTOMER_GETLISTResponse1
     {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:soap:functions:mc-style", Order=0)]
-        public ServiceReference1.CustomerFindResponse CustomerFindResponse;
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", Order=0)]
+        public ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse;
         
-        public CustomerFindResponse1()
+        public BAPI_CUSTOMER_GETLISTResponse1()
         {
         }
         
-        public CustomerFindResponse1(ServiceReference1.CustomerFindResponse CustomerFindResponse)
+        public BAPI_CUSTOMER_GETLISTResponse1(ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse)
         {
-            this.CustomerFindResponse = CustomerFindResponse;
+            this.BAPI_CUSTOMER_GETLISTResponse = BAPI_CUSTOMER_GETLISTResponse;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    public interface ZSD_BAPI_CUSTOMER_FINDChannel : ServiceReference1.ZSD_BAPI_CUSTOMER_FIND, System.ServiceModel.IClientChannel
+    public interface zBAPI_CUSTOMER_GETLISTChannel : ServiceReference1.zBAPI_CUSTOMER_GETLIST, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    public partial class ZSD_BAPI_CUSTOMER_FINDClient : System.ServiceModel.ClientBase<ServiceReference1.ZSD_BAPI_CUSTOMER_FIND>, ServiceReference1.ZSD_BAPI_CUSTOMER_FIND
+    public partial class zBAPI_CUSTOMER_GETLISTClient : System.ServiceModel.ClientBase<ServiceReference1.zBAPI_CUSTOMER_GETLIST>, ServiceReference1.zBAPI_CUSTOMER_GETLIST
     {
         
-        /// <summary>
-        /// Implémentez cette méthode partielle pour configurer le point de terminaison de service.
-        /// </summary>
-        /// <param name="serviceEndpoint">Point de terminaison à configurer</param>
-        /// <param name="clientCredentials">Informations d'identification du client</param>
-        static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
-        
-        public ZSD_BAPI_CUSTOMER_FINDClient(EndpointConfiguration endpointConfiguration) : 
-                base(ZSD_BAPI_CUSTOMER_FINDClient.GetBindingForEndpoint(endpointConfiguration), ZSD_BAPI_CUSTOMER_FINDClient.GetEndpointAddress(endpointConfiguration))
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ZSD_BAPI_CUSTOMER_FINDClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
-                base(ZSD_BAPI_CUSTOMER_FINDClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress))
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ZSD_BAPI_CUSTOMER_FINDClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
-                base(ZSD_BAPI_CUSTOMER_FINDClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress)
-        {
-            this.Endpoint.Name = endpointConfiguration.ToString();
-            ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
-        }
-        
-        public ZSD_BAPI_CUSTOMER_FINDClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress, string username, string password) : 
+        public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress, string username, string password) : 
                 base(binding, remoteAddress)
         {
-           /* ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
+         /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
             {
                 CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None,
                 RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck
@@ -818,88 +752,35 @@ namespace ServiceReference1
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        ServiceReference1.CustomerFindResponse1 ServiceReference1.ZSD_BAPI_CUSTOMER_FIND.CustomerFind(ServiceReference1.CustomerFindRequest request)
+        ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 ServiceReference1.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request)
         {
-            return base.Channel.CustomerFind(request);
+            return base.Channel.BAPI_CUSTOMER_GETLIST(request);
         }
         
-        public ServiceReference1.CustomerFindResponse CustomerFind(ServiceReference1.CustomerFind CustomerFind1)
+        public ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST1)
         {
-            ServiceReference1.CustomerFindRequest inValue = new ServiceReference1.CustomerFindRequest();
-            inValue.CustomerFind = CustomerFind1;
-            ServiceReference1.CustomerFindResponse1 retVal = ((ServiceReference1.ZSD_BAPI_CUSTOMER_FIND)(this)).CustomerFind(inValue);
-            return retVal.CustomerFindResponse;
+            ServiceReference1.BAPI_CUSTOMER_GETLISTRequest inValue = new ServiceReference1.BAPI_CUSTOMER_GETLISTRequest();
+            inValue.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST1;
+            ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 retVal = ((ServiceReference1.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLIST(inValue);
+            return retVal.BAPI_CUSTOMER_GETLISTResponse;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<ServiceReference1.CustomerFindResponse1> ServiceReference1.ZSD_BAPI_CUSTOMER_FIND.CustomerFindAsync(ServiceReference1.CustomerFindRequest request)
+        System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> ServiceReference1.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request)
         {
-            return base.Channel.CustomerFindAsync(request);
+            return base.Channel.BAPI_CUSTOMER_GETLISTAsync(request);
         }
         
-        public System.Threading.Tasks.Task<ServiceReference1.CustomerFindResponse1> CustomerFindAsync(ServiceReference1.CustomerFind CustomerFind)
+        public System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
         {
-            ServiceReference1.CustomerFindRequest inValue = new ServiceReference1.CustomerFindRequest();
-            inValue.CustomerFind = CustomerFind;
-            return ((ServiceReference1.ZSD_BAPI_CUSTOMER_FIND)(this)).CustomerFindAsync(inValue);
+            ServiceReference1.BAPI_CUSTOMER_GETLISTRequest inValue = new ServiceReference1.BAPI_CUSTOMER_GETLISTRequest();
+            inValue.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST;
+            return ((ServiceReference1.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLISTAsync(inValue);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
         {
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
-        }
-        
-        private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
-        {
-            if ((endpointConfiguration == EndpointConfiguration.binding))
-            {
-                System.ServiceModel.Channels.CustomBinding result = new System.ServiceModel.Channels.CustomBinding();
-                System.ServiceModel.Channels.MtomMessageEncodingBindingElement mtomBindingElement = new System.ServiceModel.Channels.MtomMessageEncodingBindingElement();
-                mtomBindingElement.MessageVersion = System.ServiceModel.Channels.MessageVersion.CreateVersion(System.ServiceModel.EnvelopeVersion.Soap11, System.ServiceModel.Channels.AddressingVersion.WSAddressing10);
-                result.Elements.Add(mtomBindingElement);
-                System.ServiceModel.Channels.HttpsTransportBindingElement httpsBindingElement = new System.ServiceModel.Channels.HttpsTransportBindingElement();
-                httpsBindingElement.AllowCookies = true;
-                httpsBindingElement.MaxBufferSize = int.MaxValue;
-                httpsBindingElement.MaxReceivedMessageSize = int.MaxValue;
-                httpsBindingElement.AuthenticationScheme = System.Net.AuthenticationSchemes.Basic;
-                result.Elements.Add(httpsBindingElement);
-                return result;
-            }
-            if ((endpointConfiguration == EndpointConfiguration.binding_soap12))
-            {
-                System.ServiceModel.WS2007HttpBinding result = new System.ServiceModel.WS2007HttpBinding();
-                result.ReaderQuotas = System.Xml.XmlDictionaryReaderQuotas.Max;
-                result.MaxReceivedMessageSize = int.MaxValue;
-                result.AllowCookies = true;
-                result.MessageEncoding = System.ServiceModel.WSMessageEncoding.Mtom;
-                result.Security.Mode = System.ServiceModel.SecurityMode.Transport;
-                result.Security.Transport.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Basic;
-                return result;
-            }
-            throw new System.InvalidOperationException(string.Format("Le point de terminaison nommé \'{0}\' est introuvable.", endpointConfiguration));
-        }
-        
-        private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
-        {
-            if ((endpointConfiguration == EndpointConfiguration.binding))
-            {
-                return new System.ServiceModel.EndpointAddress("https://itcsapwct.grouphc.net:44300/sap/bc/srt/scs/sap/zsd_bapi_customer_find?sap" +
-                        "-client=150");
-            }
-            if ((endpointConfiguration == EndpointConfiguration.binding_soap12))
-            {
-                return new System.ServiceModel.EndpointAddress("https://itcsapwct.grouphc.net:44300/sap/bc/srt/scs/sap/zsd_bapi_customer_find?sap" +
-                        "-client=150");
-            }
-            throw new System.InvalidOperationException(string.Format("Le point de terminaison nommé \'{0}\' est introuvable.", endpointConfiguration));
-        }
-        
-        public enum EndpointConfiguration
-        {
-            
-            binding,
-            
-            binding_soap12,
         }
     }
 }
