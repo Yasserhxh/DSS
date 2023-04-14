@@ -15,6 +15,8 @@ using System.Net;
 using NwRfcNet;
 using NwRfcNet.Bapi;
 using Microsoft.Extensions.Configuration;
+using Service.Services;
+using System.Data;
 
 namespace WEBAPI.Controllers;
 
@@ -53,92 +55,105 @@ public class CommandeController : Controller
         return Ok(result);
     }
 
-  /*  [HttpPost]
-    [Route("Convert")]
-    public IActionResult ConvertFile([FromBody] string File)
-    {
-        
-        var mystr = File.Replace("base64,",string.Empty);
-
-                                               
-        var testb = Convert.FromBase64String(mystr);
-
-        System.IO.File.WriteAllBytes(@"c:\yourfile", Convert.FromBase64String(mystr));    
-        
-       // var file = Server.MapPath("~/Documents/"+File.name);
-        //System.IO.File.WriteAllBytes(file, testb);
-    }*/
-  [HttpPost]
-  [Route("ConvertFile")]
-
-  public string ConvertFile([FromBody]  IFormFile? file)
-  {
-      if (file == null) return "";
-      var mimeType = file.ContentType;
-      byte[] fileData;
-      using (var ms = new MemoryStream())
+    /*  [HttpPost]
+      [Route("Convert")]
+      public IActionResult ConvertFile([FromBody] string File)
       {
-          file.CopyTo(ms);
-          fileData = ms.ToArray();
-      }
 
-      var str=  blobService.UploadFileToBlob(Guid.NewGuid() + "/" + file.FileName,
-          "Beton Spécial", fileData, mimeType);
-      return str;
+          var mystr = File.Replace("base64,",string.Empty);
 
-  }
 
-  [HttpPost]
+          var testb = Convert.FromBase64String(mystr);
+
+          System.IO.File.WriteAllBytes(@"c:\yourfile", Convert.FromBase64String(mystr));    
+
+         // var file = Server.MapPath("~/Documents/"+File.name);
+          //System.IO.File.WriteAllBytes(file, testb);
+      }*/
+    [HttpPost]
+    [Route("ConvertFile")]
+
+    public string ConvertFile([FromBody] IFormFile? file)
+    {
+        if (file == null) return "";
+        var mimeType = file.ContentType;
+        byte[] fileData;
+        using (var ms = new MemoryStream())
+        {
+            file.CopyTo(ms);
+            fileData = ms.ToArray();
+        }
+
+        var str = blobService.UploadFileToBlob(Guid.NewGuid() + "/" + file.FileName,
+            "Beton Spécial", fileData, mimeType);
+        return str;
+
+    }
+
+    [HttpPost]
     [Route("Create")]
 
-public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
+    public async Task<IActionResult> Create([FromBody] CommandeViewModel commandeViewModel, IFormFile? file)
     {
         var redirect = await _commandeService.CreateCommande(commandeViewModel);
-        return redirect.Any()  ? Ok(redirect) : Problem();
+        return redirect.Any() ? Ok(redirect) : Problem();
     }
-[HttpPost]
-[Route("CreateProspect")]
+    [HttpPost]
+    [Route("CreateProspect")]
 
-public async Task<bool> CreateProspect([FromBody] CommandeViewModel commandeViewModel)
-{
-    var redirect = await _commandeService.CreateProspect(commandeViewModel);
-    return redirect;
-}
+    public async Task<bool> CreateProspect([FromBody] CommandeViewModel commandeViewModel)
+    {
+        var redirect = await _commandeService.CreateProspect(commandeViewModel);
+        return redirect;
+    }
 
-[HttpPost]
-[Route("CreateCommandeProspection")]
-public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel commandeViewModel)
-{
-    var redirect = await _commandeService.CreateCommandeProspection(commandeViewModel);
-    return redirect;
-}
+    [HttpPost]
+    [Route("CreateCommandeProspection")]
+    public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel commandeViewModel)
+    {
+        var redirect = await _commandeService.CreateCommandeProspection(commandeViewModel);
+        return redirect;
+    }
 
     [HttpGet]
     [Route("FindUserRoleByEmail/{email}")]
     public async Task<IActionResult> FindUserRoleByEmail(string email)
     {
         var res = await _authentificationService.FindUserRoleByEmail(email);
-        return string.IsNullOrEmpty(email) ? Problem(statusCode: StatusCodes.Status409Conflict, title:"Utilisateur introuvable!") : Ok(res);
+        return string.IsNullOrEmpty(email) ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Utilisateur introuvable!") : Ok(res);
     }
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterModel user)
+    {
+        user.Password = "123***Sss";
+        return Ok(await _authentificationService.Register(user));
+    }
+    [HttpGet]
+    public async Task<IActionResult> ListeDesUtilisateurs()
+        => Ok(await _authentificationService.getListUsers());
+    [HttpGet]
+    public async Task<IActionResult> ListDesRoles()
+        => Ok(await _authentificationService.GetRoles());
+
     [HttpPost("ListeCommandes")]
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
     {
         var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
         if (!client.Any())
             return Ok(new List<CommandeApiModel>());
-        vm.IdClients = client.Select(x=>x.Client_Id).ToList();
+        vm.IdClients = client.Select(x => x.Client_Id).ToList();
         vm.CommandesAPI = vm.UserRole switch
         {
-            "Commercial" => await _commandeService.GetCommandes(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
-            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients, vm.DateCommande ,vm.DateDebutSearch, vm.DateFinSearch),
-            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
-            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
-            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients, vm.DateCommande,vm.DateDebutSearch, vm.DateFinSearch),
+            "Commercial" => await _commandeService.GetCommandes(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
+            "Prescripteur technique" => await _commandeService.GetCommandesPT(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
+            "DA BPE" => await _commandeService.GetCommandesDAPBE(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
+            "Responsable commercial" => await _commandeService.GetCommandesRC(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
+            "Chef de ventes" => await _commandeService.GetCommandesCV(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             "Responsable logistique" => await _commandeService.GetCommandesRL(vm.IdClients, vm.DateCommande, vm.DateDebutSearch, vm.DateFinSearch),
             _ => vm.CommandesAPI
         };
         return Ok(vm.CommandesAPI);
-    }   
+    }
     [HttpGet("DetailCommande/{commandeId}")]
     public async Task<IActionResult> DetailCommande(int? commandeId)
     {
@@ -159,7 +174,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     {
         if (commandeId is null) return Problem("Veuillez selectionner une commande");
         var status = await _commandeService.GetCommandesStatuts(commandeId);
-       
+
         return !status.Any() ? Problem("Commande non trouvée") : Ok(status);
 
     }
@@ -172,7 +187,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     public async Task<IActionResult> GetTypeChantiers()
     {
         return Ok(await _commandeService.GetTypeChantiers());
-    }[HttpGet("GetZones")]
+    } [HttpGet("GetZones")]
     public async Task<IActionResult> GetZones()
     {
         return Ok(await _commandeService.GetZones());
@@ -182,7 +197,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
 
     public async Task<IActionResult> GetArticles(string email)
     {
-        var user = await  _authentificationService.FindUserByEmail(email);
+        var user = await _authentificationService.FindUserByEmail(email);
         return Ok(await _commandeService.GetArticles(user.VilleId));
     }
     [HttpGet("GetDelaiPaiements")]
@@ -201,22 +216,22 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
         return Ok(await _commandeService.GetTarifPompeRefs());
     }
     [HttpGet("GetVilles")]
-    public async Task<IActionResult> GetVilles() =>  Ok(await _commandeService.GetVilles());
-    
+    public async Task<IActionResult> GetVilles() => Ok(await _commandeService.GetVilles());
+
     [HttpGet("GetPays")]
     public async Task<IActionResult> GetPays() => Ok(await _commandeService.GetPays());
-    
-    
+
+
     [HttpGet("GetTarifArticle/{id:int}")]
     public async Task<double> GetTarifArticle(int id)
     {
         return await _commandeService.GetTarifArticle(id);
-    } 
+    }
     [HttpGet("GetTarifZone/{id:int}")]
     public async Task<double> GetTarifZone(int id)
     {
         return await _commandeService.GetTarifZone(id);
-    } 
+    }
     [HttpGet("GetTarifPompe/{id:int}")]
     public async Task<double> GetTarifPompe(int id)
     {
@@ -229,10 +244,10 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
         var success = await _commandeService.FixationPrixTransport(
             commandeModifApi.CommandeId, commandeModifApi.CommandeTarifTrans,
             commandeModifApi.CommandeTarifPomp, commandeModifApi.UserEmail);
-            
+
         return success;
     }
-    
+
     [HttpPost]
     [Route("PropositionPrix")]
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
@@ -251,7 +266,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
     [HttpGet("GetListValidation/{commandeId:int}")]
     public async Task<IActionResult> GetListValidation(int commandeId) =>
         Ok(await _commandeService.GetListValidation(commandeId));
-    
+
     [HttpGet("GeneratePDF/{id:int}")]
     public async Task<string> GeneratePDf(int id)
     {
@@ -263,7 +278,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "Pdf",
                 "Devis" + commande.IdCommande);
-            
+
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
             return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
@@ -284,7 +299,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",
                 "FicheChantier" + commande.IdCommande);
-            
+
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
             return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
@@ -306,7 +321,7 @@ public async Task<bool> CreateCommandeProspection([FromBody] CommandeViewModel c
         var client = await _commandeService.GetClients(vm.IceClient, vm.CnieClient, vm.RsClient);
         if (!client.Any())
             return Ok(new List<CommandeApiModel>());
-        vm.IdClients = client.Select(x=>x.Client_Id).ToList();
+        vm.IdClients = client.Select(x => x.Client_Id).ToList();
         vm.CommandesAPI =
             await _commandeService.GetCommandesValide(vm.IdClients, vm.DateCommande, vm.DateDebutSearch,
                 vm.DateFinSearch);
