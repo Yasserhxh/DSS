@@ -122,19 +122,19 @@ public class CommandeController : Controller
         var res = await _authentificationService.FindUserRoleByEmail(email);
         return string.IsNullOrEmpty(email) ? Problem(statusCode: StatusCodes.Status409Conflict, title: "Utilisateur introuvable!") : Ok(res);
     }
-    [HttpPost]
-    public async Task<IActionResult> Register(RegisterModel user)
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register([FromBody] RegisterModel user)
     {
         user.Password = "123***Sss";
         return Ok(await _authentificationService.Register(user));
     }
-    [HttpGet]
+    [HttpGet("ListeDesUtilisateurs")]
     public async Task<IActionResult> ListeDesUtilisateurs()
         => Ok(await _authentificationService.getListUsers());
-    [HttpGet]
+   /* [HttpGet("ListDesRoles")]
     public async Task<IActionResult> ListDesRoles()
         => Ok(await _authentificationService.GetRoles());
-
+   */
     [HttpPost("ListeCommandes")]
     public async Task<IActionResult> ListeCommandes([FromBody] CommandeSearchVm vm)
     {
