@@ -1,7 +1,7 @@
 {
   "ExtendedData": {
     "inputs": [
-      "../../../../../../Downloads/BAPI_CUSTOMER_GETLIST.wsdl"
+      "http://itcsapwct.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002P111AD1/sdef_url/ZBAPI_CUSTOMER_GETLIST?sap-client=150"
     ],
     "collectionTypes": [
       "System.Array",

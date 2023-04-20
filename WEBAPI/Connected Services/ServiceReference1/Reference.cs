@@ -18,12 +18,14 @@ namespace ServiceReference1
         
         // CODEGEN : La génération du contrat de message depuis l'opération BAPI_CUSTOMER_GETLIST n'est ni RPC, ni encapsulée dans un document.
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STRequest", ReplyAction="*")]
+            "STRequest", ReplyAction="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
+            "STResponse")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STRequest", ReplyAction="*")]
+            "STRequest", ReplyAction="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
+            "STResponse")]
         System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
     }
     
@@ -738,11 +740,12 @@ namespace ServiceReference1
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
     public partial class zBAPI_CUSTOMER_GETLISTClient : System.ServiceModel.ClientBase<ServiceReference1.zBAPI_CUSTOMER_GETLIST>, ServiceReference1.zBAPI_CUSTOMER_GETLIST
     {
-        
-        public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress, string username, string password) : 
+
+        public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress
+            , string username, string password) : 
                 base(binding, remoteAddress)
-        {
-         /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
+        { 
+            /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
             {
                 CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None,
                 RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck

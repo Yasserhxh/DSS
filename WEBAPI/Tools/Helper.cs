@@ -21,7 +21,7 @@ namespace WEBAPI.Tools
                     Mode = BasicHttpSecurityMode.TransportCredentialOnly,
                     Transport = new HttpTransportSecurity()
                     {
-                        ClientCredentialType = HttpClientCredentialType.Windows,
+                        ClientCredentialType = HttpClientCredentialType.Basic,
                      }
                 }
             };

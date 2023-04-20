@@ -71,10 +71,10 @@ namespace Repository.Repositories
         public async Task<ApplicationUser> FindUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
-        }  
+        }
         public async Task<UserModel> FindUserByEmailByRoleAndRegion(string role, int regionId)
-        { 
-            var users = await (_db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc" && x.VilleId ==regionId) .Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+        {
+            var users = await (_db.Users.Where(x => x.Id != "3375dc1e-b359-403e-9f13-5e2b395ffafc" && x.VilleId == regionId).Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
                 .Join(_db.Roles, @t => @t.ur.RoleId, r => r.Id,
                     (@t, r) => new UserModel
                     {
@@ -94,7 +94,7 @@ namespace Repository.Repositories
             var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
                 return null;
-            var roles= await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
             return roles.FirstOrDefault();
         }
         public async Task<List<UserModel>> getListUsers()
@@ -228,7 +228,7 @@ namespace Repository.Repositories
                         {
                             await transaction.RollbackAsync();
                             return new Response { Success = false, Message = Messages.ErrorRole };
-                            
+
                         }
                     }
 
@@ -271,5 +271,38 @@ namespace Repository.Repositories
 
             return new Response { Success = true, Message = "" };
         }
+        public async Task<Response> UpdateUserRole(UserModel model)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == model.Id);
+                var roles = await _userManager.GetRolesAsync(user);
+                var role = roles.FirstOrDefault();
+                if (user != null)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, role);
+
+                    var resultRole = await _userManager.AddToRoleAsync(user, model.Role);
+
+                    if (!resultRole.Succeeded)
+                    {
+                        await transaction.RollbackAsync();
+                        return new Response { Success = false, Message = Messages.ErrorRole };
+
+                    }
+                }
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                return new Response { Success = false, Message = Messages.Error };
+            }
+            return new Response { Success = true, Message = "" };
+
+        }
+
     }
 }
