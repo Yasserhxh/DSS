@@ -335,33 +335,33 @@ public class CommandeController : Controller
                 vm.DateFinSearch);
         return Ok(vm.CommandesAPI);
     }
-    [HttpPost]
+    [HttpGet]
     [Route("GetListSAP")]
     public async Task<IActionResult> GetListSAPAsync()
     {
-        String endpointurl = "http://itcsapwct.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002P111AD1/sdef_url/ZBAPI_CUSTOMER_GETLIST?sap-client=150";
+        /*String endpointurl = "http://GRPXAHEIDU100.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zbapi_customer_getlist/125/zbapi_customer_getlist/zbapi_customer_getlist?sap-client=125";
         WSHttpBinding binding = new WSHttpBinding();
 
         binding.Security.Mode = SecurityMode.TransportWithMessageCredential;
         binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
 
         EndpointAddress endpoint = new(endpointurl);
-        var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint, "MAR_DSSRMC", "Azerty2023++");
+        var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint, "MAR_DSSRMC", "Init2023**");
 
       //  wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
       //  wsclient.ClientCredentials.UserName.Password = "Azerty2023++";
         var request = new BAPI_CUSTOMER_GETLIST();
         //open client
-       // wsclient.Open();
+        wsclient.Open();
         var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        return Ok(response);
+        return Ok(response);*/
         
-     /*   const string _urlSuffix = "";
+        const string _urlSuffix = "";
         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
             _configuration["Sap:Username"], _configuration["Sap:Password"]);
         var request = new BAPI_CUSTOMER_GETLIST();
         var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
         var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
-        return Ok(clientsFromSap);*/
+        return Ok(clientsFromSap);
     }
 }

@@ -18,14 +18,12 @@ namespace ServiceReference1
         
         // CODEGEN : La génération du contrat de message depuis l'opération BAPI_CUSTOMER_GETLIST n'est ni RPC, ni encapsulée dans un document.
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STRequest", ReplyAction="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STResponse")]
+            "STRequest", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STRequest", ReplyAction="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
-            "STResponse")]
+            "STRequest", ReplyAction="*")]
         System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
     }
     
@@ -742,9 +740,9 @@ namespace ServiceReference1
     {
 
         public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress
-            , string username, string password) : 
-                base(binding, remoteAddress)
-        { 
+         , string username, string password) :
+             base(binding, remoteAddress)
+        {
             /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
             {
                 CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None,
@@ -753,7 +751,7 @@ namespace ServiceReference1
             this.ChannelFactory.Credentials.UserName.UserName = username;
             this.ChannelFactory.Credentials.UserName.Password = password;
         }
-        
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 ServiceReference1.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request)
         {
