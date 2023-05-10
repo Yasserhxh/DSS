@@ -339,29 +339,46 @@ public class CommandeController : Controller
     [Route("GetListSAP")]
     public async Task<IActionResult> GetListSAPAsync()
     {
-        /*String endpointurl = "http://GRPXAHEIDU100.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zbapi_customer_getlist/125/zbapi_customer_getlist/zbapi_customer_getlist?sap-client=125";
-        WSHttpBinding binding = new WSHttpBinding();
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+        BasicHttpBinding binding = new BasicHttpBinding();
 
-        binding.Security.Mode = SecurityMode.TransportWithMessageCredential;
-        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+        binding.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.TransportCredentialOnly; 
+        binding.Security.Transport.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Basic;
 
         EndpointAddress endpoint = new(endpointurl);
-        var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint, "MAR_DSSRMC", "Init2023**");
+        var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint);
 
-      //  wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-      //  wsclient.ClientCredentials.UserName.Password = "Azerty2023++";
-        var request = new BAPI_CUSTOMER_GETLIST();
+        wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        wsclient.ClientCredentials.UserName.Password = "azerty2023++";
+
+        var request = new BAPI_CUSTOMER_GETLIST
+        {
+            MAXROWS = 100,
+            CPDONLY = "",
+            IDRANGE = new[] 
+            { 
+                new BAPICUSTOMER_IDRANGE()
+                {
+                    SIGN = "I",
+                    OPTION = "BT",
+                    LOW = "0000000001",
+                    HIGH = "1111111111"
+
+                 }
+                
+            }
+        };
         //open client
         wsclient.Open();
         var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        return Ok(response);*/
+        return Ok(response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA);
         
-        const string _urlSuffix = "";
+   /*     const string _urlSuffix = "";
         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
             _configuration["Sap:Username"], _configuration["Sap:Password"]);
         var request = new BAPI_CUSTOMER_GETLIST();
         var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
         var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
-        return Ok(clientsFromSap);
+        return Ok(clientsFromSap);*/
     }
 }
