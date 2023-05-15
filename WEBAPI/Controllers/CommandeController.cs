@@ -361,8 +361,8 @@ public class CommandeController : Controller
                 {
                     SIGN = "I",
                     OPTION = "BT",
-                    LOW = "0000000001",
-                    HIGH = "1111111111"
+                    LOW = "0001200000",
+                    HIGH = "0001249999"
 
                  }
                 
@@ -371,7 +371,7 @@ public class CommandeController : Controller
         //open client
         wsclient.Open();
         var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        return Ok(response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA);
+        return Ok(response.BAPI_CUSTOMER_GETLISTResponse);
         
    /*     const string _urlSuffix = "";
         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
