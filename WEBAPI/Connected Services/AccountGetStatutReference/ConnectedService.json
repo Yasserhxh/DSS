@@ -1,0 +1,17 @@
+{
+  "ExtendedData": {
+    "inputs": [
+      "../../../../../../Downloads/BAPI_CREDIT_ACCOUNT_GET_STATUS.wsdl"
+    ],
+    "collectionTypes": [
+      "System.Array",
+      "System.Collections.Generic.Dictionary`2"
+    ],
+    "namespaceMappings": [
+      "*, AccountGetStatutReference"
+    ],
+    "sync": true,
+    "targetFramework": "net6.0",
+    "typeReuseMode": "All"
+  }
+}

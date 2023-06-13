@@ -7,12 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceReference1
+namespace GetListClients
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", ConfigurationName="ServiceReference1.zBAPI_CUSTOMER_GETLIST")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", ConfigurationName="GetListClients.zBAPI_CUSTOMER_GETLIST")]
     public interface zBAPI_CUSTOMER_GETLIST
     {
         
@@ -20,11 +20,11 @@ namespace ServiceReference1
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
             "STRequest", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
+        GetListClients.BAPI_CUSTOMER_GETLISTResponse1 BAPI_CUSTOMER_GETLIST(GetListClients.BAPI_CUSTOMER_GETLISTRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="urn:sap-com:document:sap:rfc:functions:zBAPI_CUSTOMER_GETLIST:BAPI_CUSTOMER_GETLI" +
             "STRequest", ReplyAction="*")]
-        System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request);
+        System.Threading.Tasks.Task<GetListClients.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(GetListClients.BAPI_CUSTOMER_GETLISTRequest request);
     }
     
     /// <remarks/>
@@ -697,13 +697,13 @@ namespace ServiceReference1
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", Order=0)]
-        public ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST;
+        public GetListClients.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST;
         
         public BAPI_CUSTOMER_GETLISTRequest()
         {
         }
         
-        public BAPI_CUSTOMER_GETLISTRequest(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
+        public BAPI_CUSTOMER_GETLISTRequest(GetListClients.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
         {
             this.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST;
         }
@@ -717,66 +717,58 @@ namespace ServiceReference1
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:sap-com:document:sap:rfc:functions", Order=0)]
-        public ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse;
+        public GetListClients.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse;
         
         public BAPI_CUSTOMER_GETLISTResponse1()
         {
         }
         
-        public BAPI_CUSTOMER_GETLISTResponse1(ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse)
+        public BAPI_CUSTOMER_GETLISTResponse1(GetListClients.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLISTResponse)
         {
             this.BAPI_CUSTOMER_GETLISTResponse = BAPI_CUSTOMER_GETLISTResponse;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    public interface zBAPI_CUSTOMER_GETLISTChannel : ServiceReference1.zBAPI_CUSTOMER_GETLIST, System.ServiceModel.IClientChannel
+    public interface zBAPI_CUSTOMER_GETLISTChannel : GetListClients.zBAPI_CUSTOMER_GETLIST, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.1.0")]
-    public partial class zBAPI_CUSTOMER_GETLISTClient : System.ServiceModel.ClientBase<ServiceReference1.zBAPI_CUSTOMER_GETLIST>, ServiceReference1.zBAPI_CUSTOMER_GETLIST
+    public partial class zBAPI_CUSTOMER_GETLISTClient : System.ServiceModel.ClientBase<GetListClients.zBAPI_CUSTOMER_GETLIST>, GetListClients.zBAPI_CUSTOMER_GETLIST
     {
-
-        public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress
-         /*, string username, string password*/) :
-             base(binding, remoteAddress)
+        
+        public zBAPI_CUSTOMER_GETLISTClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+                base(binding, remoteAddress)
         {
-            /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
-            {
-                CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None,
-                RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck
-            };*/
-           /* this.ChannelFactory.Credentials.UserName.UserName = username;
-            this.ChannelFactory.Credentials.UserName.Password = password;*/
         }
-
+        
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 ServiceReference1.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request)
+        GetListClients.BAPI_CUSTOMER_GETLISTResponse1 GetListClients.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLIST(GetListClients.BAPI_CUSTOMER_GETLISTRequest request)
         {
             return base.Channel.BAPI_CUSTOMER_GETLIST(request);
         }
         
-        public ServiceReference1.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLIST(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST1)
+        public GetListClients.BAPI_CUSTOMER_GETLISTResponse BAPI_CUSTOMER_GETLIST(GetListClients.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST1)
         {
-            ServiceReference1.BAPI_CUSTOMER_GETLISTRequest inValue = new ServiceReference1.BAPI_CUSTOMER_GETLISTRequest();
+            GetListClients.BAPI_CUSTOMER_GETLISTRequest inValue = new GetListClients.BAPI_CUSTOMER_GETLISTRequest();
             inValue.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST1;
-            ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1 retVal = ((ServiceReference1.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLIST(inValue);
+            GetListClients.BAPI_CUSTOMER_GETLISTResponse1 retVal = ((GetListClients.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLIST(inValue);
             return retVal.BAPI_CUSTOMER_GETLISTResponse;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> ServiceReference1.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLISTRequest request)
+        System.Threading.Tasks.Task<GetListClients.BAPI_CUSTOMER_GETLISTResponse1> GetListClients.zBAPI_CUSTOMER_GETLIST.BAPI_CUSTOMER_GETLISTAsync(GetListClients.BAPI_CUSTOMER_GETLISTRequest request)
         {
             return base.Channel.BAPI_CUSTOMER_GETLISTAsync(request);
         }
         
-        public System.Threading.Tasks.Task<ServiceReference1.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(ServiceReference1.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
+        public System.Threading.Tasks.Task<GetListClients.BAPI_CUSTOMER_GETLISTResponse1> BAPI_CUSTOMER_GETLISTAsync(GetListClients.BAPI_CUSTOMER_GETLIST BAPI_CUSTOMER_GETLIST)
         {
-            ServiceReference1.BAPI_CUSTOMER_GETLISTRequest inValue = new ServiceReference1.BAPI_CUSTOMER_GETLISTRequest();
+            GetListClients.BAPI_CUSTOMER_GETLISTRequest inValue = new GetListClients.BAPI_CUSTOMER_GETLISTRequest();
             inValue.BAPI_CUSTOMER_GETLIST = BAPI_CUSTOMER_GETLIST;
-            return ((ServiceReference1.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLISTAsync(inValue);
+            return ((GetListClients.zBAPI_CUSTOMER_GETLIST)(this)).BAPI_CUSTOMER_GETLISTAsync(inValue);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()

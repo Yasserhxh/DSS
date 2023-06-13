@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.IServices;
 using WEBAPI.Tools;
-using ServiceReference1;
+using GetListClients;
 using System.ServiceModel;
 using Domain.Entities;
 using System.Net;
@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Service.Services;
 using System.Data;
 using ErrorOr;
+using AccountGetStatutReference;
 
 namespace WEBAPI.Controllers;
 
@@ -339,11 +340,11 @@ public class CommandeController : Controller
     [Route("GetListSAP")]
     public async Task<IActionResult> GetListSAPAsync()
     {
-        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+       String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
         BasicHttpBinding binding = new BasicHttpBinding();
 
-        binding.Security.Mode = System.ServiceModel.BasicHttpSecurityMode.TransportCredentialOnly; 
-        binding.Security.Transport.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Basic;
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly; 
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
 
         EndpointAddress endpoint = new(endpointurl);
         var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint);
@@ -354,31 +355,84 @@ public class CommandeController : Controller
         var request = new BAPI_CUSTOMER_GETLIST
         {
             MAXROWS = 100,
-            CPDONLY = "",
-            IDRANGE = new[] 
-            { 
+            IDRANGE = new[]
+            {
                 new BAPICUSTOMER_IDRANGE()
                 {
                     SIGN = "I",
                     OPTION = "BT",
-                    LOW = "0001200000",
-                    HIGH = "0001249999"
+                    LOW = "0000000001",
+                    HIGH = "0000000010"
 
-                 }
-                
-            }
+                }
+
+            },
+            ADDRESSDATA = new[]
+            {
+                new BAPICUSTOMER_ADDRESSDATA()
+                {
+                    
+                }
+            } 
+            
         };
         //open client
         wsclient.Open();
         var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        return Ok(response.BAPI_CUSTOMER_GETLISTResponse);
-        
-   /*     const string _urlSuffix = "";
-        var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
-            _configuration["Sap:Username"], _configuration["Sap:Password"]);
-        var request = new BAPI_CUSTOMER_GETLIST();
+        return Ok(response);
+
+         /*const string _urlSuffix = "zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
+        _configuration["Sap:Username"], _configuration["Sap:Password"]);
+        var request = new BAPI_CUSTOMER_GETLIST
+             {
+                 MAXROWS = 100,
+                 IDRANGE = new[]
+                 {
+                     new BAPICUSTOMER_IDRANGE()
+                     {
+                         SIGN = "I",
+                         OPTION = "BT",
+                         LOW = "0000000001",
+                         HIGH = "0000000010"
+
+                     }
+
+                 },
+                 ADDRESSDATA = new[]
+                 {
+                     new BAPICUSTOMER_ADDRESSDATA()
+                     {
+
+                     }
+                 } 
+
+             };        
         var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
         var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
         return Ok(clientsFromSap);*/
+    }
+    [HttpGet]
+    [Route("GetClientStatus")]
+    public async Task<IActionResult> GetClientStatus()
+    {
+        const string _urlSuffix = "zbapi_credit_account_getstatus/150/zbapi_credit_account_getstatus/zbapi_credit_account_getstatus";
+        var serviceClient = new ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
+            _configuration["Sap:Username"], _configuration["Sap:Password"]);
+        var request = new BAPI_CREDIT_ACCOUNT_GET_STATUS()
+        {
+            CUSTOMER = "0000000001",
+            CREDITCONTROLAREA = "0001",
+            CREDIT_ACCOUNT_OPEN_ITEMS = new[]
+            {
+                new BAPI1010_2()
+                {
+
+                }
+            }
+        };
+        var response = await serviceClient.BAPI_CREDIT_ACCOUNT_GET_STATUSAsync(request);
+        var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse.ToString();
+        return Ok(clientsFromSap);
     }
 }

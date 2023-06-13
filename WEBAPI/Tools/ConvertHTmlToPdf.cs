@@ -34,7 +34,7 @@ namespace WEBAPI.Tools
             //htmlToPdfConverter.PdfDocumentOptions.StretchToFit = true;
             //htmlToPdfConverter.NavigationTimeout = 480;
             //htmlToPdfConverter.PdfDocumentOptions.JpegCompressionEnabled = false;
-            //htmlToPdfConverter.PdfDocumentOptions.ShowFooter = htmlToPdfConverter.PdfDocumentOptions.ShowHeader = false;
+            htmlToPdfConverter.PdfDocumentOptions.ShowFooter = htmlToPdfConverter.PdfDocumentOptions.ShowHeader = false;
             htmlToPdfConverter.PdfDocumentOptions.RightMargin = htmlToPdfConverter.PdfDocumentOptions.LeftMargin = 10;
             htmlToPdfConverter.PdfDocumentOptions.TopMargin = 20;
             htmlToPdfConverter.PdfDocumentOptions.BottomMargin = 20;

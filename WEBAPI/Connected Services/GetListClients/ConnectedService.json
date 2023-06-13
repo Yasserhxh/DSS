@@ -8,7 +8,7 @@
       "System.Collections.Generic.Dictionary`2"
     ],
     "namespaceMappings": [
-      "*, ServiceReference1"
+      "*, GetListClients"
     ],
     "references": [
       "AutoMapper, {AutoMapper, 11.0.0}",
