@@ -985,15 +985,16 @@ namespace AccountGetStatutReference
     public partial class ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient : System.ServiceModel.ClientBase<AccountGetStatutReference.ZBAPI_CREDIT_ACCOUNT_GETSTATUS>, AccountGetStatutReference.ZBAPI_CREDIT_ACCOUNT_GETSTATUS
     {
         
-        public ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress , string username, string password) : 
+        public ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress /*, string username, string password*/) : 
                 base(binding, remoteAddress)
         { /*    ClientCredentials.ServiceCertificate.SslCertificateAuthentication = new System.ServiceModel.Security.X509ServiceCertificateAuthentication
             {
                 CertificateValidationMode = System.ServiceModel.Security.X509CertificateValidationMode.None,
                 RevocationMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck
             };*/
-             this.ChannelFactory.Credentials.UserName.UserName = username;
-             this.ChannelFactory.Credentials.UserName.Password = password;
+            
+            /*this.ClientCredentials.UserName.UserName = username;
+             this.ClientCredentials.UserName.Password = password;*/
         }
 
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]

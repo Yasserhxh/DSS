@@ -416,13 +416,19 @@ public class CommandeController : Controller
     [Route("GetClientStatus")]
     public async Task<IActionResult> GetClientStatus()
     {
-        const string _urlSuffix = "zbapi_credit_account_getstatus/150/zbapi_credit_account_getstatus/zbapi_credit_account_getstatus";
-        var serviceClient = new ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
-            _configuration["Sap:Username"], _configuration["Sap:Password"]);
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_credit_account_getstatus/150/zbapi_credit_account_getstatus/zbapi_credit_account_getstatus";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new ZBAPI_CREDIT_ACCOUNT_GETSTATUSClient(binding, endpoint);
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
         var request = new BAPI_CREDIT_ACCOUNT_GET_STATUS()
         {
-            CUSTOMER = "0000000001",
-            CREDITCONTROLAREA = "0001",
+            CUSTOMER = "0000000010",
+            CREDITCONTROLAREA = "",
             CREDIT_ACCOUNT_OPEN_ITEMS = new[]
             {
                 new BAPI1010_2()
@@ -431,6 +437,7 @@ public class CommandeController : Controller
                 }
             }
         };
+        serviceClient.Open();
         var response = await serviceClient.BAPI_CREDIT_ACCOUNT_GET_STATUSAsync(request);
         var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse.ToString();
         return Ok(clientsFromSap);
