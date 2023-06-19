@@ -19,6 +19,7 @@ using Service.Services;
 using System.Data;
 using ErrorOr;
 using AccountGetStatutReference;
+using GetClientPartnerFS;
 
 namespace WEBAPI.Controllers;
 
@@ -336,9 +337,9 @@ public class CommandeController : Controller
                 vm.DateFinSearch);
         return Ok(vm.CommandesAPI);
     }
-    [HttpGet]
+    [HttpPost]
     [Route("GetListSAP")]
-    public async Task<IActionResult> GetListSAPAsync()
+    public async Task<IActionResult> GetListSAPAsync([FromBody] SapSearchVMFindClient searchVM)
     {
        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
         BasicHttpBinding binding = new BasicHttpBinding();
@@ -361,8 +362,8 @@ public class CommandeController : Controller
                 {
                     SIGN = "I",
                     OPTION = "BT",
-                    LOW = "0000000001",
-                    HIGH = "0000000010"
+                    LOW =  searchVM.ClientSapLow.ToString(),
+                    HIGH = searchVM.ClientSapHigh.ToString()
 
                 }
 
@@ -379,7 +380,9 @@ public class CommandeController : Controller
         //open client
         wsclient.Open();
         var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        return Ok(response);
+        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA;
+
+        return Ok(clientsFromSap);
 
          /*const string _urlSuffix = "zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
          var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
@@ -412,9 +415,9 @@ public class CommandeController : Controller
         var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
         return Ok(clientsFromSap);*/
     }
-    [HttpGet]
+    [HttpPost]
     [Route("GetClientStatus")]
-    public async Task<IActionResult> GetClientStatus()
+    public async Task<IActionResult> GetClientStatus([FromBody] SapSearchVMGetStatus searchVM)
     {
         String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_credit_account_getstatus/150/zbapi_credit_account_getstatus/zbapi_credit_account_getstatus";
         BasicHttpBinding binding = new BasicHttpBinding();
@@ -427,11 +430,18 @@ public class CommandeController : Controller
         serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
         var request = new BAPI_CREDIT_ACCOUNT_GET_STATUS()
         {
-            CUSTOMER = "0000000010",
-            CREDITCONTROLAREA = "",
+            CUSTOMER = searchVM.customerSap,//"0001046236"
+            CREDITCONTROLAREA =searchVM.creditControlArea, //"1474"
             CREDIT_ACCOUNT_OPEN_ITEMS = new[]
             {
                 new BAPI1010_2()
+                {
+
+                }
+            },
+            CREDIT_ACCOUNT_DETAIL = new[]
+            {
+                new BAPI1010_1()
                 {
 
                 }
@@ -439,7 +449,39 @@ public class CommandeController : Controller
         };
         serviceClient.Open();
         var response = await serviceClient.BAPI_CREDIT_ACCOUNT_GET_STATUSAsync(request);
-        var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse.ToString();
+        var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse;
+        return Ok(clientsFromSap);
+    }
+    [HttpPost]
+    [Route("CUSTOMER_PARTNERFS_GET")]
+    public async Task<IActionResult> CUSTOMER_PARTNERFS_GET([FromBody] SapSearchVMGetPartner sapSearchVM)
+    {
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zcustomer_partnerfs_get/150/zcustomer_partnerfs_get/zcustomer_partnerfs_get";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new ZCUSTOMER_PARTNERFS_GETClient(binding, endpoint);
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        var request = new CUSTOMER_PARTNERFS_GET()
+        {
+          ET_E1KNVPM = new[]
+          {
+              new E1KNVPM()
+              {
+
+              }
+          },
+          IV_KUNNR =  sapSearchVM.IV_KUNNR, //"0001046236",
+          IV_VKORG = sapSearchVM.IV_VKORG,  //"MA05",
+          IV_VTWEG = sapSearchVM.IV_VTWEG,  // "01",
+          IV_SPART = sapSearchVM.IV_SPART   //"03"
+        };
+        serviceClient.Open();
+        var response = await serviceClient.CUSTOMER_PARTNERFS_GETAsync(request);
+        var clientsFromSap = response.CUSTOMER_PARTNERFS_GETResponse;
         return Ok(clientsFromSap);
     }
 }

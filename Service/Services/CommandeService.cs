@@ -355,7 +355,9 @@ namespace Service.Services
                 await _commandeRepository.CreateDetailOffreDePrix(listDetailsOffre);
 
                 await transaction.CommitAsync();
-                return commandeViewModel.Commande.Emails;
+                if(commandeViewModel.Commande.Emails.Any())
+                    return commandeViewModel.Commande.Emails;
+                return new List<string> { "Command created with no emails" };
             }
             catch (Exception exception)
             {

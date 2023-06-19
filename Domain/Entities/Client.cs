@@ -13,15 +13,15 @@ namespace Domain.Entities
         [ForeignKey("Forme_Juridique")]
         public int FormeJuridique_Id { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        public string Ice { get; set; }
+        public string? Ice { get; set; }
         [Column(TypeName = "nvarchar(50)")]
-        public string Cnie { get; set; }
+        public string? Cnie { get; set; }
         [Column(TypeName = "nvarchar(50)")]
         public string Gsm { get; set; }
         [Column(TypeName = "nvarchar(150)")]
         public string RaisonSociale { get; set; }
         [Column(TypeName = "nvarchar(100)")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Column(TypeName = "nvarchar(250)")]
         public string Adresse { get; set; }
         [Column(TypeName = "nvarchar(100)")]
