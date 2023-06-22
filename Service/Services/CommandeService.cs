@@ -691,6 +691,7 @@ namespace Service.Services
                 detail.MargeBenef = marge;
                 detail.ArticleFile = articleFile;
                 detail.Commande.MontantCommande += detail.Montant;
+                detail.MontantRef = tarifAchat;
 
                 // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 

@@ -51,7 +51,8 @@ public class AzureBlobService : IBlobService
 
         public async Task<string> UploadFileToBlobAsync(string filenameP, string strFileName, byte[] fileData, string fileMimeType)
         {
-            var cloudStorageAccount = CloudStorageAccount.Parse(_configuration["AzureBlob:AccessKey"]);
+            var key = "DefaultEndpointsProtocol=https;AccountName=gmsblobstoragedev;AccountKey=4yJQYMXCgqKognOxzPxWUqWIzS2gc7Ozb8Aq/kY98DAE8nVG0DP6SviZBzd72r0osDebfYu53qlO+AStMuqO3A==;EndpointSuffix=core.windows.net";
+            var cloudStorageAccount = CloudStorageAccount.Parse(/*_configuration["AzureBlob:AccessKey"]*/key);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
             var strContainerName = "cimarpdfs";
             var cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
