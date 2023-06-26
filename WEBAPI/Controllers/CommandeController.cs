@@ -45,8 +45,55 @@ public class CommandeController : Controller
 
     [HttpPost]
     [Route("CheckClient")]
-    public IActionResult CheckClient([FromBody] CommandeSearchVm clientInFos)
+    public async Task<IActionResult> CheckClient([FromBody] CommandeSearchVm clientInFos)
     {
+        if (!string.IsNullOrEmpty(clientInFos.CodeSap))
+        {
+            String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+            BasicHttpBinding binding = new BasicHttpBinding();
+
+            binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+            EndpointAddress endpoint = new(endpointurl);
+            var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding, endpoint);
+
+            wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+            wsclient.ClientCredentials.UserName.Password = "azerty2023++";
+
+            var request = new BAPI_CUSTOMER_GETLIST
+            {
+                MAXROWS = 100,
+                IDRANGE = new[]
+                {
+                    new BAPICUSTOMER_IDRANGE()
+                    {
+                        SIGN = "I",
+                        OPTION = "BT",
+                        LOW = clientInFos.CodeSap.ToString(),
+                        HIGH = clientInFos.CodeSap.ToString()
+
+                    }
+                },
+                ADDRESSDATA = new[] { new BAPICUSTOMER_ADDRESSDATA() { } }
+            };
+            wsclient.Open();
+            var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
+            var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA.FirstOrDefault();
+            if(clientsFromSap != null)
+            {
+                var clientResult = new ClientModel()
+                {
+                    Adresse = clientsFromSap!.STREET,
+                    RaisonSociale = clientsFromSap.NAME,
+                    CodeClientSap = clientsFromSap.CUSTOMER,
+                    Gsm = clientsFromSap.TEL1_NUMBR,
+                    IdVille = Convert.ToInt32(clientsFromSap.REGION)
+                };
+                return Ok(clientResult);
+            }
+            return Ok(new ClientModel());
+        }
         var result = _commandeService.FindFormulaireClient(clientInFos.IceClient, clientInFos.CnieClient, clientInFos.RsClient, clientInFos.IdClient);
         return Ok(result);
     }
@@ -341,7 +388,7 @@ public class CommandeController : Controller
     [Route("GetListSAP")]
     public async Task<IActionResult> GetListSAPAsync([FromBody] SapSearchVMFindClient searchVM)
     {
-       String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
         BasicHttpBinding binding = new BasicHttpBinding();
 
         binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly; 
