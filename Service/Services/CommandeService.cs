@@ -208,11 +208,11 @@ namespace Service.Services
                     if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 /*|| long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60*/))
                     {
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            (int)commandeViewModel.Client.IdVille).Result.Email);
+                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email);
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            (int)commandeViewModel.Client.IdVille).Result.Email); 
+                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email); 
                         commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
-                            (int)commandeViewModel.Client.IdVille).Result.Email);
+                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email);
                         
                        
                         

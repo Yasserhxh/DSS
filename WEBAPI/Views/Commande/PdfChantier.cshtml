@@ -251,10 +251,13 @@ h3.signature {
   <table align="center" class="titable">
     <thead>
       <tr>
-        <th>Résistance</th>
+         <th>Désignation</th>
+        <@* th>Résistance</th>
         <th>Exposition</th>
         <th>D. Max Grv.</th>
-        <th>Consistance</th>        <th>Chlorures</th>        <th>Prix H.T</th> @*<th>Pompe</th>*@
+        <th>Consistance</th>        
+        <th>Chlorures</th>      *@   
+        <th>Prix H.T</th> @*<th>Pompe</th>*@
       </tr>
     </thead>
     <tbody>
@@ -262,72 +265,39 @@ h3.signature {
     {
       <tr align="center">
         <td><b>@item.Article.Designation</b></td>
+       @*  <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        <td>&nbsp;</td> *@
         @if (item.MontantDA is not null)
-              {
-                  <td>&nbsp; @item.MontantDA!.Value.ToString("n2")</td>
-
-              }else if(item.MontantRC is not null)
-              {
-                  <td>&nbsp; @item.MontantRC!.Value.ToString("n2")</td>
-                  
-              }else if(item.MontantV1 is not null)
-              {
-                  <td>&nbsp; @item.MontantV1!.Value.ToString("n2")</td>
-                  
-              }
-              else
-              {
-                  <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
-
-              }        @*<td>&nbsp;</td>*@
+        {<td>&nbsp; @item.MontantDA!.Value.ToString("n2")</td>}
+        else if(item.MontantRC is not null)
+        {<td>&nbsp; @item.MontantRC!.Value.ToString("n2")</td>}
+        else if(item.MontantV1 is not null)
+        {<td>&nbsp; @item.MontantV1!.Value.ToString("n2")</td>}
+        else
+        {<td>&nbsp; @item.Montant!.Value.ToString("n2")</td>}        @*<td>&nbsp;</td>*@
       </tr>
     }
+    
     <tr align="center">
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr align="center">
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
+      
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
     <tr align="center">
       <td><b>...</b></td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
+      
       <td>&nbsp;</td>
     </tr>
     <tr align="center">
       <td><b>...</b></td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
+      
       <td>&nbsp;</td>
     </tr>
     <tr align="center">
       <td><b>...</b></td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
+      
       <td>&nbsp;</td>
     </tr>
     </tbody>
