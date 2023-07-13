@@ -13,7 +13,7 @@
         public int? IdClient { get; set; }
         public int? IdChantier { get; set; }
         public string CodeClientSap { get; set; }
-        public string Currency { get; set; }
+        public string Currency {get; set;}
         public DateTime? DateCommande { get; set; }
         public decimal? MontantCommande { get; set; }
         public DateTime? DateLivraisonSouhaite { get; set; }

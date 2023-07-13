@@ -20,6 +20,7 @@ using System.Data;
 using ErrorOr;
 using AccountGetStatutReference;
 using GetClientPartnerFS;
+using Create_Simulation_Commande;
 
 namespace WEBAPI.Controllers;
 
@@ -530,5 +531,91 @@ public class CommandeController : Controller
         var response = await serviceClient.CUSTOMER_PARTNERFS_GETAsync(request);
         var clientsFromSap = response.CUSTOMER_PARTNERFS_GETResponse;
         return Ok(clientsFromSap);
+    }
+    [HttpGet]
+    [Route("SAP_CREATE_COMMANDE")]
+    public async Task<IActionResult> SAP_CREATE_COMMANDE(/*[FromBody] SapCreateCommande sapCreate*/)
+    {
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_salesorder_createfromdat/150/zbapi_salesorder_createfromdat/zbapi_salesorder_createfromdat";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new ZBAPI_SALESORDER_CREATEFROMDATClient(binding, endpoint);
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        var request = new BAPI_SALESORDER_CREATEFROMDAT2()
+        {
+            ORDER_HEADER_IN = new BAPISDHD1()
+            {
+                DOC_TYPE = "ZCOC", //Type de commande
+                SALES_ORG = "MA03", // Organisation commercial
+                DISTR_CHAN = "01", // Canal de distribution
+                DIVISION = "01",   // Division Usine
+                LINE_TIME = "12:04:35", // Heure de livraison
+                //PRICE_DATE = "2023-07-12T00:00:00", // Date de prix from date to xml form to string,
+                //PURCH_NO_C = "TEST" // Numero de commande client
+            },
+            ORDER_HEADER_INX = new BAPISDHD1X()
+            {
+                DOC_TYPE = "X", //Type de commande
+                SALES_ORG = "X", // Organisation commercial
+                DISTR_CHAN = "X", // Canal de distribution
+                DIVISION = "X",   // Division Usine
+                LINE_TIME = "X", // Heure de livraison
+                //PRICE_DATE = "X", // Date de prix from date to string,
+                //PURCH_NO_C = "X" // Numero de commande client
+            },
+            ORDER_PARTNERS = new[]
+         {
+                new BAPIPARNR()
+                {
+                    PARTN_ROLE = "AG", // Role du partenaire
+                    PARTN_NUMB = "0001064347" // Numero du partenaire
+                },
+                new BAPIPARNR()
+                {
+                    PARTN_ROLE = "WE", // Role du partenaire
+                    PARTN_NUMB = "0001064347" // Numero du partenaire For test Same client same chantier
+                }
+            },
+            ORDER_ITEMS_IN = new[]
+            {
+                new BAPISDITM()
+                {
+                    MATERIAL = "000000000002002820", // Code article
+                    PLANT = "M103", // USINE division
+                    // ITM_NUMBER = "000010", // Numero de poste For multiple articles
+                }
+            },
+            ORDER_SCHEDULES_IN = new[]
+         {
+                new BAPISCHDL()
+                {
+                    REQ_QTY = 28 ,// Quantité article
+                    REQ_TIME = "00:00:00", // Heure de livraison
+                    DLV_TIME = "00:00:00",
+                    TP_TIME = "00:00:00",
+                    GI_TIME = "00:00:00",
+                    LOAD_TIME = "00:00:00",
+                    MS_TIME = "00:00:00"
+                   // ITM_NUMBER = "000010", // Numero de poste For multiple articles
+                }
+         },
+            TESTRUN = "X",
+            RETURN = new[]
+            {
+                new BAPIRET2()
+                {
+
+                }
+            }
+
+        };
+        serviceClient.Open();
+        var response = await serviceClient.BAPI_SALESORDER_CREATEFROMDAT2Async(request);
+        var resultCommande = response.BAPI_SALESORDER_CREATEFROMDAT2Response.RETURN;
+        return Ok(resultCommande);
     }
 }
