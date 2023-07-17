@@ -14,12 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = 
     builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-//var connstring = "Server=msserversql.database.windows.net;Database=CIMAR_PORTAIL_V2;User Id=sqladmin;password=P@ssw0rd2023**";
+var connstring = "Server=msserversql.database.windows.net;Database=DSS_STAGING;User Id=sqladmin;password=P@ssw0rd2023**";
     
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(
-                   builder.Configuration.GetConnectionString("DefaultConnection") ));
+                  /* builder.Configuration.GetConnectionString("DefaultConnection") */connstring));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString,
         o=>o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));

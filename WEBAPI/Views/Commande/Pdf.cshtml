@@ -116,18 +116,14 @@ h3.signature {
               <tr>
                 <td width="55%">Date de devis</td>
                 <td width="5%">:</td>
-                <td class="bold">@DateTime.Now.ToShortDateString()</td>
+                <td class="bold">@DateTime.Now.ToString("dd/mm/yyyy")</td>
               </tr>
               <tr>
                 <td>Référence du devis</td>
                 <td>:</td>
                 <td class="bold">@Model.IdCommande.ToString()</td>
               </tr>
-                <tr>
-                <td>Date de validité du devis</td>
-                <td>:</td>
-                <td class="bold">27/10/2022</td>
-              </tr>
+              
                 <tr>
                 <td>Emis par</td>
                 <td>:</td>
@@ -143,16 +139,7 @@ h3.signature {
                 <td>:</td>
                 <td class="bold">@Model.Chantier.Ctn_Nom</td>
               </tr>
-                <tr>
-                <td>Volume Prévisionnel</td>
-                <td>:</td>
-                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString("n2") m<sup>3</sup></td>
-              </tr>
-                <tr>
-                <td>Zone de livraison</td>
-                <td>:</td>
-                <td class="bold">@Model.Chantier.ZONE_CHANTIER.Zone_Libelle</td>
-              </tr>
+              
             </tbody>
           </table></td>
         <td width="10%">&nbsp;</td>
@@ -180,23 +167,23 @@ h3.signature {
           <tbody>
           
           <tr>
-              <td>&nbsp; @item.Article.Designation</td>
+              <td class="text-center">&nbsp; @item.Article.Designation</td>
               @if (item.MontantDA is not null)
               {
-                  <td>&nbsp; @item.MontantDA!.Value.ToString("n2")</td>
+                  <td class="text-center">&nbsp; @item.MontantDA!.Value.ToString("n2")</td>
 
               }else if(item.MontantRC is not null)
               {
-                  <td>&nbsp; @item.MontantRC!.Value.ToString("n2")</td>
+                  <td class="text-center">&nbsp; @item.MontantRC!.Value.ToString("n2")</td>
                   
               }else if(item.MontantV1 is not null)
               {
-                  <td>&nbsp; @item.MontantV1!.Value.ToString("n2")</td>
+                  <td class="text-center">&nbsp; @item.MontantV1!.Value.ToString("n2")</td>
                   
               }
               else
               {
-                  <td>&nbsp; @item.Montant!.Value.ToString("n2")</td>
+                  <td class="text-center">&nbsp; @item.Montant!.Value.ToString("n2")</td>
 
               }
               @*<td>&nbsp; @item.Volume!.Value.ToString("n2")</td>
@@ -231,7 +218,13 @@ h3.signature {
     @Model.Conditions
     </div>
     
-    
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
   <h3 class="signature">Cachet & Signature</h3>
   <hr>
   <p style="font-size: 12px" class="text-center"><span class="Fb">Ciment du Maroc</span> - N° 621 boulevard Panoramique 20 150 Casablanca,Maroc. <span class="Fb">Téléphone :</span> 05.22.85.94.50<br>

@@ -10,6 +10,9 @@
         }
         public int IdCommande { get; set; }
         public string CodeCommandeSap { get; set; }
+        public string CommercialEmail { get; set; }
+        public string CommercialId { get; set; }
+        public int CommercialRegion { get; set; }
         public int? IdClient { get; set; }
         public int? IdChantier { get; set; }
         public string CodeClientSap { get; set; }

@@ -258,6 +258,15 @@ public class CommandeController : Controller
         var user = await _authentificationService.FindUserByEmail(email);
         return Ok(await _commandeService.GetArticles(user.VilleId));
     }
+    [HttpGet("GetUserInfos")]
+    [Route("GetUserInfos/{email}")]
+    public async Task<IActionResult> GetUserInfos(string email)
+    {
+        var user = await _authentificationService.FindUserByEmail(email);
+        if(user is not null)
+            return Ok(new CommercialInfos(user.Id, user.VilleId, user.Email));
+        return BadRequest();
+    }
     [HttpGet("GetDelaiPaiements")]
     public async Task<IActionResult> GetDelaiPaiements()
     {

@@ -161,10 +161,10 @@ namespace Service.Services
                 // Statut de la commande
                 if (commandeViewModel.Commande.IsProspection)
                 {
-                    if (commandeViewModel.Commande.TarifAchatTransport !=  0)
+                    if (Math.Abs(commandeViewModel.Commande.TarifAchatTransport - 60) !=0 || Math.Abs(commandeViewModel.Commande.TarifAchatPompage - 808) !=0)
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable logistique",
-                            1).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
 
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
@@ -178,7 +178,7 @@ namespace Service.Services
                     if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 14))
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Prescripteur technique",
-                            1).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
                        // var email2 = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
                         //    1).Result.Email;                        
@@ -205,14 +205,14 @@ namespace Service.Services
                 
                 
                     var tarifs = await _commandeRepository.GetTarifsByArticleIds(commandeViewModel.DetailCommandes.Select(x => x.IdArticle).ToList());
-                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant  > 10 /*|| long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60*/))
+                    if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant!.Value  > 10 /*|| long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60*/))
                     {
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion).Result.Email);
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email); 
+                            commandeViewModel.Commande.CommercialRegion).Result.Email); 
                         commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
-                            /*(int)commandeViewModel.Client.IdVille*/1).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion).Result.Email);
                         
                        
                         
@@ -235,9 +235,9 @@ namespace Service.Services
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  > 5 && tarifs[det.IdArticle] - (double)det.Montant  <=10))
                     {
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            1).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion).Result.Email);
                         commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            1).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion).Result.Email);
                         
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -251,7 +251,7 @@ namespace Service.Services
                     }
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 1 && tarifs[det.IdArticle] - (double)det.Montant  <=5))
                     {  var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            1).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -1137,7 +1137,7 @@ namespace Service.Services
                 var userRole = await _authentificationRepository.GetUserRole(user);
                 commande.MontantCommande += (decimal?)(commande.TarifAchatTransport - VenteT);
                 commande.TarifAchatTransport = VenteT;
-                var commercialEmail = _authentificationRepository.FindUserByEmailByRoleAndRegion("Commercial", (int)region).Result.Email;
+                var commercialEmail = _authentificationRepository.FindUserByEmailByRoleAndRegion("Commercial", region!.Value).Result.Email;
 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
