@@ -28,7 +28,7 @@ namespace Service.IServices
         Task<List<CommandeApiModel>> GetListProspects();
         Task<bool> CreateCommandeProspection(CommandeViewModel commandeViewModel);
         Task<bool> CreateProspect(CommandeViewModel commandeViewModel);
-        Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat);
+        Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat, string nameSpecial);
         Task<List<CommandeApiModel>> GetCommandesDAPBE(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<CommandeApiModel>> GetCommandesRC(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);
         Task<List<CommandeApiModel>> GetCommandesCV(List<int>  ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch);

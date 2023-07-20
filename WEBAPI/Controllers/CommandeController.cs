@@ -320,7 +320,7 @@ public class CommandeController : Controller
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
     {
         var res = await _commandeService.ProposerPrix(commandeModifApi.CommandeDetailId,
-            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile, commandeModifApi.CommandeCoutDeProdBeton);
+            commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile, commandeModifApi.CommandeCoutDeProdBeton,commandeModifApi.CommandeArticleName);
         return res;
     }
     [HttpPost]

@@ -649,7 +649,8 @@ namespace Service.Services
                         MontantV1 = item.MontantV1,
                         MargeBenef = item.MargeBenef,
                         MontantRC = item.MontantRC,
-                        MontantDA = item.MontantDA
+                        MontantDA = item.MontantDA,
+                        ArticleName = item.ArticleName
                     })
                     .ToList();
             {
@@ -665,7 +666,8 @@ namespace Service.Services
                         UniteLibelle = item.Unite.Libelle,
                         ArticleFile = item.ArticleFile,
                         MontantRef = item.MontantRef,
-                        IdArticle = item.IdArticle
+                        IdArticle = item.IdArticle,
+                        ArticleName = item.ArticleName
                     })
                     .ToList();
             }
@@ -675,7 +677,7 @@ namespace Service.Services
 
         public async Task<List<ValidationEtatModel>> GetCommandesStatuts(int? id) =>
         _mapper.Map<List<ValidationEtat>,List<ValidationEtatModel>>(await _commandeRepository.GetCommandesStatuts(id));
-        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat)
+        public async Task<bool> ProposerPrix(int Id, decimal Tarif, string UserName, string articleFile, decimal tarifAchat, string nameSpecial)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             try
@@ -692,13 +694,14 @@ namespace Service.Services
                 detail.ArticleFile = articleFile;
                 detail.Commande.MontantCommande += detail.Montant;
                 detail.MontantRef = tarifAchat;
-
+                detail.ArticleName = nameSpecial;
+                
                 // detail.Commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
 
                 // Trace Vlidateur
                 var validationModel = new ValidationModel
                 {
-                    IdCommande = (int)detail.IdCommande,
+                    IdCommande = detail.IdCommande!.Value,
                     IdStatut = Statuts.ParametrageDesPrixPBE,
                     Date = DateTime.Now,
                     UserId = user.Id,

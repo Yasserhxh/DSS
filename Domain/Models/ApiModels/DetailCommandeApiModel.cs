@@ -6,6 +6,7 @@ public class DetailCommandeApiModel
     public int IdCommande { get; set; }
     public int? IdArticle { get; set; }
     public string ArticleDesignation { get; set; }
+    public string ArticleName { get; set; }
     public decimal? Montant { get; set; }
     public decimal? MontantRef { get; set; }
     public decimal? MargeBenef { get; set; }
