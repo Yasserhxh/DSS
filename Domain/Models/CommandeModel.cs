@@ -32,7 +32,11 @@
         public string ArticleFile { get; set; }
         public bool IsProspection { get; set; }
         //public string Commercial_ID { get; set; }
-
+        public string PresenceLabo { get; set; }
+        public string RegimeTaxe { get; set; }
+        public string LaboDeControle { get; set; }
+        public bool? FicheIsGenerated { get; set; }
+        public decimal? VolumePompe { get; set; }
         public ClientModel Client { get; set; }
         public StatutModel Statut { get; set; }
         public ChantierModel Chantier { get; set; }

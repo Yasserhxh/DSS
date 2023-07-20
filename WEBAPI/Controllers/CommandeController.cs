@@ -355,13 +355,18 @@ public class CommandeController : Controller
             throw;
         }
     }
-    [HttpGet("GeneratePDfChantier/{id:int}")]
-    public async Task<string> GeneratePDfChantier(int id)
+    [HttpPost]
+    [Route("UpdateCommande")]
+    public async Task<bool> UpdateCommande([FromBody] CommandeApiModel commandeApiModel)
+      => await _commandeService.SetCommande(commandeApiModel.CommandeId);
+
+    [HttpPost]
+    [Route("GeneratePDfChantier")]
+    public async Task<string> GeneratePDfChantier([FromBody] CommandeApiModel commandeApiModel)
     {
         try
         {
-
-            var commande = await _commandeService.GetCommande(id);
+            var commande = await _commandeService.UpdateCommande(commandeApiModel) ;
             Controller controller = this;
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",

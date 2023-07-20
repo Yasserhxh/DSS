@@ -37,6 +37,11 @@ public class CommandeApiModel
     public decimal Rayon { get; set; }
     public string CtrNom { get; set; }
     public string PresenceLabo { get; set; }
-
+    public string RegimeTaxe { get; set; }
+    public string LaboDeControle { get; set; }
+    public decimal? VolumePompe { get; set; }
+    public string CodeClientSap { get; set; }
+    public bool? FicheIsGenerated { get; set; }
+    public string IdentifiantChantier { get; set; }
     // public List<DetailCommandeApiModel> DetailsCommande { get; set; }
 }

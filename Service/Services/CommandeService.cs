@@ -551,7 +551,15 @@ namespace Service.Services
                     Email = item.Client.Email,
                     DestinataireInterlocuteur = item.Client.Destinataire_Interlocuteur,
                     Ville = item.Client.Ville.NomVille,
-                    Pays = item.Client.Pays.NomPays
+                    Pays = item.Client.Pays.NomPays,
+
+                    PresenceLabo = item.PresenceLabo,
+                    FicheIsGenerated = item.FicheIsGenerated,
+                    CodeClientSap = item.Client.CodeClientSap,
+                    IdentifiantChantier = item.Chantier.Ctn_Adresse,
+                    LaboDeControle = item.LaboDeControle,
+                    VolumePompe = item.VolumePompe,
+                    RegimeTaxe = item.RegimeTaxe
                     // DetailsCommande  = listDetailCommandeApi
                 })
                 .ToList();
@@ -1073,60 +1081,37 @@ namespace Service.Services
             }
         }
 
-        public async Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName)
+        public async Task<CommandeModel> UpdateCommande(CommandeApiModel commandeApiModel)
         {
-            await using var transaction = this._unitOfWork.BeginTransaction();
+            await using var transaction = _unitOfWork.BeginTransaction();
             try
             {
-                var user = await _authentificationRepository.GetUserByName(UserName);
-                var userRole = await _authentificationRepository.GetUserRole(user);
-                var commande = await _commandeRepository.GetCommande(id);
+                var commande = await _commandeRepository.GetCommande(commandeApiModel.CommandeId);
 
                 //Update Commande
-                commande.TarifAchatPompage = commandeViewModel.Commande.TarifAchatPompage;
-                commande.TarifAchatTransport = commandeViewModel.Commande.TarifVenteTransport;
-                commande.Conditions = commandeViewModel.Commande.Conditions;
-                commande.Delai_Paiement = commandeViewModel.Commande.Delai_Paiement;
-                commande.LongFleche_Id = commandeViewModel.Commande.LongFleche_Id;
-               // commande.IdStatut = Statuts.ValidationDeLoffreDePrix;
-                var Mt = commandeViewModel.DetailCommandes.Select(c => c.Volume * c.Montant).ToList();
-                commande.MontantCommande = Mt.Sum();
+                commande.PresenceLabo = commandeApiModel.PresenceLabo;
+                commande.RegimeTaxe = commandeApiModel.RegimeTaxe;
+                commande.LaboDeControle = commandeApiModel.LaboDeControle;
+                commande.VolumePompe = commandeApiModel.VolumePompe;
+                commande.FicheIsGenerated = true;
 
-                //Update Chantier
-                var chantier = _mapper.Map<ChantierModel, Chantier>(commandeViewModel.Chantier);
-                await _commandeRepository.UpdateChantier((int)commande.IdChantier, chantier);
 
-                //Update Client
-                var client = _mapper.Map<ClientModel, Client>(commandeViewModel.Client);
-                await _commandeRepository.UpdateClient((int)commande.IdClient, client);
+                //Update Client Sap
+                commande.Client.CodeClientSap = commandeApiModel.CodeClientSap;
 
-                //Update Details
-                var detailCommandes = _mapper.Map<List<DetailCommandeModel>, List<DetailCommande>>(commandeViewModel.DetailCommandes);                  
-                await _commandeRepository.UpdateDetailCommande(detailCommandes);
-
-                //Trace Validateur
-                var validationModel = new ValidationModel()
-                {
-                    IdCommande = commande.IdCommande,
-                    IdStatut = null,
-                    Date = DateTime.Now,
-                    UserId = user.Id,
-                    Nom = user.Nom,
-                    Prenom = user.Prenom,
-                    Fonction = userRole,
-                    ValidationLibelle = "Modification tarif commande"
-                };
-                var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
-                await _commandeRepository.CreateValidation(validation);
+                //Update Chantier 
+                commande.Chantier.Ctn_Adresse = commandeApiModel.IdentifiantChantier;
 
                 await _unitOfWork.Complete();
                 await transaction.CommitAsync();
-                return true;
+                var commandeModel = _mapper.Map<Commande,CommandeModel>(commande);
+
+                return commandeModel;
             }
             catch(Exception ex)
             {
                 await transaction.RollbackAsync();
-                return false;
+                return null;
             }
         }
 

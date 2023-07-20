@@ -36,7 +36,7 @@ namespace Service.IServices
         Task<bool> RefuserCommande(int Id, string Commentaire, string UserName);
         Task<bool> ValiderCommande(int Id, string Commentaire, string UserName);
         Task<List<CommandeApiModel>> GetCommandesRL(List<int> ClientIds, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
-        Task<bool> UpdateCommande(int id, CommandeViewModel commandeViewModel, string UserName);
+        Task<CommandeModel> UpdateCommande(CommandeApiModel commandeApiModel);
         Task<string> FixationPrixTransport(int Id, double VenteT, double VenteP, string email);
         ClientModel FindFormulaireClient(string Ice, string Cnie, string Rs,int? IdClient);
         ChantierModel FindFormulaireChantier(int? chantierId);

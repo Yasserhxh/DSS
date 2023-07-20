@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -39,6 +40,12 @@ namespace Domain.Entities
         public string Commentaire { get; set; }
         public string ArticleFile { get; set; }
         public bool IsProspection { get; set; }
+        public string PresenceLabo { get; set; }
+        public string RegimeTaxe { get; set; }
+        public string LaboDeControle { get; set; }
+        public bool? FicheIsGenerated { get; set; } = false;
+        public decimal? VolumePompe { get; set; }
+
         //public string Commercial_ID { get; set; }
         public Client Client { get; set; }
         public Statut Statut { get; set; }

@@ -96,6 +96,33 @@ h3.signature {
 }
     td.bold{font-weight: bold}
     .textarea{ border:2px solid #000; width: 100%; min-height: 140px;}
+
+    
+
+    .checkbox {
+        position: relative;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border: 1px solid #000;
+        margin-left: 5px;
+    }
+
+        .checkbox::before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 11px;
+            height: 11px;
+            background-color: #000;
+            opacity: 0; /* Set to 1 for checked appearance */
+        }
+
+        /* Styling for checked appearance */
+        .checkbox.checked::before {
+            opacity: 1;
+        }
 </style>
 <html>
 <head>
@@ -119,7 +146,7 @@ h3.signature {
             <td width="14%">Référence :</td>
             <td width="18%"><b>DOM/FT/04/21</b></td>
             <td width="14%">Date :</td>
-            <td width="18%"></td>
+            <td width="18%"> @DateTime.UtcNow.ToString("dd/MM/yyyy")</td>
             <td width="14%">Secteur : </td>
             <td width="18%"></td>
         </tr>
@@ -137,7 +164,7 @@ h3.signature {
               <tr>
                 <td>Code SAP donneur d’ordre</td>
                 <td>:</td>
-                <td class="bold"> @Model.Chantier.Ctn_Id.ToString()</td>
+                <td class="bold"> @Model.Client.CodeClientSap</td>
               </tr>
                 <tr>
                 <td>Code SAP Chantier</td>
@@ -162,7 +189,7 @@ h3.signature {
                 <tr>
                 <td>Régime de Taxe (HT/TTC)</td>
                 <td>:</td>
-                <td class="bold"></td>
+                <td class="bold"> @Model.RegimeTaxe</td>
               </tr>
             </tbody>
           </table></td>
@@ -182,22 +209,30 @@ h3.signature {
                 <tr>
                 <td>Chantier Contrôlé</td>
                 <td>:</td>
-                <td class="bold"><span>Oui <font style="margin-left: 5px; margin-right: 5px;   height: 15px; width:15px; border:1px solid #000; display: inline-block"></font></span> <span>Non <font style="margin-left: 5px; height: 15px; width:15px; border:1px solid #000; display: inline-block"></font></span></td>
+                <td class="bold">
+                    @if(Model.PresenceLabo == "Non"){
+                    <span>Oui <span class="checkbox"></span></span> <span>Non <span class="checkbox checked"></span></span>
+                    }else{
+                    <span>Oui <span class="checkbox checked"></span></span> <span>Non <span class="checkbox"></span></span>
+                    }                    
+
+                </td>
+
               </tr>
                 <tr>
                 <td>Labo. de Contrôle</td>
                 <td>:</td>
-                <td class="bold"></td>
+                <td class="bold"> &nbsp; @Model.LaboDeControle</td>
               </tr>
                 <tr>
                 <td>Distance de CAB <font style="color:red">*</font></td>
                 <td>:</td>
-                <td class="bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Km</td>
+                <td class="bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Km</td>
               </tr>
                 <tr>
                 <td>Volume Pompé (Estimatif)</td>
                 <td>:</td>
-                <td class="bold"></td>
+                <td class="bold">@Model.VolumePompe  m3</td>
               </tr>
                 <tr>
                 <td></td>
@@ -229,10 +264,15 @@ h3.signature {
         <th>3</th>
       </tr>
       <tr>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
+        @for(int i = 0 ; i<=3 ; i++){
+            if(Model.Chantier.ZONE_CHANTIER.Zone_Libelle.Split(" ")[1] == i.ToString()){
+                  <td class="text-center">&nbsp; X </td>
+
+            }else{
+                 <td>&nbsp;</td>
+            }
+        }
+    
       </tr>
 
     </tbody>
@@ -252,7 +292,7 @@ h3.signature {
     <thead>
       <tr>
          <th>Désignation</th>
-        <@* th>Résistance</th>
+        @* <th>Résistance</th>
         <th>Exposition</th>
         <th>D. Max Grv.</th>
         <th>Consistance</th>        
