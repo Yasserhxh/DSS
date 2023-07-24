@@ -546,9 +546,9 @@ public class CommandeController : Controller
         var clientsFromSap = response.CUSTOMER_PARTNERFS_GETResponse;
         return Ok(clientsFromSap);
     }
-    [HttpGet]
+    [HttpPost]
     [Route("SAP_CREATE_COMMANDE")]
-    public async Task<IActionResult> SAP_CREATE_COMMANDE(/*[FromBody] SapCreateCommande sapCreate*/)
+    public async Task<IActionResult> SAP_CREATE_COMMANDE([FromBody] SapCreateCommande sapCreate)
     {
         String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_salesorder_createfromdat/150/zbapi_salesorder_createfromdat/zbapi_salesorder_createfromdat";
         BasicHttpBinding binding = new BasicHttpBinding();
@@ -563,10 +563,10 @@ public class CommandeController : Controller
         {
             ORDER_HEADER_IN = new BAPISDHD1()
             {
-                DOC_TYPE = "ZCOC", //Type de commande
-                SALES_ORG = "MA03", // Organisation commercial
+                DOC_TYPE = "ZROB",  // Test "ZCOC", //Type de commande
+                SALES_ORG = "MA14",   // Organisation commercial
                 DISTR_CHAN = "01", // Canal de distribution
-                DIVISION = "01",   // Division Usine
+                DIVISION = "03",   //   Division Usine
                 LINE_TIME = "12:04:35", // Heure de livraison
                 //PRICE_DATE = "2023-07-12T00:00:00", // Date de prix from date to xml form to string,
                 //PURCH_NO_C = "TEST" // Numero de commande client
@@ -585,21 +585,21 @@ public class CommandeController : Controller
          {
                 new BAPIPARNR()
                 {
-                    PARTN_ROLE = "AG", // Role du partenaire
-                    PARTN_NUMB = "0001064347" // Numero du partenaire
+                    //PARTN_ROLE = "AG", // Role du partenaire
+                    PARTN_NUMB = sapCreate.PARTN_NUMB // Numero du partenaire code SAP chantier
                 },
                 new BAPIPARNR()
                 {
-                    PARTN_ROLE = "WE", // Role du partenaire
-                    PARTN_NUMB = "0001064347" // Numero du partenaire For test Same client same chantier
+                    //PARTN_ROLE = "WE", // Role du partenaire
+                    PARTN_NUMB = sapCreate.PARTN_NUMB  // Numero du partenaire For test Same client same chantier
                 }
             },
             ORDER_ITEMS_IN = new[]
             {
                 new BAPISDITM()
                 {
-                    MATERIAL = "000000000002002820", // Code article
-                    PLANT = "M103", // USINE division
+                    MATERIAL = sapCreate.CodeArticle, //"000000000002002820", // Code article
+                    PLANT = sapCreate.PLANT, // Code Sap chantier USINE division
                     // ITM_NUMBER = "000010", // Numero de poste For multiple articles
                 }
             },
@@ -607,7 +607,7 @@ public class CommandeController : Controller
          {
                 new BAPISCHDL()
                 {
-                    REQ_QTY = 28 ,// Quantité article
+                    REQ_QTY =  sapCreate.QuantiteArticle,//28 ,// Quantité article
                     REQ_TIME = "00:00:00", // Heure de livraison
                     DLV_TIME = "00:00:00",
                     TP_TIME = "00:00:00",

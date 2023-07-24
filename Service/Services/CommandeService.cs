@@ -161,7 +161,7 @@ namespace Service.Services
                 // Statut de la commande
                 if (commandeViewModel.Commande.IsProspection)
                 {
-                    if (Math.Abs(commandeViewModel.Commande.TarifAchatTransport - 60) !=0 || Math.Abs(commandeViewModel.Commande.TarifAchatPompage - 808) !=0)
+                    if (Math.Abs(commandeViewModel.Commande.TarifAchatTransport - 80) !=0 || Math.Abs(commandeViewModel.Commande.TarifAchatPompage - 60) !=0)
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable logistique",
                             commandeViewModel.Commande.CommercialRegion).Result.Email;                        

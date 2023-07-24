@@ -6,10 +6,10 @@
         public string CodeClientSap { get; set; }
         public int FormeJuridique_Id { get; set; }
         public string Ice { get; set; }
-        public string Cnie { get; set; }
+        public string? Cnie { get; set; }
         public string Gsm { get; set; }
         public string RaisonSociale { get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public string Adresse { get; set; }
         public string Destinataire_Interlocuteur { get; set; }
         public int? IdVille { get; set; }
