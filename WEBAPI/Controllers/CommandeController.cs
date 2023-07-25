@@ -564,7 +564,7 @@ public class CommandeController : Controller
             ORDER_HEADER_IN = new BAPISDHD1()
             {
                 DOC_TYPE = "ZROB",  // Test "ZCOC", //Type de commande
-                SALES_ORG = "MA14",   // Organisation commercial
+                SALES_ORG = "MA15",   // Organisation commercial
                 DISTR_CHAN = "01", // Canal de distribution
                 DIVISION = "03",   //   Division Usine
                 LINE_TIME = "12:04:35", // Heure de livraison
@@ -585,12 +585,12 @@ public class CommandeController : Controller
          {
                 new BAPIPARNR()
                 {
-                    //PARTN_ROLE = "AG", // Role du partenaire
-                    PARTN_NUMB = sapCreate.PARTN_NUMB // Numero du partenaire code SAP chantier
+                    PARTN_ROLE = "AG", // Role du partenaire
+                    PARTN_NUMB = sapCreate.DONNANT_ORDRE // Numero du partenaire code SAP chantier
                 },
                 new BAPIPARNR()
                 {
-                    //PARTN_ROLE = "WE", // Role du partenaire
+                    PARTN_ROLE = "WE", // Role du partenaire
                     PARTN_NUMB = sapCreate.PARTN_NUMB  // Numero du partenaire For test Same client same chantier
                 }
             },

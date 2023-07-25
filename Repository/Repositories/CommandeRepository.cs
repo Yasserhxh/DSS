@@ -416,6 +416,7 @@ namespace Repository.Repositories
                 .Include(x => x.DetailCommandes)
                 .Include(p=>p.CommandeStatuts)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
+                .Include(d=>d.Chantier.Type_Chantier)
                 .Include(d => d.Client.Forme_Juridique).FirstOrDefaultAsync();
             return cmd;
         }
