@@ -45,6 +45,10 @@ namespace Domain.Entities
         public string LaboDeControle { get; set; }
         public bool? FicheIsGenerated { get; set; } = false;
         public decimal? VolumePompe { get; set; }
+        public string CommercialEmail { get; set; }
+        public string CommercialFullName { get; set; }
+        public string CommercialId { get; set; }
+        public int? CommercialRegion { get; set; }
 
         //public string Commercial_ID { get; set; }
         public Client Client { get; set; }

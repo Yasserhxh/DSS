@@ -11,6 +11,7 @@
         public string RaisonSociale { get; set; }
         public string? Email { get; set; }
         public string Adresse { get; set; }
+        public string Sexe { get; set; }
         public string Destinataire_Interlocuteur { get; set; }
         public int? IdVille { get; set; }
         public int? IdPays { get; set; }

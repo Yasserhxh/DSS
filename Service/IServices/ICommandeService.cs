@@ -46,6 +46,6 @@ namespace Service.IServices
             string dateFinSearch);
 
         Task<CommandeVModel> GetCommandeV(int? id);
-        Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande);
+        Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande/*, string isBetonSpecial*/);
     }
 }

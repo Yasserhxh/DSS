@@ -1,0 +1,182 @@
+﻿@using System.Globalization
+@model Domain.Models.CommandeModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<style>
+    body {
+        font-family: 'Trebuchet MS', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    .Fb {
+        font-weight: bold
+    }
+
+    .text-left {
+        text-align: left
+    }
+
+    .text-right {
+        text-align: right
+    }
+
+    .text-center {
+        text-align: center
+    }
+
+    .entetp {
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: 500;
+        text-align: left
+    }
+
+    .entetitle {
+        width: 30%;
+        text-align: left
+    }
+
+    .entet td {
+        border: none;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    h1.gtitle {
+        text-align: center;
+        font-size: 24px;
+        margin: 15px 0;
+        font-weight: 600;
+    }
+
+    h2.gtitle {
+        text-align: left;
+        font-size: 18px;
+        margin: 10px 0;
+        font-weight: 600;
+    }
+
+    h3.gtitle {
+        font-size: 12px;
+        margin: 15px 0;
+        font-weight: 600;
+    }
+
+
+
+
+    h3.signature {
+        text-align: center;
+        font-size: 18px;
+        margin: 40px auto 120px;
+        font-weight: bold
+    }
+
+    hr.hr {
+        border: 6px solid #000
+    }
+
+    .Destin1 {
+        margin-top: 20px;
+        background: #fff;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+    }
+
+        .Destin1 td {
+            padding: 2px 5px 2px;
+        }
+
+
+
+    .titable {
+        margin: 20px auto;
+        width: 700px;
+    }
+
+        .titable th {
+            background: #d2d2d2;
+            padding: 6px 0;
+            border: 1px solid #000;
+            text-align: center;
+        }
+
+        .titable td {
+            background: #ffffff;
+            padding: 2px 5px;
+            border: 1px solid #000
+        }
+
+    .bold {
+        font-weight: bold
+    }
+
+    .footer {
+        background: orange;
+        padding: 10px 0;
+        text-align: center;
+        color: #000;
+        font-size: 13px;
+    }
+
+    .Text-2 {
+        font-size: 18px;
+    }
+</style>
+<html>
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <div style=" width:95%; margin: 30px auto">
+
+        <div class="Text-2" style=" width:90%; margin: 30px auto">OA/DC/ BPE N° @Model.IdCommande.ToString()/ @Model.DateCommande!.Value.Year.ToString()</div>
+
+
+        <div class="Text-2" style=" width:90%; margin: 30px auto">
+
+
+            <p style="font-size: 20px; margin-top:100px; font-weight: bold;">Toute augmentation du prix du ciment, du sable ou du transport d’agrégats sera répercutée sur les prix des bétons ci-dessus.</p>
+
+            <p>Nous restons à votre disposition pour tous renseignements complémentaires et pour mener à bonnes fins toute opération que vous choisiriez de nous confier.</p>
+
+            <p>Dans l'espoir de retenir votre attention lors de votre consultation,</p>
+            <p>Nous vous prions de croire, @(Model.Client.Sexe == "Mr." ? "Monsieur" : "Madame"), en l'assurance de nos sentiments les plus dévoués.</p>
+
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <p style="margin-top: 270px;">
+                Chef Secteur Grand Casablanca Nord<br>
+                SAMOUH LAHCEN<br>
+                <b>GSM : 0661 11 94 51</b>
+            </p>
+
+        </div>
+
+    </div>
+    <div class="footer" style="margin-top: 420px;">
+        <p>S.A. au capital de 1.443.600.400,00 DH - Siége : 621, boulevard Panoramique, 20150 Casablanca, Maroc - R.C. 70617 Casablanca - C.N.S.S. 1929415 - I.F. 1085799 - T.P. 37997801 - ICE / 001524400000046</p>
+    </div>
+</body>
+
+</html>

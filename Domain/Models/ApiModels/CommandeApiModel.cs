@@ -25,6 +25,8 @@ public class CommandeApiModel
     public string Gsm { get; set; }
     public string Email { get; set; }
     public string Adresse { get; set; }
+    public string Sexe { get; set; }
+    public string CommercialFullName { get; set; }
     public string DestinataireInterlocuteur { get; set; }
     public string Ville { get; set; }
     public string Pays { get; set; }

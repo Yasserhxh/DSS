@@ -327,7 +327,7 @@ public class CommandeController : Controller
     [Route("FixationPrixRC")]
     public async Task<bool> FixationPrixRC([FromBody] JsonBetonModifApi betonModifApi)
     {
-        var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail, betonModifApi.IdCommande);
+        var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail, betonModifApi.IdCommande/*, betonModifApi.isBetonSpecial*/);
         return res;
     }
     [HttpGet("GetListValidation/{commandeId:int}")]
@@ -343,12 +343,21 @@ public class CommandeController : Controller
             var commande = await _commandeService.GetCommande(id);
             Controller controller = this;
 
-            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "Pdf",
+            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis1",
                 "Devis" + commande.IdCommande);
 
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
-            return await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
+            var devis1 =  await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
+            
+            var lFileResult2 = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis2",
+                 "Devis" + commande.IdCommande);
+
+            var content2 = lFileResult2 as FileContentResult;
+            var mimeType2 = content2?.ContentType;
+            var devis2 = await blobService.UploadFileToBlobAsync(content2!.FileDownloadName, Guid.NewGuid().ToString(), content2.FileContents, mimeType2!);
+
+            return devis1 + "," + devis2;        
         }
         catch (Exception ex)
         {

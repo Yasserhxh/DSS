@@ -164,7 +164,7 @@ namespace Service.Services
                     if (Math.Abs(commandeViewModel.Commande.TarifAchatTransport - 80) !=0 || Math.Abs(commandeViewModel.Commande.TarifAchatPompage - 60) !=0)
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable logistique",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
 
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
@@ -178,7 +178,7 @@ namespace Service.Services
                     if (commandeViewModel.DetailCommandes.Any(x => x.IdArticle == 14))
                     {
                         var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Prescripteur technique",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
                        // var email2 = _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
                         //    1).Result.Email;                        
@@ -208,11 +208,11 @@ namespace Service.Services
                     if (commandeViewModel.DetailCommandes.Any(det =>tarifs[det.IdArticle] - (double)det.Montant!.Value  > 10 /*|| long.Parse(commandeViewModel.Commande.Delai_Paiement) > 60*/))
                     {
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email);
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email); 
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email); 
                         commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("DA BPE",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email);
                         
                        
                         
@@ -235,9 +235,9 @@ namespace Service.Services
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  > 5 && tarifs[det.IdArticle] - (double)det.Montant  <=10))
                     {
                         commandeViewModel.Commande.Emails.Add(_authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email);
                         commandeViewModel.Commande.Emails.Add( _authentificationRepository.FindUserByEmailByRoleAndRegion("Responsable commercial",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email);
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email);
                         
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -251,7 +251,7 @@ namespace Service.Services
                     }
                     else if (commandeViewModel.DetailCommandes.Any(det => tarifs[det.IdArticle] - (double)det.Montant  >= 1 && tarifs[det.IdArticle] - (double)det.Montant  <=5))
                     {  var email = _authentificationRepository.FindUserByEmailByRoleAndRegion("Chef de ventes",
-                            commandeViewModel.Commande.CommercialRegion).Result.Email;                        
+                            commandeViewModel.Commande.CommercialRegion!.Value).Result.Email;                        
                         commandeViewModel.Commande.Emails.Add(email);
                         commandeViewModel.Commande.IdStatut = Statuts.EnCoursDeTraitement;
                         commandeViewModel.Commande.CommandeStatuts.Add(new CommandeStatutModel
@@ -716,7 +716,7 @@ namespace Service.Services
                     Nom = user.Nom,
                     Prenom = user.Prenom,
                     Fonction = userRole,
-                    ValidationLibelle = "Parametrage des prix PBE"
+                    ValidationLibelle = "Parametrage des prix PBE"/* Beton special*/
                 };
 
                 var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
@@ -1213,7 +1213,7 @@ namespace Service.Services
                 .ToList();        
         }
         
-        public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande)
+        public async Task<bool> FixationPrixRC(List<CommandeModifVenteApi> commandeModifApi, string UserEmail, int IdCommande/*, string isBetonSpecial*/)
         {
             await using var transaction = _unitOfWork.BeginTransaction();
             var isSpecial = false;
@@ -1258,7 +1258,7 @@ namespace Service.Services
                     Nom = user.Nom,
                     Prenom = user.Prenom,
                     Fonction = userRole,
-                    ValidationLibelle = "Parametrage des prix PBE"
+                    ValidationLibelle = "Parametrage des prix PBE" //isBetonSpecial == "1" ? "Parametrage des prix PBE Beton special" : "Parametrage des prix PBE"
                 };
 
                 var validation = _mapper.Map<ValidationModel, Validation>(validationModel);
