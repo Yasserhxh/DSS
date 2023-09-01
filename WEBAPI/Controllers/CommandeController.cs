@@ -21,6 +21,7 @@ using ErrorOr;
 using AccountGetStatutReference;
 using GetClientPartnerFS;
 using Create_Simulation_Commande;
+using Customer_details;
 
 namespace WEBAPI.Controllers;
 
@@ -521,6 +522,30 @@ public class CommandeController : Controller
         serviceClient.Open();
         var response = await serviceClient.BAPI_CREDIT_ACCOUNT_GET_STATUSAsync(request);
         var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse;
+        return Ok(clientsFromSap);
+    }
+    [HttpPost]
+    [Route("GetClientDetails")]
+    public async Task<IActionResult> GetClientDetails([FromBody] SapSearchVMGetStatus searchVM)
+    {
+        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/z_bapi_customer_details/150/z_bapi_customer_details/z_bapi_customer_details";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new Z_bapi_customer_detailsClient(binding, endpoint);
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        var request = new Z_BAPI_CUSTOMER_CREDITDETAILS()
+        {
+            CUSTOMER = searchVM.customerSap,//"0001046236"
+            CREDIT_CONTROL_AREA =searchVM.creditControlArea, //"1474"
+          
+        };
+        serviceClient.Open();
+        var response = await serviceClient.Z_BAPI_CUSTOMER_CREDITDETAILSAsync(request);
+        var clientsFromSap = response.Z_BAPI_CUSTOMER_CREDITDETAILSResponse;
         return Ok(clientsFromSap);
     }
     [HttpPost]
