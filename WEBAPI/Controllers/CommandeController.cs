@@ -502,8 +502,8 @@ public class CommandeController : Controller
         serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
         var request = new BAPI_CREDIT_ACCOUNT_GET_STATUS()
         {
-            CUSTOMER = searchVM.customerSap,//"0001046236"
-            CREDITCONTROLAREA =searchVM.creditControlArea, //"1474"
+            CUSTOMER = searchVM.customerSap,
+            CREDITCONTROLAREA =searchVM.creditControlArea,
             CREDIT_ACCOUNT_OPEN_ITEMS = new[]
             {
                 new BAPI1010_2()
@@ -539,8 +539,8 @@ public class CommandeController : Controller
         serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
         var request = new Z_BAPI_CUSTOMER_CREDITDETAILS()
         {
-            CUSTOMER = searchVM.customerSap,//"0001046236"
-            CREDIT_CONTROL_AREA =searchVM.creditControlArea, //"1474"
+            CUSTOMER = searchVM.customerSap,
+            CREDIT_CONTROL_AREA =searchVM.creditControlArea,
           
         };
         serviceClient.Open();
