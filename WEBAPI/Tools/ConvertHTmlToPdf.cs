@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
+using System.Drawing;
 using WEBAPI.Controllers;
 using Winnovative.HtmlToPdfClient;
 
@@ -9,9 +13,10 @@ using Winnovative.HtmlToPdfClient;
 
 namespace WEBAPI.Tools
 {
+    
     public static class ConvertHTmlToPdf
     {
-        public static async Task<IActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName)
+        public static async Task<IActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName, string footerLink,string secondPageLink)
         {
             // Get the view HTML string
             var htmlToConvert = (await RenderViewAsync(pController, pViewName1, model));
@@ -34,10 +39,49 @@ namespace WEBAPI.Tools
             //htmlToPdfConverter.PdfDocumentOptions.StretchToFit = true;
             //htmlToPdfConverter.NavigationTimeout = 480;
             //htmlToPdfConverter.PdfDocumentOptions.JpegCompressionEnabled = false;
-            htmlToPdfConverter.PdfDocumentOptions.ShowFooter = htmlToPdfConverter.PdfDocumentOptions.ShowHeader = false;
+            htmlToPdfConverter.PdfDocumentOptions.ShowFooter = true;
+            htmlToPdfConverter.PdfFooterOptions.PageNumberingStartIndex = 10;
+            htmlToPdfConverter.PdfDocumentOptions.ShowHeader = false;
             htmlToPdfConverter.PdfDocumentOptions.RightMargin = htmlToPdfConverter.PdfDocumentOptions.LeftMargin = 10;
             htmlToPdfConverter.PdfDocumentOptions.TopMargin = 20;
-            htmlToPdfConverter.PdfDocumentOptions.BottomMargin = 20;
+            htmlToPdfConverter.PdfDocumentOptions.BottomMargin = 0;
+
+            // Optionally add a space between footer and the page body
+            // Leave this option not set for no spacing
+
+            // Draw footer elements
+            if (htmlToPdfConverter.PdfDocumentOptions.ShowFooter)
+                DrawFooter(htmlToPdfConverter, false, true, footerLink);
+
+
+            string secondPageHtmlString = File.ReadAllText(secondPageLink);
+
+            string footerBaseUrl = "https://localhost:7217/Views/Commande/Footer.cshtml";
+
+            // Set the footer height in points
+            htmlToPdfConverter.PdfFooterOptions.FooterHeight = 65;
+
+            // Set footer background color
+            htmlToPdfConverter.PdfFooterOptions.FooterBackColor = RgbColor.White;
+
+            // PdfPage secondPdfPage = null;
+
+            // Create a HTML element to be added in footer
+            /* HtmlToPdfElement secondHtml = new(0, 0, secondPageHtmlString, footerBaseUrl)
+            {
+                // Set the HTML element to fit the container height
+                FitHeight = true
+            };
+            // Create a PDF page where to add the second HTML
+            //secondPdfPage = htmlToPdfConverter.();
+
+            // Add the second HTML to PDF document
+            secondPdfPage.AddElement(secondHtml);*/
+
+
+
+
+
             //htmlToPdfConverter.ConversionDelay = 2;
 
             htmlToPdfConverter.PdfSecurityOptions.CanPrint = true;
@@ -100,6 +144,69 @@ namespace WEBAPI.Tools
             await viewResult.View.RenderAsync(viewContext);
 
             return writer.GetStringBuilder().ToString();
+        }
+        private static void DrawFooter(HtmlToPdfConverter htmlToPdfConverter, bool addPageNumbers, bool drawFooterLine, string footerPath)
+        {
+            string footerHtmlString = File.ReadAllText(footerPath);
+
+            string footerBaseUrl = "https://localhost:7217/Views/Commande/Footer.cshtml";
+
+            // Set the footer height in points
+            htmlToPdfConverter.PdfFooterOptions.FooterHeight = 65;
+
+            // Set footer background color
+            htmlToPdfConverter.PdfFooterOptions.FooterBackColor = RgbColor.White;
+
+
+            // Create a HTML element to be added in footer
+            HtmlToPdfElement footerHtml = new(footerHtmlString, footerBaseUrl)
+            {
+                // Set the HTML element to fit the container height
+                FitHeight = true
+            };
+
+            // Add HTML element to footer
+            htmlToPdfConverter.PdfFooterOptions.AddElement(footerHtml);
+
+            // Add page numbering
+            if (addPageNumbers)
+            {
+                // Create a text element with page numbering place holders &p; and & P;
+                TextElement footerText = new TextElement(0, 30, "Page &p; of &P;  ", new PdfFont("Times New Roman", 10, true));
+
+                // Align the text at the right of the footer
+                footerText.TextAlign = HorizontalTextAlign.Right;
+
+                // Set page numbering text color
+                footerText.ForeColor = RgbColor.Navy;
+
+                // Embed the text element font in PDF
+                footerText.EmbedSysFont = true;
+
+                // Add the text element to footer
+                htmlToPdfConverter.PdfFooterOptions.AddElement(footerText);
+            }
+
+            if (drawFooterLine)
+            {
+                // Calculate the footer width based on PDF page size and margins
+                float footerWidth = htmlToPdfConverter.PdfDocumentOptions.PdfPageSize.Width -
+                            htmlToPdfConverter.PdfDocumentOptions.LeftMargin - htmlToPdfConverter.PdfDocumentOptions.RightMargin;
+
+                // Create a line element for the top of the footer
+                LineElement footerLine = new LineElement(0, 0, footerWidth, 0);
+
+                // Set line color
+                footerLine.ForeColor = RgbColor.Gray;
+
+                // Add line element to the bottom of the footer
+                htmlToPdfConverter.PdfFooterOptions.AddElement(footerLine);
+            }
+
+            // set footer visibility in PDF pages
+            htmlToPdfConverter.PdfFooterOptions.ShowInFirstPage = true;
+            htmlToPdfConverter.PdfFooterOptions.ShowInOddPages = true;
+            htmlToPdfConverter.PdfFooterOptions.ShowInEvenPages = true;
         }
     }
 }

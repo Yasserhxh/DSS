@@ -22,6 +22,7 @@ using AccountGetStatutReference;
 using GetClientPartnerFS;
 using Create_Simulation_Commande;
 using Customer_details;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WEBAPI.Controllers;
 
@@ -34,15 +35,18 @@ public class CommandeController : Controller
     private readonly IAuthentificationService _authentificationService;
     private readonly UserManager<ApplicationUser> _userManager;
     private IConfiguration _configuration;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
     public CommandeController(ICommandeService commandeService, IBlobService blobService,
-        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
         _authentificationService = authentificationService;
         _userManager = userManager;
         _configuration = configuration;
+        _webHostEnvironment = webHostEnvironment;
+
     }
 
     [HttpPost]
@@ -340,19 +344,26 @@ public class CommandeController : Controller
     {
         try
         {
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string contentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string pathfooter = "";
+            string pathsecondpage = "";
+            pathfooter = Path.Combine(contentRootPath , "Views\\Commande", "Footer.cshtml" );
+            pathsecondpage = Path.Combine(contentRootPath , "Views\\Commande", "devis2.cshtml" );
 
             var commande = await _commandeService.GetCommande(id);
             Controller controller = this;
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis1",
-                "Devis" + commande.IdCommande);
+                "Devis" + commande.IdCommande, pathfooter, pathsecondpage);
 
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
             var devis1 =  await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
             
             var lFileResult2 = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis2",
-                 "Devis" + commande.IdCommande);
+                 "Devis" + commande.IdCommande, pathfooter, pathsecondpage);
 
             var content2 = lFileResult2 as FileContentResult;
             var mimeType2 = content2?.ContentType;
@@ -376,11 +387,19 @@ public class CommandeController : Controller
     {
         try
         {
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string contentRootPath = _webHostEnvironment.ContentRootPath;
+
+            string pathfooter = "";
+            string pathsecondpage = "";
+            pathfooter = Path.Combine(contentRootPath, "Views\\Commande", "Footer.cshtml");
+            pathsecondpage = Path.Combine(contentRootPath, "Views\\Commande", "devis2.cshtml");
+
             var commande = await _commandeService.UpdateCommande(commandeApiModel) ;
             Controller controller = this;
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",
-                "FicheChantier" + commande.IdCommande);
+                "FicheChantier" + commande.IdCommande, pathfooter, pathsecondpage);
 
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;

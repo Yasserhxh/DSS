@@ -129,6 +129,11 @@
         font-size: 13px;
     }
 
+    .Text-2 {
+        font-size: 18px;
+    }
+
+
 </style>
 <html>
 
@@ -147,7 +152,7 @@
                         <table>
                             <tbody>
                                 <tr>
-                                    <td style="text-align: left;"><img src="betomar.png" alt="" width="120"></td>
+                                    <td style="text-align: left;"><img src="https://gmsblobstoragedev.blob.core.windows.net/cimarpdfs/95062822-e9e8-4784-9f09-afcecae15c67-betomar.png" alt="" width="120"></td>
                                 </tr>
                                 <tr>
                                     <td style=" font-size:14px; text-align: left;">
@@ -174,11 +179,11 @@
                 <tbody>
                     <tr>
                         <td style="text-align: left;">OA/DC/ BPE N° @Model.IdCommande.ToString()/ @Model.DateCommande!.Value.Year.ToString()</td>
-                        <td style="text-align: right;">Casablanca, le @DateTime.Now.ToString("dd-MMMM-yyyy")</td>
+                        <td style="text-align: right;">Casablanca, le @DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR"))</td>
                     </tr>
                 </tbody>
             </table>
-            <h1 class="gtitle">Sté NORMAR TRAVAUX</h1>
+            <h1 class="gtitle">@Model.Client.RaisonSociale</h1>
             <table class="Destin1">
                 <tbody>
                     <tr>
@@ -293,7 +298,7 @@
 
                 <li>@Model.Conditions.Split(",").ElementAt(0),</li>
                 <li>@Model.Conditions.Split(",").ElementAt(1),</li>
-                <li>Délai de paiement : @(Model.Delai_Paiement != "Delai habituel" ? Model.Delai_Paiement + "jours" : Model.Delai_Paiement)</li>
+                <li>Délai de paiement : @(Model.Delai_Paiement != "DELAI HABITUEL" ? Model.Delai_Paiement + "jours" : Model.Delai_Paiement)</li>
                 <li class="bold">
                     @Model.Conditions.Split(",").ElementAt(2).
                 </li>
@@ -302,11 +307,10 @@
 
 
         </div>
-
     </div>
-    <div class="footer" style="margin-top: 300px;">
+@*     <div class="footer" id="footer" style="margin-top: 300px;">
         <p>S.A. au capital de 1.443.600.400,00 DH - Siége : 621, boulevard Panoramique, 20150 Casablanca, Maroc - R.C. 70617 Casablanca - C.N.S.S. 1929415 - I.F. 1085799 - T.P. 37997801 - ICE / 001524400000046</p>
-    </div>
+    </div> *@
 </body>
 
 </html>
