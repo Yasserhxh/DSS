@@ -133,7 +133,10 @@
         font-size: 18px;
     }
 
-
+    .page {
+        page-break-after: always;
+    }
+    
 </style>
 <html>
 
@@ -142,7 +145,7 @@
 </head>
 
 <body>
-    <div style=" width:95%; margin: 30px auto">
+    <div style=" width:95%; margin: 30px auto" class="page">
 
         <table>
             <tbody>
@@ -160,7 +163,7 @@
                                         Casablanca
                                     </td>
                                     <td style="font-size:14px; text-align: left;">
-                                        Tél. +212 522 85 94 à 59<br>
+                                        Tél. +212 522 85 94 50 à 59<br>
                                         Fax +212 522 50 10 99<br>
                                         <b>www.cimentsdumaroc.com</b>
                                     </td>
@@ -308,6 +311,44 @@
 
         </div>
     </div>
+    <div style=" width:95%; margin: 30px auto" >
+
+        <div class="Text-2" style=" width:90%; margin: 30px auto">OA/DC/ BPE N° @Model.IdCommande.ToString()/ @Model.DateCommande!.Value.Year.ToString()</div>
+
+
+        <div class="Text-2" style=" width:90%; margin: 30px auto">
+
+
+            <p style="font-size: 20px; margin-top:100px; font-weight: bold;">Toute augmentation du prix du ciment, du sable ou du transport d’agrégats sera répercutée sur les prix des bétons ci-dessus.</p>
+
+            <p>Nous restons à votre disposition pour tous renseignements complémentaires et pour mener à bonnes fins toute opération que vous choisiriez de nous confier.</p>
+
+            <p>Dans l'espoir de retenir votre attention lors de votre consultation,</p>
+            <p>Nous vous prions de croire, @(Model.Client.Sexe == "Mr." ? "Monsieur" : "Madame"), en l'assurance de nos sentiments les plus dévoués.</p>
+
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <p style="margin-top: 270px;">
+                Chef Secteur Grand Casablanca Nord<br>
+                SAMOUH LAHCEN<br>
+                <b>GSM : 0661 11 94 51</b>
+            </p>
+
+        </div>
+
+    </div>
+
 @*     <div class="footer" id="footer" style="margin-top: 300px;">
         <p>S.A. au capital de 1.443.600.400,00 DH - Siége : 621, boulevard Panoramique, 20150 Casablanca, Maroc - R.C. 70617 Casablanca - C.N.S.S. 1929415 - I.F. 1085799 - T.P. 37997801 - ICE / 001524400000046</p>
     </div> *@
