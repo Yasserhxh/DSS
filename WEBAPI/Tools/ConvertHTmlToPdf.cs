@@ -16,7 +16,7 @@ namespace WEBAPI.Tools
     
     public static class ConvertHTmlToPdf
     {
-        public static async Task<IActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName, string footerLink,string secondPageLink)
+        public static async Task<IActionResult> ConvertCurrentPageToPdf(Controller pController, object model, String pViewName1, String pFileName, string footerName)
         {
             // Get the view HTML string
             var htmlToConvert = (await RenderViewAsync(pController, pViewName1, model));
@@ -51,12 +51,12 @@ namespace WEBAPI.Tools
 
             // Draw footer elements
             if (htmlToPdfConverter.PdfDocumentOptions.ShowFooter)
-                DrawFooter(htmlToPdfConverter, false, true, footerLink);
+               await DrawFooterAsync(pController, model, footerName, htmlToPdfConverter, false, true, footerName);
 
 
-            string secondPageHtmlString = File.ReadAllText(secondPageLink);
+            //string secondPageHtmlString = File.ReadAllText(secondPageLink);
 
-            string footerBaseUrl = "https://localhost:7217/Views/Commande/Footer.cshtml";
+           // string footerBaseUrl = "https://localhost:7217/Views/Commande/Footer.cshtml";
 
             // Set the footer height in points
             htmlToPdfConverter.PdfFooterOptions.FooterHeight = 65;
@@ -145,11 +145,12 @@ namespace WEBAPI.Tools
 
             return writer.GetStringBuilder().ToString();
         }
-        private static void DrawFooter(HtmlToPdfConverter htmlToPdfConverter, bool addPageNumbers, bool drawFooterLine, string footerPath)
+        private static async Task DrawFooterAsync(Controller pController, object model, String pViewName1, HtmlToPdfConverter htmlToPdfConverter, bool addPageNumbers, bool drawFooterLine, string footerPath)
         {
-            string footerHtmlString = File.ReadAllText(footerPath);
 
-            string footerBaseUrl = "https://localhost:7217/Views/Commande/Footer.cshtml";
+            string footerHtmlString = (await RenderViewAsync(pController, pViewName1, model));
+
+            string footerBaseUrl = "https://app-emea-we-dssprod-dss-001.azurewebsites.net/Views/Commande/Footer.cshtml";
 
             // Set the footer height in points
             htmlToPdfConverter.PdfFooterOptions.FooterHeight = 65;

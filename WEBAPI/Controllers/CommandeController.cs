@@ -23,6 +23,7 @@ using GetClientPartnerFS;
 using Create_Simulation_Commande;
 using Customer_details;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 
 namespace WEBAPI.Controllers;
 
@@ -344,32 +345,16 @@ public class CommandeController : Controller
     {
         try
         {
-            string webRootPath = _webHostEnvironment.WebRootPath;
-            string contentRootPath = _webHostEnvironment.ContentRootPath;
-
-            string pathfooter = "";
-            string pathsecondpage = "";
-            pathfooter = Path.Combine(contentRootPath , "Views\\Commande", "Footer.cshtml" );
-            pathsecondpage = Path.Combine(contentRootPath , "Views\\Commande", "devis2.cshtml" );
-
             var commande = await _commandeService.GetCommande(id);
             Controller controller = this;
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis1",
-                "Devis" + commande.IdCommande, pathfooter, pathsecondpage);
+                "Devis" + commande.IdCommande, "Footer");
 
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
-            var devis1 =  await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);
-            
-            var lFileResult2 = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis2",
-                 "Devis" + commande.IdCommande, pathfooter, pathsecondpage);
-
-            var content2 = lFileResult2 as FileContentResult;
-            var mimeType2 = content2?.ContentType;
-            var devis2 = await blobService.UploadFileToBlobAsync(content2!.FileDownloadName, Guid.NewGuid().ToString(), content2.FileContents, mimeType2!);
-
-            return devis1 + "," + devis2;        
+            var devis1 =  await blobService.UploadFileToBlobAsync(content!.FileDownloadName, Guid.NewGuid().ToString(), content.FileContents, mimeType!);            
+            return devis1 ;        
         }
         catch (Exception ex)
         {
@@ -387,19 +372,11 @@ public class CommandeController : Controller
     {
         try
         {
-            string webRootPath = _webHostEnvironment.WebRootPath;
-            string contentRootPath = _webHostEnvironment.ContentRootPath;
-
-            string pathfooter = "";
-            string pathsecondpage = "";
-            pathfooter = Path.Combine(contentRootPath, "Views\\Commande", "Footer.cshtml");
-            pathsecondpage = Path.Combine(contentRootPath, "Views\\Commande", "devis2.cshtml");
-
             var commande = await _commandeService.UpdateCommande(commandeApiModel) ;
             Controller controller = this;
 
             var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",
-                "FicheChantier" + commande.IdCommande, pathfooter, pathsecondpage);
+                "FicheChantier" + commande.IdCommande, "Footer");
 
             var content = lFileResult as FileContentResult;
             var mimeType = content?.ContentType;
