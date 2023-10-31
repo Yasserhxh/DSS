@@ -15,6 +15,7 @@ namespace Domain.Models.Commande
         public DateTime? DateCommande { get; set; }
         public string DateDebutSearch { get; set; }
         public string DateFinSearch { get; set; }
+        public string Email { get; set; }
         public IEnumerable<CommandeModel> Commandes { get; set; }
         public IEnumerable<CommandeApiModel> CommandesAPI { get; set; }
         public IEnumerable<ClientModel> CLients { get; set; }

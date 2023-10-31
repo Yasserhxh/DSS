@@ -20,7 +20,7 @@ namespace Repository.IRepositories
         Task<bool> CreateDetailCommandeV(List<DetailCommandeV> detailCommandesV);
         Task<Article> GetArticleByDesi(string articleDesi);
         Task<List<Client>> GetClients(string Ice, string Cnie, string RS);
-        Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
+        Task<List<Commande>> GetCommandes(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch, string Email);
         Task<List<DetailCommande>> GetListDetailsCommande(int? id); 
         Task<List<DetailCommandeV>> GetListDetailsCommandeV(int? id);
         Task<List<ValidationEtat>> GetCommandesStatuts(int? id);

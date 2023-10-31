@@ -153,9 +153,9 @@ namespace Repository.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch)
+        public async Task<List<Commande>> GetCommandes(List<int> clientId, DateTime? dateCommande, string dateDebutSearch, string dateFinSearch, string Email )
         {
-            var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient) && d.IsProspection == true).AsQueryable();
+            var query = _db.Commandes.Where(d => clientId.Contains((int)d.IdClient) && d.IsProspection == true && d.CommercialEmail == Email).AsQueryable();
             if (dateCommande is not null)
             {
                 query = query.Where(d => d.DateCommande.Value.Date == dateCommande);

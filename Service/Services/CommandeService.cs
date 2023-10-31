@@ -511,10 +511,10 @@ namespace Service.Services
             return _mapper.Map<List<Client>, List<ClientModel>>(clients);
         }
 
-        public async Task<List<CommandeApiModel>> GetCommandes(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch)
+        public async Task<List<CommandeApiModel>> GetCommandes(List<int> ClientId, DateTime? DateCommande, string dateDebutSearch, string dateFinSearch, string Email)
         {
             var commandes =
-                await _commandeRepository.GetCommandes(ClientId, DateCommande, dateDebutSearch, dateFinSearch);
+                await _commandeRepository.GetCommandes(ClientId, DateCommande, dateDebutSearch, dateFinSearch, Email);
             var listDetailCommandeApi = new List<DetailCommandeApiModel>();
             //return mapper.Map<List<Commande>, List<CommandeModel>>(commandes);
             return commandes.Select(item => new CommandeApiModel
@@ -559,7 +559,8 @@ namespace Service.Services
                     IdentifiantChantier = item.Chantier.Ctn_Adresse,
                     LaboDeControle = item.LaboDeControle,
                     VolumePompe = item.VolumePompe,
-                    RegimeTaxe = item.RegimeTaxe
+                    RegimeTaxe = item.RegimeTaxe,
+                    CommercialFullName = item.CommercialFullName
                     // DetailsCommande  = listDetailCommandeApi
                 })
                 .ToList();
