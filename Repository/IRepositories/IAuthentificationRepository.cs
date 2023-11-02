@@ -12,6 +12,7 @@ namespace Repository.IRepositories
         Task<bool> Logout();
         Task<ApplicationUser> GetUserByName(string name);
         Task<string> GetUserRole(ApplicationUser user);
+        Task<UserModel> GetUserByEmail(string email);
         Task<List<UserModel>> getListUsers();
         Task<bool> EnableDisableUser(string Id, int code);
         Task<List<IdentityRole>> GetRoles();

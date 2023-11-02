@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model Domain.Models.CommandeModel
+@model Domain.Models.Commande.CommandesPDFViewModel;
 @{
     Layout = null;
 }
@@ -181,12 +181,12 @@
             <table style="margin: 40px 0 30px ; font-size: 18px; font-weight: 600;">
                 <tbody>
                     <tr>
-                        <td style="text-align: left;">OA/DC/ BPE N° @Model.IdCommande.ToString()/ @Model.DateCommande!.Value.Year.ToString()</td>
+                        <td style="text-align: left;">OA/DC/ BPE N° @Model.commande.IdCommande.ToString()/ @Model.commande.DateCommande!.Value.Year.ToString()</td>
                         <td style="text-align: right;">Casablanca, le @DateTime.Now.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR"))</td>
                     </tr>
                 </tbody>
             </table>
-            <h1 class="gtitle">@Model.Client.RaisonSociale</h1>
+            <h1 class="gtitle">@Model.commande.Client.RaisonSociale</h1>
             <table class="Destin1">
                 <tbody>
                     <tr>
@@ -196,7 +196,7 @@
                                     <tr>
                                         <td width="45%"><b>Destinataire</b></td>
                                         <td width="5%">:</td>
-                                        <td>@Model.Client.Sexe @Model.Client.Destinataire_Interlocuteur</td>
+                                        <td>@Model.commande.Client.Sexe @Model.commande.Client.Destinataire_Interlocuteur</td>
                                     </tr>
                                     <tr>
                                         <td width="45%"><b>Objet</b></td>
@@ -206,7 +206,7 @@
                                     <tr>
                                         <td width="45%"><b>Chantiers</b></td>
                                         <td width="5%">:</td>
-                                        <td>@Model.Chantier.Ctn_Nom / @Model.Chantier.Ctn_Adresse</td>
+                                        <td>@Model.commande.Chantier.Ctn_Nom / @Model.commande.Chantier.Ctn_Adresse</td>
                                     </tr>
                                     <tr>
                                         <td width="45%"><b>Nbre de pages</b></td>
@@ -223,7 +223,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p> @(Model.Client.Sexe == "Mr." ? "Monsieur":"Madame"),</p>
+            <p> @(Model.commande.Client.Sexe == "Mr." ? "Monsieur" : "Madame"),</p>
             <p> Suite à votre consultation, nous avons l’honneur de vous communiquer ci-après, notre offre de prix pour la fourniture des Bétons Prêts à l’Emploi désignés ci-après :</p>
 
             <h2 class="gtitle">Nos prix Bétons rendus :</h2>
@@ -236,7 +236,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var item in Model.DetailCommandes)
+                    @foreach (var item in Model.commande.DetailCommandes)
                     {
                         <tr>
                             <td class="text-center">&nbsp; @item.Article.Designation</td>
@@ -290,7 +290,7 @@
                 <tbody>
                     <tr>
                         <td width="50%">Prestation pompe </td>
-                        <td width="50%" class="text-center">@Model.TarifAchatPompage </td>
+                        <td width="50%" class="text-center">@Model.commande.TarifAchatPompage </td>
                     </tr>
                 </tbody>
             </table>
@@ -299,13 +299,13 @@
 
             <ul>
 
-                <li>@Model.Conditions.Split(",").ElementAt(0),</li>
-                <li>@Model.Conditions.Split(",").ElementAt(1),</li>
-                <li>Délai de paiement : @(Model.Delai_Paiement != "DELAI HABITUEL" ? Model.Delai_Paiement + "jours" : Model.Delai_Paiement)</li>
+                <li>@Model.commande.Conditions.Split(",").ElementAt(0),</li>
+                <li>@Model.commande.Conditions.Split(",").ElementAt(1),</li>
+                <li>Délai de paiement : @(Model.commande.Delai_Paiement != "DELAI HABITUEL" ? Model.commande.Delai_Paiement + " "+ "jours" : Model.commande.Delai_Paiement)</li>
                 <li class="bold">
-                    @Model.Conditions.Split(",").ElementAt(2).
+                    @Model.commande.Conditions.Split(",").ElementAt(2).
                 </li>
-                <li class="bold">@Model.Conditions.Split(",").ElementAt(3)</li>
+                <li class="bold">@Model.commande.Conditions.Split(",").ElementAt(3)</li>
             </ul>
 
 
@@ -313,7 +313,7 @@
     </div>
     <div style=" width:95%; margin: 30px auto" >
 
-        <div class="Text-2" style=" width:90%; margin: 30px auto">OA/DC/ BPE N° @Model.IdCommande.ToString()/ @Model.DateCommande!.Value.Year.ToString()</div>
+        <div class="Text-2" style=" width:90%; margin: 30px auto">OA/DC/ BPE N° @Model.commande.IdCommande.ToString()/ @Model.commande.DateCommande!.Value.Year.ToString()</div>
 
 
         <div class="Text-2" style=" width:90%; margin: 30px auto">
@@ -324,7 +324,7 @@
             <p>Nous restons à votre disposition pour tous renseignements complémentaires et pour mener à bonnes fins toute opération que vous choisiriez de nous confier.</p>
 
             <p>Dans l'espoir de retenir votre attention lors de votre consultation,</p>
-            <p>Nous vous prions de croire, @(Model.Client.Sexe == "Mr." ? "Monsieur" : "Madame"), en l'assurance de nos sentiments les plus dévoués.</p>
+            <p>Nous vous prions de croire, @(Model.commande.Client.Sexe == "Mr." ? "Monsieur" : "Madame"), en l'assurance de nos sentiments les plus dévoués.</p>
 
 
             <br />
@@ -342,9 +342,9 @@
             <br />
             <br />
             <p style="margin-top: 270px;">
-                Commercial Grand Casablanca Nord<br>
-                 @Model.CommercialFullName.ToUpper()<br>
-                <b>GSM : 0661 11 94 51</b>
+                @Model.user.Role Grand Casablanca Nord<br>
+                @Model.commande.CommercialFullName.ToUpper()<br>
+                <b>GSM : @Model.user.PhoneNumber</b>
             </p>
 
         </div>

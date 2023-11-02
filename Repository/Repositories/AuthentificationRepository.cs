@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Repository.UnitOfWork;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore.Storage;
+using Domain.Entities;
+using System.Data;
 
 namespace Repository.Repositories
 {
@@ -71,6 +73,23 @@ namespace Repository.Repositories
         public async Task<ApplicationUser> FindUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        } 
+        public async Task<UserModel> GetUserByEmail(string email)
+        {
+            var users = await (_db.Users.Where(x => x.Email == email).Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+                .Join(_db.Roles, @t => @t.ur.RoleId, r => r.Id,
+                    (@t, r) => new UserModel
+                    {
+                        Id = @t.u.Id,
+                        UserName = @t.u.UserName,
+                        Email = @t.u.Email,
+                        Role = r.Name,
+                        Nom = @t.u.Nom,
+                        Prenom = @t.u.Prenom,
+                        PhoneNumber = @t.u.PhoneNumber,
+                        Statut = @t.u.IsActive
+                    })).ToListAsync();
+            return users.FirstOrDefault();
         }
         public async Task<UserModel> FindUserByEmailByRoleAndRegion(string role, int regionId)
         {

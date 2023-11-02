@@ -417,7 +417,8 @@ namespace Repository.Repositories
                 .Include(p=>p.CommandeStatuts)
                 .Include(d => d.Chantier.ZONE_CHANTIER)
                 .Include(d=>d.Chantier.Type_Chantier)
-                .Include(d => d.Client.Forme_Juridique).FirstOrDefaultAsync();
+                .Include(d => d.Client.Forme_Juridique)
+                .FirstOrDefaultAsync();
             return cmd;
         }
         public async Task<CommandeV> GetCommandeV(int? id)

@@ -160,6 +160,7 @@ public class CommandeController : Controller
 
     public async Task<bool> CreateProspect([FromBody] CommandeViewModel commandeViewModel)
     {
+        var clientSap = commandeViewModel.CommandeV.CodeClientSap;
         var redirect = await _commandeService.CreateProspect(commandeViewModel);
         return redirect;
     }
@@ -346,9 +347,15 @@ public class CommandeController : Controller
         try
         {
             var commande = await _commandeService.GetCommande(id);
+            var user = await _authentificationService.GetUserByEmail(commande.CommercialId);
+            var commandePdf = new CommandesPDFViewModel
+            {
+                commande = commande,
+                user = user
+            };
             Controller controller = this;
 
-            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "devis1",
+            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commandePdf, "devis1",
                 "Devis" + commande.IdCommande, "Footer");
 
             var content = lFileResult as FileContentResult;
@@ -373,9 +380,14 @@ public class CommandeController : Controller
         try
         {
             var commande = await _commandeService.UpdateCommande(commandeApiModel) ;
-            Controller controller = this;
+            var validation = await _commandeService.GetListValidation(commande.IdCommande);
+            var commandePdf = new CommandesPDFViewModel
+            {
+                commande = commande,
+                validations = validation
+            }; Controller controller = this;
 
-            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commande, "PdfChantier",
+            var lFileResult = await ConvertHTmlToPdf.ConvertCurrentPageToPdf(controller, commandePdf, "PdfChantier",
                 "FicheChantier" + commande.IdCommande, "Footer");
 
             var content = lFileResult as FileContentResult;

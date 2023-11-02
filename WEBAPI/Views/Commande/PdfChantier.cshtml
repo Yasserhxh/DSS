@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model Domain.Models.CommandeModel
+@model Domain.Models.Commande.CommandesPDFViewModel
 @{
     Layout = null;
 }
@@ -159,12 +159,12 @@ h3.signature {
               <tr>
                 <td width="55%"><b>CHANTIER</b></td>
                 <td width="5%">:</td>
-                <td class="bold"> @Model.Chantier.Ctn_Nom</td>
+                <td class="bold"> @Model.commande.Chantier.Ctn_Nom</td>
               </tr>
               <tr>
                 <td>Code SAP donneur d’ordre</td>
                 <td>:</td>
-                <td class="bold"> @Model.Client.CodeClientSap</td>
+                <td class="bold"> @Model.commande.Client.CodeClientSap</td>
               </tr>
                 <tr>
                 <td>Code SAP Chantier</td>
@@ -174,22 +174,22 @@ h3.signature {
                 <tr>
                 <td>Ident. chantier/Localisation</td>
                 <td>:</td>
-                <td class="bold">@Model.Chantier.Ctn_Adresse</td>
+                <td class="bold">@Model.commande.Chantier.Ctn_Adresse</td>
               </tr>
                 <tr>
                 <td>Nature du chantier</td>
                 <td>:</td>
-                <td class="bold">@Model.Chantier.Type_Chantier.Tc_Libelle</td>
+                <td class="bold">@Model.commande.Chantier.Type_Chantier.Tc_Libelle</td>
               </tr>
                 <tr>
                 <td>Volume (Prévisionnel)</td>
                 <td>:</td>
-                <td class="bold">@Model.Chantier.VolumePrevisonnel.ToString("G29")</td>
+                <td class="bold">@Model.commande.Chantier.VolumePrevisonnel.ToString("G29")</td>
               </tr>
                 <tr>
                 <td>Régime de Taxe (HT/TTC)</td>
                 <td>:</td>
-                <td class="bold"> @Model.RegimeTaxe</td>
+                <td class="bold"> @Model.commande.RegimeTaxe</td>
               </tr>
             </tbody>
           </table></td>
@@ -210,7 +210,7 @@ h3.signature {
                 <td>Chantier Contrôlé</td>
                 <td>:</td>
                 <td class="bold">
-                    @if(Model.PresenceLabo == "Non"){
+                    @if(Model.commande.PresenceLabo == "Non"){
                     <span>Oui <span class="checkbox"></span></span> <span>Non <span class="checkbox checked"></span></span>
                     }else{
                     <span>Oui <span class="checkbox checked"></span></span> <span>Non <span class="checkbox"></span></span>
@@ -222,7 +222,7 @@ h3.signature {
                 <tr>
                 <td>Labo. de Contrôle</td>
                 <td>:</td>
-                <td class="bold"> &nbsp; @Model.LaboDeControle</td>
+                <td class="bold"> &nbsp; @Model.commande.LaboDeControle</td>
               </tr>
                 <tr>
                 <td>Distance CAB <font style="color:red">*</font></td>
@@ -232,7 +232,7 @@ h3.signature {
                 <tr>
                 <td>Volume Pompé (Estimatif)</td>
                 <td>:</td>
-                <td class="bold">@Model.VolumePompe  m3</td>
+                <td class="bold">@Model.commande.VolumePompe  m3</td>
               </tr>
                 <tr>
                 <td></td>
@@ -265,7 +265,7 @@ h3.signature {
       </tr>
       <tr>
         @for(int i = 0 ; i<=3 ; i++){
-            if(Model.Chantier.ZONE_CHANTIER.Zone_Libelle.Split(" ")[1] == i.ToString()){
+            if(Model.commande.Chantier.ZONE_CHANTIER.Zone_Libelle.Split(" ")[1] == i.ToString()){
                   <td class="text-center">&nbsp; X </td>
 
             }else{
@@ -281,7 +281,7 @@ h3.signature {
             <table style=" width: 200px;  margin:20px auto 0" class="titable">
                   <tr>
                 <td style="height: 52px; text-align: center" width="50%">Prix de Transport</td>
-                <td>&nbsp; &nbsp; @Model.TarifAchatTransport.ToString("G29")</td>
+                <td>&nbsp; &nbsp; @Model.commande.TarifAchatTransport.ToString("G29")</td>
                 </tr>
               </table>
             </td>
@@ -301,7 +301,7 @@ h3.signature {
       </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model.DetailCommandes)
+    @foreach (var item in Model.commande.DetailCommandes)
     {
       <tr align="center">
         <td class="text-center"><b>@item.Article.Designation</b></td>
@@ -389,27 +389,33 @@ h3.signature {
     </tbody>
   </table>
     
-  @* <table class="Destin1">
+  <table class="Destin1">
     <tbody>
       <tr>
+          @foreach(var item in Model.validations){
         <td width="33%"><table>
             <tbody>
+              @if(Model.validations.FirstOrDefault()!.Validation_Id == item.Validation_Id){
+                  <tr>
+                      <td><b>Signature:</b></td>
+                  </tr>
+              }
+              
               <tr>
-                <td><b>Signature:</b></td>
-              </tr>
-              <tr>
-                <td><b>Commercial</b></td>
+                <td><b>@item.Fonction</b></td>
               </tr>
                 <tr>
-                <td>Nom : .......</td>
+                <td>Nom : @item.Nom &nbsp; @item.Prenom</td>
               </tr>
                 <tr>
-                <td>Date et signature :</td>
+                <td>Date et signature : @item.Date!.Value.ToString(System.Globalization.CultureInfo.CreateSpecificCulture("fr-FR"))</td>
               </tr>
             </tbody>
           </table></td>
 
-        <td width="33%"><table>
+          }
+
+@*         <td width="33%"><table>
             <tbody>
                 <tr>
                 <td>&nbsp;</td>
@@ -440,10 +446,10 @@ h3.signature {
                 <td>Date et signature : <br> <span style="font-size: 12px; color:red">(*) Cas de tarif spécial</span></td>
               </tr>
             </tbody>
-          </table></td>
+          </table></td> *@
       </tr>
     </tbody>
-  </table>*@
+  </table>
     <h1 style="font-style: italic; font-size: 16px">Enregistrement par l’Administration des Ventes le :</h1>
 </div>
 </body>
