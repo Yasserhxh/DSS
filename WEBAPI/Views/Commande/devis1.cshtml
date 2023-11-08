@@ -342,9 +342,9 @@
             <br />
             <br />
             <p style="margin-top: 270px;">
-                @Model.user.Role Grand Casablanca Nord<br>
-                @Model.commande.CommercialFullName.ToUpper()<br>
-                <b>GSM : @Model.user.PhoneNumber</b>
+                Commercial Grand Casablanca Nord<br>
+                @(Model.commande.CommercialFullName != null ? Model.commande.CommercialFullName.ToUpper() : "" )<br>
+                <b>GSM : 0661 11 94 51</b>
             </p>
 
         </div>

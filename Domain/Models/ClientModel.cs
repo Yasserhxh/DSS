@@ -5,7 +5,7 @@
         public int Client_Id { get; set; }
         public string CodeClientSap { get; set; }
         public int FormeJuridique_Id { get; set; }
-        public string Ice { get; set; }
+        public string? Ice { get; set; }
         public string? Cnie { get; set; }
         public string Gsm { get; set; }
         public string RaisonSociale { get; set; }
@@ -16,6 +16,7 @@
         public int? IdVille { get; set; }
         public int? IdPays { get; set; }
         public int Client_Ctn_Id { get; set; }
+        public string? SocieteCiment { get; set; }
 
         public VilleModel Ville { get; set; }
         public PaysModel Pays { get; set; }
