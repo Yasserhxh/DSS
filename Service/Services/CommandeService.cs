@@ -45,7 +45,45 @@ namespace Service.Services
         }
         public async Task<List<DelaiPaiementModel>> GetDelaiPaiements()
         {
-            return _mapper.Map<List<DelaiPaiement>, List<DelaiPaiementModel>>(await this._commandeRepository.GetDelaiPaiements());
+            var res = await _commandeRepository.GetDelaiPaiements();
+            var delai1 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(0).Delai_Libelle,
+                    Delai_Id = res.ElementAt(0).Delai_Id
+                };
+            var delai2 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(1).Delai_Libelle,
+                    Delai_Id = res.ElementAt(1).Delai_Id
+                };
+            var delai3 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(2).Delai_Libelle,
+                    Delai_Id = res.ElementAt(2).Delai_Id
+                };
+            var delai4 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(5).Delai_Libelle,
+                    Delai_Id = res.ElementAt(5).Delai_Id
+                };
+            var delai5 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(3).Delai_Libelle,
+                    Delai_Id = res.ElementAt(3).Delai_Id
+                };
+            var delai6 = new DelaiPaiementModel()
+                {
+                    Delai_Libelle = res.ElementAt(4).Delai_Libelle,
+                    Delai_Id = res.ElementAt(4).Delai_Id
+                };
+            var delais = new List<DelaiPaiementModel>();
+            delais.Add(delai1);
+            delais.Add(delai2);
+            delais.Add(delai3);
+            delais.Add(delai4);
+            delais.Add(delai5);
+            delais.Add(delai6);
+            return delais;
         }
         public async Task<List<CentraleBetonModel>> GetCentraleBetons()
         {
