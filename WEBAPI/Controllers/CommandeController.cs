@@ -219,11 +219,11 @@ public class CommandeController : Controller
         };
         return Ok(vm.CommandesAPI);
     }
-    [HttpGet("DetailCommande/{commandeId}")]
-    public async Task<IActionResult> DetailCommande(int? commandeId)
+    [HttpGet("DetailCommande")]
+    public async Task<IActionResult> DetailCommande(int? commandeId, int isCommande)
     {
         if (commandeId is null) return Problem("Veuillez selectionner une commande");
-        var details = await _commandeService.GetCommandesDetails(commandeId);
+        var details = await _commandeService.GetCommandesDetails(commandeId, isCommande);
         return !details.Any() ? Problem("Commande non trouvée") : Ok(details);
 
     }

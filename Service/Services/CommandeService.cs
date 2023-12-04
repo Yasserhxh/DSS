@@ -491,7 +491,8 @@ namespace Service.Services
                     
                 }
 
-                commandeViewModel.CommandeV.IdStatut = Statuts.CommandeCree;
+                if (commandeViewModel.CommandeV.IdStatut == null)
+                    commandeViewModel.CommandeV.IdStatut = Statuts.CommandeCree;
                 commandeViewModel.CommandeV.Currency = "MAD";
                 commandeViewModel.CommandeV.DateCommande = DateTime.Now;
                 //commandeViewModel.Commande.IsProspection = true;
@@ -677,49 +678,49 @@ namespace Service.Services
         {
             return _mapper.Map<List<TarifPompeRef>, List<TarifPompeRefModel>>(await this._commandeRepository.GetTarifPompeRefs());
         }
-        public async Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId)
+        public async Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId, int isCommande)
         {
-            var commandes = await _commandeRepository.GetListDetailsCommande(commandeId);
-            if (commandes.Any())
-                return commandes.Select(item => new DetailCommandeApiModel
-                    {
-                        IdDetailCommande = item.IdDetailCommande,
-                        IdCommande = (int)item.IdCommande!,
-                        ArticleDesignation = item.Article.Designation,
-                        Montant = item.Montant,
-                        DateProduction = item.DateProduction,
-                        Volume = item.Volume,
-                        UniteLibelle = item.Unite.Libelle,
-                        ArticleFile = item.ArticleFile,
-                        MontantRef = item.MontantRef,
-                        IdArticle = item.IdArticle,
-                        MontantV1 = item.MontantV1,
-                        MargeBenef = item.MargeBenef,
-                        MontantRC = item.MontantRC,
-                        MontantDA = item.MontantDA,
-                        ArticleName = item.ArticleName
-                    })
-                    .ToList();
+            if(isCommande == 1)
             {
                 var commandesV = await _commandeRepository.GetListDetailsCommandeV(commandeId);
                 return commandesV.Select(item => new DetailCommandeApiModel
-                    {
-                        IdDetailCommande = item.IdDetailCommande,
-                        IdCommande = (int)item.IdCommande!,
-                        ArticleDesignation = item.Article.Designation,
-                        Montant = item.Montant,
-                        DateProduction = item.DateProduction,
-                        Volume = item.Volume,
-                        UniteLibelle = item.Unite.Libelle,
-                        ArticleFile = item.ArticleFile,
-                        MontantRef = item.MontantRef,
-                        IdArticle = item.IdArticle,
-                        ArticleName = item.ArticleName
-                    })
+                {
+                    IdDetailCommande = item.IdDetailCommande,
+                    IdCommande = (int)item.IdCommande!,
+                    ArticleDesignation = item.Article.Designation,
+                    Montant = item.Montant,
+                    DateProduction = item.DateProduction,
+                    Volume = item.Volume,
+                    UniteLibelle = item.Unite.Libelle,
+                    ArticleFile = item.ArticleFile,
+                    MontantRef = item.MontantRef,
+                    IdArticle = item.IdArticle,
+                    ArticleName = item.ArticleName
+                })
                     .ToList();
             }
+            var commandes = await _commandeRepository.GetListDetailsCommande(commandeId);
+            return commandes.Select(item => new DetailCommandeApiModel
+            {
+                IdDetailCommande = item.IdDetailCommande,
+                IdCommande = (int)item.IdCommande!,
+                ArticleDesignation = item.Article.Designation,
+                Montant = item.Montant,
+                DateProduction = item.DateProduction,
+                Volume = item.Volume,
+                UniteLibelle = item.Unite.Libelle,
+                ArticleFile = item.ArticleFile,
+                MontantRef = item.MontantRef,
+                IdArticle = item.IdArticle,
+                MontantV1 = item.MontantV1,
+                MargeBenef = item.MargeBenef,
+                MontantRC = item.MontantRC,
+                MontantDA = item.MontantDA,
+                ArticleName = item.ArticleName
+            })
+                    .ToList();
             //return mapper.Map<List<DetailCommande>, List<DetailCommandeModel>>(commandes);
-            
+
         }
 
         public async Task<List<ValidationEtatModel>> GetCommandesStatuts(int? id) =>

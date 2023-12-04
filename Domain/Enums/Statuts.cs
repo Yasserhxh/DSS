@@ -12,5 +12,6 @@
         public const int ValidationDeLoffreDePrixRC = 8;
         public const int ValidationDeLoffreDePrixCV = 9;
         public const int CommandeCree = 10;
+        public const int CommandeArchivee = 12;
     }
 }

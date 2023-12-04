@@ -23,7 +23,7 @@ namespace Service.IServices
         Task<double> GetTarifZone(int Id);
         Task<double> GetTarifPompe(int Id);
         Task<List<CommandeApiModel>> GetCommandesPT(List<int>  ClientId, DateTime? DateCommande, string DateDebutSearch, string DateFinSearch);
-        Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId);
+        Task<List<DetailCommandeApiModel>> GetCommandesDetails(int? commandeId, int isCommande);
         Task<List<ValidationEtatModel>> GetCommandesStatuts(int? id);
         Task<List<CommandeApiModel>> GetListProspects();
         Task<bool> CreateCommandeProspection(CommandeViewModel commandeViewModel);
