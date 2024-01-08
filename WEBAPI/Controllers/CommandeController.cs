@@ -24,6 +24,7 @@ using Create_Simulation_Commande;
 using Customer_details;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using Consomation_mensu;
 
 namespace WEBAPI.Controllers;
 
@@ -421,7 +422,8 @@ public class CommandeController : Controller
     [Route("GetListSAP")]
     public async Task<IActionResult> GetListSAPAsync([FromBody] SapSearchVMFindClient searchVM)
     {
-        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+        //String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
+        var endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zbapi_material_getlist/150/zbapi_material_getlist/zbapi_material_getlist?sap-client=150";
         BasicHttpBinding binding = new BasicHttpBinding();
 
         binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly; 
@@ -430,9 +432,10 @@ public class CommandeController : Controller
         EndpointAddress endpoint = new(endpointurl);
         var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint);
 
+        //wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        //wsclient.ClientCredentials.UserName.Password = "azerty2023++";
         wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-        wsclient.ClientCredentials.UserName.Password = "azerty2023++";
-
+        wsclient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
         var request = new BAPI_CUSTOMER_GETLIST
         {
             MAXROWS = 100,
@@ -536,15 +539,18 @@ public class CommandeController : Controller
     [Route("GetClientDetails")]
     public async Task<IActionResult> GetClientDetails([FromBody] SapSearchVMGetStatus searchVM)
     {
-        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/z_bapi_customer_details/150/z_bapi_customer_details/z_bapi_customer_details";
+        // String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/z_bapi_customer_details/150/z_bapi_customer_details/z_bapi_customer_details";
+        var endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/z_bapi_customer_details/150/z_bapi_customer_details/z_bapi_customer_details";
         BasicHttpBinding binding = new BasicHttpBinding();
         binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
         binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
 
         EndpointAddress endpoint = new(endpointurl);
         var serviceClient = new Z_bapi_customer_detailsClient(binding, endpoint);
+        //serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        //serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
         serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
         var request = new Z_BAPI_CUSTOMER_CREDITDETAILS()
         {
             CUSTOMER = searchVM.customerSap,
@@ -554,6 +560,59 @@ public class CommandeController : Controller
         serviceClient.Open();
         var response = await serviceClient.Z_BAPI_CUSTOMER_CREDITDETAILSAsync(request);
         var clientsFromSap = response.Z_BAPI_CUSTOMER_CREDITDETAILSResponse;
+        return Ok(clientsFromSap);
+    }
+    [HttpPost]
+    [Route("GetConsomation")]
+    public async Task<IActionResult> GetConsomation([FromBody] SapSearchVMGetStatus searchVM)
+    {
+        var endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/wsdl/flv_10002A111AD1/srvc_url/sap/bc/srt/rfc/sap/zsd_mcsi_s805_wsr/150/zsd_mcsi_s805_wsr/zsd_mcsi_s805_wsr?sap-client=150";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new ZSD_MCSI_S805_WSRClient(binding, endpoint);
+        //serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        //serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+        var request = new ZSD_MCSI_S805()
+        {
+            ZKUNAG = new[]
+            {
+                 new ZSTKUNAG
+                 {
+                     OPTION = searchVM.KUNAG_Option,// "EQ",
+                     SIGN = searchVM.KUNAG_Sign,// "I",
+                     LOW = searchVM.KUNAG_Low,
+                     HIGH = searchVM.KUNAG_High
+                 }
+            },
+            ZSPTAG = new[]
+            {
+                new ZSTSPTAG
+                {
+                    OPTION = searchVM.SPTAG_Option,
+                    SIGN = searchVM.SPTAG_Sign,
+                    LOW = searchVM.SPTAG_Low,
+                    HIGH = searchVM.SPTAG_High
+                }
+            },
+            T_CUST_SALES = new[]
+            {
+                new ZSTCUST_SALES
+                {
+
+                }
+            }
+
+        };
+
+        serviceClient.Open();
+        var response = await serviceClient.ZSD_MCSI_S805Async(request);
+        var clientsFromSap = response.ZSD_MCSI_S805Response;
         return Ok(clientsFromSap);
     }
     [HttpPost]
