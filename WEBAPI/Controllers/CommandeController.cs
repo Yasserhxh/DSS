@@ -24,6 +24,12 @@ using Create_Simulation_Commande;
 using Customer_details;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using ClientConsommationMensuelle;
+using Domain.Models.Client;
+using System.IO.Compression;
+using ClientListeRèglements;
+using Microsoft.Extensions.Options;
+using WEBAPI.Helpers;
 
 namespace WEBAPI.Controllers;
 
@@ -35,11 +41,17 @@ public class CommandeController : Controller
     private readonly IBlobService blobService;
     private readonly IAuthentificationService _authentificationService;
     private readonly UserManager<ApplicationUser> _userManager;
-    private IConfiguration _configuration;
+    private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly SAPEndpointsModel _options;
 
-    public CommandeController(ICommandeService commandeService, IBlobService blobService,
-        IAuthentificationService authentificationService, UserManager<ApplicationUser> userManager, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+    public CommandeController(ICommandeService commandeService, 
+        IBlobService blobService,
+        IAuthentificationService authentificationService, 
+        UserManager<ApplicationUser> userManager, 
+        IConfiguration configuration, 
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<SAPEndpointsModel> options)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
@@ -47,7 +59,7 @@ public class CommandeController : Controller
         _userManager = userManager;
         _configuration = configuration;
         _webHostEnvironment = webHostEnvironment;
-
+        _options = options.Value;
     }
 
     [HttpPost]
@@ -322,6 +334,7 @@ public class CommandeController : Controller
         return success;
     }
 
+   
     [HttpPost]
     [Route("PropositionPrix")]
     public async Task<bool> PropositionPrix([FromBody] CommandeModifApi commandeModifApi)
@@ -330,6 +343,7 @@ public class CommandeController : Controller
             commandeModifApi.CommandeTarifBeton, commandeModifApi.UserEmail, commandeModifApi.CommandeBetonArticleFile, commandeModifApi.CommandeCoutDeProdBeton,commandeModifApi.CommandeArticleName);
         return res;
     }
+  
     [HttpPost]
     [Route("FixationPrixRC")]
     public async Task<bool> FixationPrixRC([FromBody] JsonBetonModifApi betonModifApi)
@@ -337,10 +351,12 @@ public class CommandeController : Controller
         var res = await _commandeService.FixationPrixRC(betonModifApi.CommandeModifVenteApis, betonModifApi.Useremail, betonModifApi.IdCommande/*, betonModifApi.isBetonSpecial*/);
         return res;
     }
+   
     [HttpGet("GetListValidation/{commandeId:int}")]
     public async Task<IActionResult> GetListValidation(int commandeId) =>
         Ok(await _commandeService.GetListValidation(commandeId));
 
+  
     [HttpGet("GeneratePDF/{id:int}")]
     public async Task<string> GeneratePDf(int id)
     {
@@ -368,6 +384,7 @@ public class CommandeController : Controller
             throw;
         }
     }
+   
     [HttpPost]
     [Route("UpdateCommande")]
     public async Task<bool> UpdateCommande([FromBody] CommandeApiModel commandeApiModel)
@@ -399,6 +416,7 @@ public class CommandeController : Controller
             throw;
         }
     }
+
     [HttpPost]
     [Route("SetCommande")]
     public async Task<bool> SetCommande([FromBody] CommandeApiModel commandeApiModel)
@@ -417,84 +435,8 @@ public class CommandeController : Controller
                 vm.DateFinSearch);
         return Ok(vm.CommandesAPI);
     }
-    [HttpPost]
-    [Route("GetListSAP")]
-    public async Task<IActionResult> GetListSAPAsync([FromBody] SapSearchVMFindClient searchVM)
-    {
-        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
-        BasicHttpBinding binding = new BasicHttpBinding();
-
-        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly; 
-        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
-
-        EndpointAddress endpoint = new(endpointurl);
-        var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding,endpoint);
-
-        wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-        wsclient.ClientCredentials.UserName.Password = "azerty2023++";
-
-        var request = new BAPI_CUSTOMER_GETLIST
-        {
-            MAXROWS = 100,
-            IDRANGE = new[]
-            {
-                new BAPICUSTOMER_IDRANGE()
-                {
-                    SIGN = "I",
-                    OPTION = "BT",
-                    LOW =  searchVM.ClientSapLow.ToString(),
-                    HIGH = searchVM.ClientSapHigh.ToString()
-
-                }
-
-            },
-            ADDRESSDATA = new[]
-            {
-                new BAPICUSTOMER_ADDRESSDATA()
-                {
-                    
-                }
-            } 
-            
-        };
-        //open client
-        wsclient.Open();
-        var response = await wsclient.BAPI_CUSTOMER_GETLISTAsync(request);
-        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ADDRESSDATA;
-
-        return Ok(clientsFromSap);
-
-         /*const string _urlSuffix = "zbapi_customer_getlist/150/zbapi_customer_getlist/zbapi_customer_getlist";
-         var serviceClient = new zBAPI_CUSTOMER_GETLISTClient(Helper.GetBinding(), Helper.GetEndpoint(_configuration, _urlSuffix),
-        _configuration["Sap:Username"], _configuration["Sap:Password"]);
-        var request = new BAPI_CUSTOMER_GETLIST
-             {
-                 MAXROWS = 100,
-                 IDRANGE = new[]
-                 {
-                     new BAPICUSTOMER_IDRANGE()
-                     {
-                         SIGN = "I",
-                         OPTION = "BT",
-                         LOW = "0000000001",
-                         HIGH = "0000000010"
-
-                     }
-
-                 },
-                 ADDRESSDATA = new[]
-                 {
-                     new BAPICUSTOMER_ADDRESSDATA()
-                     {
-
-                     }
-                 } 
-
-             };        
-        var response = await serviceClient.BAPI_CUSTOMER_GETLISTAsync(request);
-        var clientsFromSap = response.BAPI_CUSTOMER_GETLISTResponse.ToString();
-        return Ok(clientsFromSap);*/
-    }
+   
+    
     [HttpPost]
     [Route("GetClientStatus")]
     public async Task<IActionResult> GetClientStatus([FromBody] SapSearchVMGetStatus searchVM)
@@ -532,30 +474,7 @@ public class CommandeController : Controller
         var clientsFromSap = response.BAPI_CREDIT_ACCOUNT_GET_STATUSResponse;
         return Ok(clientsFromSap);
     }
-    [HttpPost]
-    [Route("GetClientDetails")]
-    public async Task<IActionResult> GetClientDetails([FromBody] SapSearchVMGetStatus searchVM)
-    {
-        String endpointurl = "http://ITCSAPWCT.grouphc.net:8000/sap/bc/srt/rfc/sap/z_bapi_customer_details/150/z_bapi_customer_details/z_bapi_customer_details";
-        BasicHttpBinding binding = new BasicHttpBinding();
-        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
-        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
-
-        EndpointAddress endpoint = new(endpointurl);
-        var serviceClient = new Z_bapi_customer_detailsClient(binding, endpoint);
-        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-        serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
-        var request = new Z_BAPI_CUSTOMER_CREDITDETAILS()
-        {
-            CUSTOMER = searchVM.customerSap,
-            CREDIT_CONTROL_AREA =searchVM.creditControlArea,
-          
-        };
-        serviceClient.Open();
-        var response = await serviceClient.Z_BAPI_CUSTOMER_CREDITDETAILSAsync(request);
-        var clientsFromSap = response.Z_BAPI_CUSTOMER_CREDITDETAILSResponse;
-        return Ok(clientsFromSap);
-    }
+      
     [HttpPost]
     [Route("CUSTOMER_PARTNERFS_GET")]
     public async Task<IActionResult> CUSTOMER_PARTNERFS_GET([FromBody] SapSearchVMGetPartner sapSearchVM)
@@ -588,6 +507,7 @@ public class CommandeController : Controller
         var clientsFromSap = response.CUSTOMER_PARTNERFS_GETResponse;
         return Ok(clientsFromSap);
     }
+   
     [HttpPost]
     [Route("SAP_CREATE_COMMANDE")]
     public async Task<IActionResult> SAP_CREATE_COMMANDE([FromBody] SapCreateCommande sapCreate)
@@ -674,4 +594,6 @@ public class CommandeController : Controller
         var resultCommande = response.BAPI_SALESORDER_CREATEFROMDAT2Response.RETURN;
         return Ok(resultCommande);
     }
+
+    
 }

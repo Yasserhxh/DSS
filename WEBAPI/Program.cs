@@ -9,6 +9,7 @@ using Repository.UnitOfWork;
 using Service.IServices;
 using Service.Mapping;
 using Service.Services;
+using WEBAPI.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = 
@@ -17,17 +18,18 @@ var connectionString =
 var connstring = "Server=msserversql.database.windows.net;Database=DSS_STAGING;User Id=sqladmin;password=P@ssw0rd2023**";
     
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(
-                  /* builder.Configuration.GetConnectionString("DefaultConnection") */connstring));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connstring));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString,
         o=>o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllers();
-builder.Services.AddControllersWithViews().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<ICommandeService, CommandeService>();
@@ -35,6 +37,8 @@ builder.Services.AddScoped<IAuthentificationRepository, AuthentificationReposito
 builder.Services.AddScoped<ICommandeRepository, CommandeRepository>();
 builder.Services.AddScoped<IBlobService, AzureBlobService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.Configure<SAPEndpointsModel>(builder.Configuration.GetSection("SAPEndpoints"));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
