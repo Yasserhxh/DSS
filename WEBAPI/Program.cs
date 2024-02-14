@@ -19,7 +19,7 @@ var connstring = "Server=msserversql.database.windows.net;Database=DSS_STAGING;U
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
                options.UseSqlServer(
-                  /* builder.Configuration.GetConnectionString("DefaultConnection") */connstring));
+                   builder.Configuration.GetConnectionString("DefaultConnection") ));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString,
         o=>o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
