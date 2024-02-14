@@ -26,6 +26,7 @@ namespace Domain.Entities
         public string Adresse { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string Destinataire_Interlocuteur { get; set; }
+        [NotMapped]
         [Column(TypeName = "nvarchar(10)")]
         public string Sexe { get; set; }
 
