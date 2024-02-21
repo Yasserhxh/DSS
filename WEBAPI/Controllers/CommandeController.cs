@@ -43,15 +43,13 @@ public class CommandeController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly SAPEndpointsModel _options;
 
     public CommandeController(ICommandeService commandeService, 
         IBlobService blobService,
         IAuthentificationService authentificationService, 
         UserManager<ApplicationUser> userManager, 
         IConfiguration configuration, 
-        IWebHostEnvironment webHostEnvironment,
-        IOptions<SAPEndpointsModel> options)
+        IWebHostEnvironment webHostEnvironment)
     {
         _commandeService = commandeService;
         this.blobService = blobService;
@@ -59,7 +57,6 @@ public class CommandeController : Controller
         _userManager = userManager;
         _configuration = configuration;
         _webHostEnvironment = webHostEnvironment;
-        _options = options.Value;
     }
 
     [HttpPost]

@@ -1,6 +1,6 @@
 ﻿namespace WEBAPI.Helpers
 {
-    public class SAPEndpointsModel
+    public class SAPEndpoints
     {
         public string? ClientDétails { get; set; }
         public string? ClientDétailsCrédit { get; set; }

@@ -14,9 +14,9 @@ namespace WEBAPI.Controllers
     [Route("[controller]")]
     public class ClientController : Controller
     {
-        private readonly SAPEndpointsModel _options;
+        private readonly SAPEndpoints _options;
 
-        public ClientController(IOptions<SAPEndpointsModel> options)
+        public ClientController(IOptions<SAPEndpoints> options)
         {
                 _options = options.Value;
         }
@@ -46,23 +46,21 @@ namespace WEBAPI.Controllers
                     MAXROWS = 100,
                     IDRANGE = new[]
                     {
-                new BAPICUSTOMER_IDRANGE()
-                {
-                    SIGN = "I",
-                    OPTION = "BT",
-                    LOW =  searchVM.ClientSapLow.ToString(),
-                    HIGH = searchVM.ClientSapHigh.ToString()
-
-                }
-
-                },
+                        new BAPICUSTOMER_IDRANGE()
+                        {
+                            SIGN = Constants.I,
+                            OPTION = Constants.I,
+                            LOW =  searchVM.ClientSapLow.ToString(),
+                            HIGH = searchVM.ClientSapHigh.ToString()
+                        }
+                    },
                     ADDRESSDATA = new[]
                     {
-                    new BAPICUSTOMER_ADDRESSDATA()
-                    {
+                        new BAPICUSTOMER_ADDRESSDATA()
+                        {
 
+                        }
                     }
-                }
                 };
 
                 wsclient.Open();
@@ -103,7 +101,6 @@ namespace WEBAPI.Controllers
                 {
                     CUSTOMER = searchVM.customerSap,
                     CREDIT_CONTROL_AREA = searchVM.creditControlArea,
-
                 };
                 serviceClient.Open();
                 var response = await serviceClient.Z_BAPI_CUSTOMER_CREDITDETAILSAsync(request);
@@ -139,37 +136,37 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new ZSD_MCSI_S805_WSRClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new ZSD_MCSI_S805()
                 {
                     T_CUST_SALES = new[]
                     {
-                    new ZSTCUST_SALES()
-                    {
+                        new ZSTCUST_SALES()
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ZKUNAG = new[]
                     {
-                    new ZSTKUNAG()
-                    {
-                        SIGN = "I",
-                        OPTION = "EQ",
-                        LOW = model.customerNumber,
-                        HIGH = ""
-                    }
-                },
+                        new ZSTKUNAG()
+                        {
+                            SIGN = Constants.I,
+                            OPTION = Constants.EQ,
+                            LOW = model.customerNumber,
+                            HIGH = ""
+                        }
+                    },
                     ZSPTAG = new[]
                     {
-                    new ZSTSPTAG()
-                    {
-                        SIGN = "I",
-                        OPTION = "BT",
-                        LOW = model.startDate,
-                        HIGH = model.endDate
+                        new ZSTSPTAG()
+                        {
+                            SIGN = Constants.I,
+                            OPTION = Constants.BT,
+                            LOW = model.startDate,
+                            HIGH = model.endDate
+                        }
                     }
-                }
                 };
 
                 serviceClient.Open();
@@ -213,66 +210,66 @@ namespace WEBAPI.Controllers
                 {
                     ItBsad = new[]
                     {
-                    new Ztybsad
-                    {
+                        new Ztybsad
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid2 = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     Zblart = new[]
                     {
-                    new Zsblart()
-                    {
-                        Sign = "I",
-                        Option = "BT",
-                        Low = "D1",
-                        High = "D8"
-                    }
-                },
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.D1,
+                            High = Constants.D8
+                        }
+                    },
                     Zbudat = new[]
                     {
-                    new Zsbudat()
-                    {
-                        Sign = "I",
-                        Option = "BT",
-                        Low = model.startDate,
-                        High = model.endDate
-                    }
-                },
+                        new Zsbudat()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = model.startDate,
+                            High = model.endDate
+                        }
+                    },
                     Zbukrs = new[]
                     {
-                    new Zsbukrs()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = "815",
-                        High = ""
-                    }
-                },
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
                     Zkeydate = "",
                     Zkunnr = new[]
                     {
                     new Zskunnr()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = model.customerNumber,
-                        High = ""
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerNumber,
+                            High = ""
+                        }
                     }
-                }
                 };
 
                 serviceClient.Open();
@@ -315,66 +312,66 @@ namespace WEBAPI.Controllers
                 {
                     ItBsad = new[]
                     {
-                    new Ztybsad
-                    {
+                        new Ztybsad
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid2 = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     Zblart = new[]
                     {
-                    new Zsblart()
-                    {
-                        Sign = "I",
-                        Option = "BT",
-                        Low = "DO",
-                        High = "DU"
-                    }
-                },
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.DO,
+                            High = Constants.DU
+                        }
+                    },
                     Zbudat = new[]
                     {
-                    new Zsbudat()
-                    {
-                        Sign = "",
-                        Option = "",
-                        Low = "",
-                        High = ""
-                    }
-                },
+                        new Zsbudat()
+                        {
+                            Sign = "",
+                            Option = "",
+                            Low = "",
+                            High = ""
+                        }
+                    },
                     Zbukrs = new[]
                     {
-                    new Zsbukrs()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = "815",
-                        High = ""
-                    }
-                },
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
                     Zkeydate = model.startDate,
                     Zkunnr = new[]
                     {
-                    new Zskunnr()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = model.customerNumber,
-                        High = ""
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerNumber,
+                            High = ""
+                        }
                     }
-                }
                 };
 
                 serviceClient.Open();
@@ -418,65 +415,65 @@ namespace WEBAPI.Controllers
                     ItBsad = new[]
                     {
                     new Ztybsad
-                    {
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid2 = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     Zblart = new[]
                     {
-                    new Zsblart()
-                    {
-                        Sign = "I",
-                        Option = "BT",
-                        Low = "DO",
-                        High = "DU"
-                    }
-                },
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.DO,
+                            High = Constants.DU
+                        }
+                    },
                     Zbudat = new[]
                     {
-                    new Zsbudat()
-                    {
-                        Sign = "",
-                        Option = "",
-                        Low = "",
-                        High = ""
-                    }
-                },
+                        new Zsbudat()
+                        {
+                            Sign = "",
+                            Option = "",
+                            Low = "",
+                            High = ""
+                        }
+                    },
                     Zbukrs = new[]
                     {
-                    new Zsbukrs()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = "815",
-                        High = ""
-                    }
-                },
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
                     Zkeydate = model.startDate,
                     Zkunnr = new[]
                     {
-                    new Zskunnr()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = model.customerNumber,
-                        High = ""
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerNumber,
+                            High = ""
+                        }
                     }
-                }
                 };
 
                 serviceClient.Open();
@@ -518,67 +515,67 @@ namespace WEBAPI.Controllers
                 var request = new ZfiCustItems()
                 {
                     ItBsad = new[]
-                    {
-                    new Ztybsad
-                    {
+                        {
+                        new Ztybsad
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid = new[]
-                    {
-                    new Ztybsid
-                    {
+                        {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     ItBsid2 = new[]
                     {
-                    new Ztybsid
-                    {
+                        new Ztybsid
+                        {
 
-                    }
-                },
+                        }
+                    },
                     Zblart = new[]
                     {
-                    new Zsblart()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = "RV",
-                        High = ""
-                    }
-                },
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants.RV,
+                            High = ""
+                        }
+                    },
                     Zbudat = new[]
                     {
-                    new Zsbudat()
-                    {
-                        Sign = "I",
-                        Option = "BT",
-                        Low = model.startDate,
-                        High = model.endDate
-                    }
-                },
+                        new Zsbudat()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = model.startDate,
+                            High = model.endDate
+                        }
+                    },
                     Zbukrs = new[]
                     {
-                    new Zsbukrs()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = "815",
-                        High = ""
-                    }
-                },
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
                     Zkeydate = "",
                     Zkunnr = new[]
                     {
-                    new Zskunnr()
-                    {
-                        Sign = "I",
-                        Option = "EQ",
-                        Low = model.customerNumber,
-                        High = ""
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerNumber,
+                            High = ""
+                        }
                     }
-                }
                 };
 
                 serviceClient.Open();

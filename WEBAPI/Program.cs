@@ -38,7 +38,7 @@ builder.Services.AddScoped<ICommandeRepository, CommandeRepository>();
 builder.Services.AddScoped<IBlobService, AzureBlobService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-builder.Services.Configure<SAPEndpointsModel>(builder.Configuration.GetSection("SAPEndpoints"));
+builder.Services.Configure<SAPEndpoints>(builder.Configuration.GetSection("SAPEndpointsPod"));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
