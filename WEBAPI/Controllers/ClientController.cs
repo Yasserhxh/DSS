@@ -39,7 +39,7 @@ namespace WEBAPI.Controllers
                 var wsclient = new zBAPI_CUSTOMER_GETLISTClient(binding, endpoint);
 
                 wsclient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                wsclient.ClientCredentials.UserName.Password = "azerty2023++";
+                wsclient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new BAPI_CUSTOMER_GETLIST
                 {
@@ -96,7 +96,7 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new Z_bapi_customer_detailsClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
                 var request = new Z_BAPI_CUSTOMER_CREDITDETAILS()
                 {
                     CUSTOMER = searchVM.customerSap,
@@ -204,7 +204,7 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new ZfiCustItems()
                 {
@@ -306,7 +306,7 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new ZfiCustItems()
                 {
@@ -408,7 +408,7 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new ZfiCustItems()
                 {
@@ -510,7 +510,7 @@ namespace WEBAPI.Controllers
                 EndpointAddress endpoint = new(endpointurl);
                 var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
                 serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
-                serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+                serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
 
                 var request = new ZfiCustItems()
                 {
