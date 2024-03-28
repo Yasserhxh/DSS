@@ -11,5 +11,7 @@ public class SapSearchVMGetStatus
     public string SPTAG_Low { get; set; }
     public string SPTAG_Sign { get; set; }
     public string SPTAG_Option { get; set; }
+    public string startDate { get; set; }
+    public string endDate { get; set; }
 
 }

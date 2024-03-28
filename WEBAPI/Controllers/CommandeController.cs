@@ -25,6 +25,8 @@ using Customer_details;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Consomation_mensu;
+using WEBAPI.Helpers;
+using ClientListeRèglements;
 
 namespace WEBAPI.Controllers;
 
@@ -615,6 +617,469 @@ public class CommandeController : Controller
         var clientsFromSap = response.ZSD_MCSI_S805Response;
         return Ok(clientsFromSap);
     }
+    [HttpPost]
+    [Route("GetConsomationProd")]
+    public async Task<IActionResult> GetConsomationProd([FromBody] SapSearchVMGetStatus searchVM)
+    {
+        var endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/zsd_mcsi_s805_wsr/150/zsd_mcsi_s805_wsr/zsd_mcsi_s805_wsr";
+        BasicHttpBinding binding = new BasicHttpBinding();
+        binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+        binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+
+        EndpointAddress endpoint = new(endpointurl);
+        var serviceClient = new ZSD_MCSI_S805_WSRClient(binding, endpoint);
+        //serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+        //serviceClient.ClientCredentials.UserName.Password = "azerty2023++";
+        serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+        var request = new ZSD_MCSI_S805()
+        {
+            T_CUST_SALES = new[]
+            {
+                        new ZSTCUST_SALES()
+                        {
+
+                        }
+                    },
+            ZKUNAG = new[]
+            {
+                        new ZSTKUNAG()
+                        {
+                            SIGN = Constants.I,
+                            OPTION = Constants.EQ,
+                            LOW = searchVM.KUNAG_Low,
+                            HIGH = ""
+                        }
+                    },
+            ZSPTAG = new[]
+            {
+                        new ZSTSPTAG()
+                        {
+                            SIGN = Constants.I,
+                            OPTION = Constants.BT,
+                            LOW = searchVM.SPTAG_Low,
+                            HIGH = searchVM.SPTAG_High
+                        }
+                    }
+        };
+
+        serviceClient.Open();
+        var response = await serviceClient.ZSD_MCSI_S805Async(request);
+        var clientsFromSap = response.ZSD_MCSI_S805Response;
+        return Ok(clientsFromSap);
+    }
+
+
+
+
+    //-------------------------------- Client liste réglement -----------------------------
+    [HttpPost]
+    [Route("ClientListeRéglement")]
+    public async Task<IActionResult> ClientListeRéglement([FromBody] SapSearchVMGetStatus model)
+    {
+        try
+        {
+            string endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/zfi_cust_items_wsdl/150/zfi_cust_items_wsdl/zfi_cust_items_wsdl";
+            BasicHttpBinding binding = new BasicHttpBinding();
+            binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+            //binding.SendTimeout = TimeSpan.FromMinutes(3);
+            //binding.MaxReceivedMessageSize = 2147483647;
+
+            EndpointAddress endpoint = new(endpointurl);
+            var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
+            serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+            serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+            var request = new ZfiCustItems()
+            {
+                ItBsad = new[]
+                {
+                        new Ztybsad
+                        {
+
+                        }
+                    },
+                ItBsid = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                ItBsid2 = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                Zblart = new[]
+                {
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.D1,
+                            High = Constants.D8
+                        }
+                    },
+                Zbudat = new[]
+                {
+                        new Zsbudat()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = model.startDate,
+                            High = model.endDate
+                        }
+                    },
+                Zbukrs = new[]
+                {
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
+                Zkeydate = "",
+                Zkunnr = new[]
+                {
+                    new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerSap,
+                            High = ""
+                        }
+                    }
+            };
+
+            serviceClient.Open();
+            var response = await serviceClient.ZfiCustItemsAsync(request);
+            var clientsFromSap = response.ZfiCustItemsResponse;
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            string message = "Caught an exception: " + ex;
+            if (ex.InnerException != null)
+            {
+                message += "\nInner exception: " + ex.InnerException.Message;
+            }
+            return BadRequest(message);
+        }
+    }
+
+
+    //-------------------------------- Client facture échues -----------------------------
+
+    [HttpPost]
+    [Route("ClientFacturesÉchues")]
+    public async Task<IActionResult> ClientFacturesÉchues([FromBody] SapSearchVMGetStatus model)
+    {
+        try
+        {
+            string endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/zfi_cust_items_wsdl/150/zfi_cust_items_wsdl/zfi_cust_items_wsdl";
+            BasicHttpBinding binding = new BasicHttpBinding();
+            binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+            //binding.SendTimeout = TimeSpan.FromMinutes(3);
+            //binding.MaxReceivedMessageSize = 2147483647;
+
+            EndpointAddress endpoint = new(endpointurl);
+            var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
+            serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+            serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+            var request = new ZfiCustItems()
+            {
+                ItBsad = new[]
+                {
+                        new Ztybsad
+                        {
+
+                        }
+                    },
+                ItBsid = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                ItBsid2 = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                Zblart = new[]
+                {
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.DO,
+                            High = Constants.DU
+                        }
+                    },
+                Zbudat = new[]
+                {
+                        new Zsbudat()
+                        {
+                            Sign = "",
+                            Option = "",
+                            Low = "",
+                            High = ""
+                        }
+                    },
+                Zbukrs = new[]
+                {
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
+                Zkeydate = model.startDate,
+                Zkunnr = new[]
+                {
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerSap,
+                            High = ""
+                        }
+                    }
+            };
+
+            serviceClient.Open();
+            var response = await serviceClient.ZfiCustItemsAsync(request);
+            var clientsFromSap = response.ZfiCustItemsResponse;
+            return Ok(clientsFromSap);
+        }
+        catch (Exception ex)
+        {
+            string message = "Caught an exception: " + ex.Message;
+            if (ex.InnerException != null)
+            {
+                message += "\nInner exception: " + ex.InnerException.Message;
+            }
+            return BadRequest(message);
+        }
+    }
+    //-------------------------------- Client liste impayés physique -------------------
+
+    [HttpPost]
+    [Route("ClientListeImpayés")]
+    public async Task<IActionResult> ClientListeImpayés([FromBody] SapSearchVMGetStatus model)
+    {
+        try
+        {
+            string endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/zfi_cust_items_wsdl/150/zfi_cust_items_wsdl/zfi_cust_items_wsdl";
+            BasicHttpBinding binding = new BasicHttpBinding();
+            binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+           // binding.SendTimeout = TimeSpan.FromMinutes(3);
+           // binding.MaxReceivedMessageSize = 2147483647;
+
+            EndpointAddress endpoint = new(endpointurl);
+            var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
+            serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+            serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+            var request = new ZfiCustItems()
+            {
+                ItBsad = new[]
+                {
+                    new Ztybsad
+                        {
+
+                        }
+                    },
+                ItBsid = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                ItBsid2 = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                Zblart = new[]
+                {
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = Constants.DO,
+                            High = Constants.DU
+                        }
+                    },
+                Zbudat = new[]
+                {
+                        new Zsbudat()
+                        {
+                            Sign = "",
+                            Option = "",
+                            Low = "",
+                            High = ""
+                        }
+                    },
+                Zbukrs = new[]
+                {
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
+                Zkeydate = model.startDate,
+                Zkunnr = new[]
+                {
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerSap,
+                            High = ""
+                        }
+                    }
+            };
+
+            serviceClient.Open();
+            var response = await serviceClient.ZfiCustItemsAsync(request);
+            var clientsFromSap = response.ZfiCustItemsResponse;
+            return Ok(clientsFromSap);
+        }
+        catch (Exception ex)
+        {
+            string message = "Caught an exception: " + ex.Message;
+            if (ex.InnerException != null)
+            {
+                message += "\nInner exception: " + ex.InnerException.Message;
+            }
+            return BadRequest(message);
+        }
+    }
+    //-------------------------------- Client liste facture -----------------------------
+
+    [HttpPost]
+    [Route("ClientListeFacture")]
+    public async Task<IActionResult> ClientListeFacture([FromBody] SapSearchVMGetStatus model)
+    {
+        try
+        {
+            string endpointurl = "http://GRPSAFRANU103.grouphc.net:8020/sap/bc/srt/rfc/sap/zfi_cust_items_wsdl/150/zfi_cust_items_wsdl/zfi_cust_items_wsdl";
+            BasicHttpBinding binding = new BasicHttpBinding();
+            binding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Basic;
+           // binding.SendTimeout = TimeSpan.FromMinutes(3);
+           // binding.MaxReceivedMessageSize = 2147483647;
+
+            EndpointAddress endpoint = new(endpointurl);
+            var serviceClient = new zfi_cust_items_wsdlClient(binding, endpoint);
+            serviceClient.ClientCredentials.UserName.UserName = "MAR_DSSRMC";
+            serviceClient.ClientCredentials.UserName.Password = "PH8YYzPZiUiTdn]jSWUYnYdJAAwnUmeJlFeAwEza";
+
+            var request = new ZfiCustItems()
+            {
+                ItBsad = new[]
+                    {
+                        new Ztybsad
+                        {
+
+                        }
+                    },
+                ItBsid = new[]
+                    {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                ItBsid2 = new[]
+                {
+                        new Ztybsid
+                        {
+
+                        }
+                    },
+                Zblart = new[]
+                {
+                        new Zsblart()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants.RV,
+                            High = ""
+                        }
+                    },
+                Zbudat = new[]
+                {
+                        new Zsbudat()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.BT,
+                            Low = model.startDate,
+                            High = model.endDate
+                        }
+                    },
+                Zbukrs = new[]
+                {
+                        new Zsbukrs()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = Constants._815,
+                            High = ""
+                        }
+                    },
+                Zkeydate = "",
+                Zkunnr = new[]
+                {
+                        new Zskunnr()
+                        {
+                            Sign = Constants.I,
+                            Option = Constants.EQ,
+                            Low = model.customerSap,
+                            High = ""
+                        }
+                    }
+            };
+
+            serviceClient.Open();
+            var response = await serviceClient.ZfiCustItemsAsync(request);
+            var clientsFromSap = response.ZfiCustItemsResponse;
+            return Ok(clientsFromSap);
+        }
+        catch (Exception ex)
+        {
+            string message = "Caught an exception: " + ex.Message;
+            if (ex.InnerException != null)
+            {
+                message += "\nInner exception: " + ex.InnerException.Message;
+            }
+            return BadRequest(message);
+        }
+    }
+
+
     [HttpPost]
     [Route("CUSTOMER_PARTNERFS_GET")]
     public async Task<IActionResult> CUSTOMER_PARTNERFS_GET([FromBody] SapSearchVMGetPartner sapSearchVM)
